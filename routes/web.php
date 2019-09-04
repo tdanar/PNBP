@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/* Route::get('/', function () {
+    return view('partials.header');
+}); */
+Route::get('/','homepageController@index')->name('home');
+Route::get('/header','homepageController@header');

@@ -2,7 +2,8 @@
 
 return [
 
-    'ADMIN_PATH' => 'admin',
+    'ADMIN_PATH' => 'ma',
+    'FRONT' => '',
 
     /*
         To Allowed Specific User Agent Only
@@ -66,7 +67,7 @@ return [
     * Note: you cannot use both layout-boxed and fixed at the same time. Anything else can be mixed together.
     */
 
-    'ADMIN_LAYOUT' => '',
+    'ADMIN_LAYOUT' => '.sidebar-collapse',
 
     /*
     * NOTE :

@@ -145,6 +145,8 @@ class AdminController extends CBController
 
         Session::flush();
 
-        return redirect()->route('getLogin')->with('message', trans("crudbooster.message_after_logout"));
+        return redirect()->route('home')->with('message', trans("crudbooster.message_after_logout"));
+
+        //return redirect()->route('getLogin')->with('message', trans("crudbooster.message_after_logout"));
     }
 }
