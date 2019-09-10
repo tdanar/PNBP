@@ -91,7 +91,7 @@
 
                 chart.write("graphs1");
             }); */
-			
+
             var chartDatas = [
                 {
                     "year": 2005,
@@ -124,7 +124,7 @@
                 chart.startDuration = 1;
                 chart.plotAreaBorderColor = "#DADADA";
                 chart.plotAreaBorderAlpha = 1;
-                chart.rotate = true; 
+                chart.rotate = true;
                 chart.angle = 15;
                 chart.depth3D = 5;
 
@@ -250,7 +250,7 @@
 
                 chart.write("graphs3");
             });*/
-			
+
 		/*	var chartData4 = [
                 {
                     "date": "2012-01-01",
@@ -503,7 +503,7 @@
                 chart.write("graphs4");
             }); */
 			function load_graph(nomor,data){
-				$("html, body").animate({scrollTop: 1080}, 1000);
+				$("html, body").animate({scrollTop: 1800}, 1000);
 				$('.graph_thumb .item').removeClass('actives');
 				$('.th_'+nomor).addClass('actives');
 				$('.gr').removeClass('active');
@@ -511,7 +511,10 @@
 				$('#graphs'+data).addClass('active');
 				$('#graphshead'+data).addClass('active');
 				$('#graphslink'+data).addClass('active');
-			}
+            }
+
+            
+
 			function load_info(data){
 				$('a.tab').removeClass('active');
 				$('a.tb_'+data).addClass('active');
@@ -524,20 +527,20 @@
 				});
 			}
 			$(function(){
-			    
+
 			    $(window).resize(function(){
- 
- 
+
+
 });
-			    
+
 				$('.input-search').focus(function(){
 					$(this).parent().addClass('expanded');
 				});
 				$('.input-search').blur(function(){
-				    
+
 					//$(this).parent().removeClass('expanded');
 				});
-				
+
 				$("#txt_search").on("click",function() {
 					$('.bg_search').fadeIn();
 					$('.social-fixed').addClass('none');
@@ -563,6 +566,27 @@
 					nav: true,
 					dots:false,
 					margin: 10,
+                });
+                $('.news-data').owlCarousel({
+                    loop: true,
+                    dots: false,
+                    margin: 0,
+                    nav: true,
+                    navText: [
+                        '<i class="fa fa-angle-left" aria-hidden="true"></i>',
+                        '<i class="fa fa-angle-right" aria-hidden="true"></i>'
+                    ],
+                });
+                $('.infografis').owlCarousel({
+                    items: 5,
+                    loop: true,
+                    dots: false,
+                    margin: 0,
+                    nav: true,
+                    navText: [
+                        '<i class="fa fa-angle-left" aria-hidden="true"></i>',
+                        '<i class="fa fa-angle-right" aria-hidden="true"></i>'
+                    ],
 				});
 				$('.fadeOut').owlCarousel({
 					items: 1,
@@ -588,5 +612,6 @@
 					animateOut: 'fadeOut',
 					loop: true,
 					margin: 20,
-				});
+                });
+                
 			});

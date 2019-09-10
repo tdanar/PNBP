@@ -2,12 +2,8 @@
 			<div class="top-footer">
 				<div class="container">
 					<div class="top-link-footer">
-						<font></font>
-						<a href="/single-page/sitemap/">Peta Situs</a><span>|</span>
-						<a href="http://webmail.kemenkeu.go.id/">Email Kemenkeu</a><span>|</span>
-						<a href="/faq/">FAQ</a><span>|</span>
-						<a href="/toc/">Prasyarat</a><span>|</span>
-						<a href="/contact-us/">Hubungi Kami</a> 						<i></i>
+                        <font></font>
+                        &nbsp;
 						<div class="clear"></div>
 					</div>
 				</div>
@@ -24,31 +20,14 @@
 							Telp: 134 Fax: 021-3500842<br />
 							<div><h3 style="text-align:center;">
 							    <div style="text-align:center;">
-							    <!--<a href="/single-page/sitemap" style="font-weight: normal;
-    color: #ffcb05;
-    font-size: 14px;
-    margin-top: 5px;
-    margin-bottom: 10px; display:none;" class="mobilecontact">Peta Situs</a>-->
-    <a href="/contact-us/" style="font-weight: normal;
-    color: #ffcb05;
-    font-size: 14px;
-    margin-top: 5px;
-    margin-bottom: 10px; display:none;" class="mobilecontact">Hubungi Kami</a> 
-    <!--<a href="http://webmail.kemenkeu.go.id" style="font-weight: normal;
-    color: #ffcb05;
-    font-size: 14px;
-    margin-top: 5px;
-    margin-bottom: 10px; display:none;" class="mobilecontact">Email Kemenkeu</a>-->
     </div></h3></div>
 						</font>
 					</div>
 					<div class="social">
-						<h3>Ikuti Kami</h3>
 						<div class="hi-icon-wrap hi-icon-effect-1 hi-icon-effect-1b">
-							<a href="http://www.facebook.com/KemenkeuRI" class="hi-icon hi-icon-fb"></a>
-							<a href="http://www.twitter.com/KemenkeuRI" class="hi-icon hi-icon-tw"></a>
-							<a href="http://youtube.com/KemenkeuRI" class="hi-icon hi-icon-yt"></a>
-							<a href="https://www.instagram.com/KemenkeuRI" class="hi-icon hi-icon-in"></a>
+							<a href="http://www.span.depkeu.go.id" target="_blank"><img src="/images/icon/span.png"/></a>
+							<a href="https://simponi.kemenkeu.go.id" target="_blank"><img src="/images/icon/simfoni.png"/></a>
+							<a href="http://elms.aaipi.or.id/aaipi/" target="_blank"><img src="/images/icon/aaipi.png"/></a>
 						</div>
 					</div>
 					<div class="clear"></div>
@@ -68,11 +47,11 @@
 	<!-- Star javascript Home -->
     <script src="/vendor/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
 		<script src="/vendor/amcharts/amcharts/serial.js" type="text/javascript"></script>
-		
+
 		<script src="/scripts/home.js"></script>
 		<script src="/vendor/owlcarousel/owl.carousel.js"></script>
 		<script src="/scripts/scripts.js"></script>
-		
+
 		<!-- End javascript Home -->
 
 <!-- Facebook Pixel Code --><script>
@@ -86,6 +65,5 @@ fbq('init', '211940415910761');
 fbq('track', 'PageView'); */
 </script><!--<noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=211940415910761&ev=PageView&noscript=1"
-/></noscript><!-- DO NOT MODIFY --><!-- End Facebook Pixel Code --> 
+/></noscript><!-- DO NOT MODIFY --><!-- End Facebook Pixel Code -->
 		</footer>
-		

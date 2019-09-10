@@ -70,7 +70,7 @@
 											<a href="\">Beranda<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\">e-Reporting<div class="mobileTriggerButton"></div></a>
+											<a href="\ma">e-Reporting<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
 											<a href="\">Informasi PNBP<div class="mobileTriggerButton"></div></a>

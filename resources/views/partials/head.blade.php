@@ -8,7 +8,9 @@
         <link rel="stylesheet" href="/css/home.css" type="text/css">
         <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">	
         <link rel="stylesheet" href="/css/responsive.css" type="text/css">	
-		<link rel="shortcut icon" href="/media/6120/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/media/6120/favicon.ico" type="image/x-icon" />
+        <link href="https://vjs.zencdn.net/7.6.0/video-js.css" rel="stylesheet">
+        <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
         <script type="text/javascript" src="/scripts/jquery.min.js"></script>
         
         <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
@@ -20,4 +22,5 @@
         <link href="/css/mmenu_button.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/scripts/jquery.mmenu.all.js"></script>
         <link rel="stylesheet" href="/css/jquery.mmenu.all.css" type="text/css"/>
+        <link href="/css/font/fontawesome/css/all.css" rel="stylesheet">
 

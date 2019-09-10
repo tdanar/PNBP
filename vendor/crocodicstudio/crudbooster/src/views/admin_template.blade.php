@@ -160,7 +160,7 @@
                 </ol>
             @else
                 <h1>{{Session::get('appname')}}
-                    <small>Information</small>
+                    <small>Selamat Datang</small>
                 </h1>
             @endif
         </section>
