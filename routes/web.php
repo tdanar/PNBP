@@ -16,3 +16,7 @@
 }); */
 Route::get('/','homepageController@index')->name('home');
 Route::get('/header','homepageController@header');
+Route::get('/helpdesk','helpdeskController@index')->name('helpdesk');
+Route::get('/faq','faqController@index')->name('faq');
+Route::get('/peraturan','peraturanController@index')->name('peraturan');
+

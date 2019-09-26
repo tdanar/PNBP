@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{trans("crudbooster.page_title_login")}} : {{Session::get('appname')}}</title>
+    <title>{{trans("crudbooster.page_title_login")}} : Portal PNBP</title>
     <meta name='generator' content='CRUDBooster'/>
     <meta name='robots' content='noindex,nofollow'/>
     <link rel="shortcut icon"
-          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
+          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('media/favicon.ico') }}">
 
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.2 -->
@@ -77,7 +77,7 @@
         <form autocomplete='off' action="{{ route('postLogin') }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
             <div class="form-group has-feedback">
-                <input autocomplete='off' type="text" class="form-control" name='email' required placeholder="Email"/>
+                <input autocomplete='off' type="text" class="form-control" name='username' required placeholder="Username"/>
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
@@ -91,8 +91,8 @@
             </div>
 
             <div class='row'>
-                <div class='col-xs-12' align="center"><p style="padding:10px 0px 10px 0px">{{trans("crudbooster.text_forgot_password")}} <a
-                                href='{{route("getForgot")}}'>{{trans("crudbooster.click_here")}}</a></p></div>
+                <div class='col-xs-12' align="center"><p style="padding:10px 0px 10px 0px">{{-- {{trans("crudbooster.text_forgot_password")}} --}} <a
+                                href='{{-- {{route("getForgot")}} --}}/'>{{-- {{trans("crudbooster.click_here")}} --}}Kembali ke Halaman Utama</a></p></div>
             </div>
         </form>
 

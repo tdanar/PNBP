@@ -1,4 +1,5 @@
 <!-- Left side column. contains the sidebar -->
+@if(CRUDBooster::myId() == 1)
 <aside class="main-sidebar">
 
     <!-- sidebar: style can be found in sidebar.less -->
@@ -31,7 +32,7 @@
                             <span>{{trans("crudbooster.text_dashboard")}}</span> </a></li>
                 @endif
 
-                @foreach(CRUDBooster::sidebarMenu() as $menu)
+                {{-- @foreach(CRUDBooster::sidebarMenu() as $menu)
                     <li data-id='{{$menu->id}}' class='{{(!empty($menu->children))?"treeview":""}} {{ (Request::is($menu->url_path."*"))?"active":""}}'>
                         <a href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}'
                            class='{{($menu->color)?"text-".$menu->color:""}}'>
@@ -51,7 +52,7 @@
                             </ul>
                         @endif
                     </li>
-                @endforeach
+                @endforeach --}}
 
 
 
@@ -169,3 +170,5 @@
     </section>
     <!-- /.sidebar -->
 </aside>
+@else
+@endif

@@ -513,7 +513,7 @@
 				$('#graphslink'+data).addClass('active');
             }
 
-            
+
 
 			function load_info(data){
 				$('a.tab').removeClass('active');
@@ -559,7 +559,7 @@
 					$('.social-fixed').removeClass('none');
 				});
 				$('.graph_thumb').owlCarousel({
-					items: 4,
+					items: 3,
 					animateOut: 'fadeOut',
 					loop: true,
 					navText:["",""],
@@ -613,5 +613,5 @@
 					loop: true,
 					margin: 20,
                 });
-                
+
 			});

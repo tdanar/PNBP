@@ -173,6 +173,7 @@
         </tr>
         </tfoot>
     </table>
+    <table id="detailTable"></table>
 
 </form><!--END FORM TABLE-->
 

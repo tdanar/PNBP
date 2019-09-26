@@ -522,6 +522,20 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
     );
 
     public static $prefixesPsr0 = array (
+        'X' => 
+        array (
+            'Xethron\\MigrationsGenerator' => 
+            array (
+                0 => __DIR__ . '/..' . '/xethron/migrations-generator/src',
+            ),
+        ),
+        'W' => 
+        array (
+            'Way\\Generators' => 
+            array (
+                0 => __DIR__ . '/..' . '/xethron/laravel-4-generators/src',
+            ),
+        ),
         'U' => 
         array (
             'UpdateHelper\\' => 
@@ -568,6 +582,16 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\AdminCmsUsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminCmsUsersController.php',
+        'App\\Http\\Controllers\\AdminLapAwasController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminLapAwasController.php',
+        'App\\Http\\Controllers\\AdminLapAwasRekomendController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminLapAwasRekomendController.php',
+        'App\\Http\\Controllers\\AdminLapAwasTemuanController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminLapAwasTemuanController.php',
+        'App\\Http\\Controllers\\AdminLapAwasTlanjutController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminLapAwasTlanjutController.php',
+        'App\\Http\\Controllers\\AdminRefJenisAwasController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminRefJenisAwasController.php',
+        'App\\Http\\Controllers\\AdminRefKodRekomendasiController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminRefKodRekomendasiController.php',
+        'App\\Http\\Controllers\\AdminRefKodTemuanController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminRefKodTemuanController.php',
+        'App\\Http\\Controllers\\AdminRefMatauangController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminRefMatauangController.php',
+        'App\\Http\\Controllers\\AdminRefTahunAwasController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminRefTahunAwasController.php',
+        'App\\Http\\Controllers\\AdminTRefKodSebabController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTRefKodSebabController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
@@ -5267,6 +5291,34 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'UpdateHelper\\NotUpdateInterfaceInstanceException' => __DIR__ . '/..' . '/kylekatarnls/update-helper/src/UpdateHelper/NotUpdateInterfaceInstanceException.php',
         'UpdateHelper\\UpdateHelper' => __DIR__ . '/..' . '/kylekatarnls/update-helper/src/UpdateHelper/UpdateHelper.php',
         'UpdateHelper\\UpdateHelperInterface' => __DIR__ . '/..' . '/kylekatarnls/update-helper/src/UpdateHelper/UpdateHelperInterface.php',
+        'Way\\Generators\\Commands\\ControllerGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/ControllerGeneratorCommand.php',
+        'Way\\Generators\\Commands\\GeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/GeneratorCommand.php',
+        'Way\\Generators\\Commands\\MigrationGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/MigrationGeneratorCommand.php',
+        'Way\\Generators\\Commands\\ModelGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/ModelGeneratorCommand.php',
+        'Way\\Generators\\Commands\\PivotGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/PivotGeneratorCommand.php',
+        'Way\\Generators\\Commands\\PublishTemplatesCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/PublishTemplatesCommand.php',
+        'Way\\Generators\\Commands\\ResourceGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/ResourceGeneratorCommand.php',
+        'Way\\Generators\\Commands\\ScaffoldGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/ScaffoldGeneratorCommand.php',
+        'Way\\Generators\\Commands\\SeederGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/SeederGeneratorCommand.php',
+        'Way\\Generators\\Commands\\ViewGeneratorCommand' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Commands/ViewGeneratorCommand.php',
+        'Way\\Generators\\Compilers\\Compiler' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Compilers/Compiler.php',
+        'Way\\Generators\\Compilers\\TemplateCompiler' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Compilers/TemplateCompiler.php',
+        'Way\\Generators\\Filesystem\\FileAlreadyExists' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Filesystem/FileAlreadyExists.php',
+        'Way\\Generators\\Filesystem\\FileNotFound' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Filesystem/FileNotFound.php',
+        'Way\\Generators\\Filesystem\\Filesystem' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Filesystem/Filesystem.php',
+        'Way\\Generators\\Generator' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Generator.php',
+        'Way\\Generators\\GeneratorsServiceProvider' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/GeneratorsServiceProvider.php',
+        'Way\\Generators\\InvalidMigrationName' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/InvalidMigrationName.php',
+        'Way\\Generators\\Parsers\\MigrationFieldsParser' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Parsers/MigrationFieldsParser.php',
+        'Way\\Generators\\Parsers\\MigrationNameParser' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Parsers/MigrationNameParser.php',
+        'Way\\Generators\\SchemaCreator' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/SchemaCreator.php',
+        'Way\\Generators\\Syntax\\AddToTable' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Syntax/AddToTable.php',
+        'Way\\Generators\\Syntax\\CreateTable' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Syntax/CreateTable.php',
+        'Way\\Generators\\Syntax\\DroppedTable' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Syntax/DroppedTable.php',
+        'Way\\Generators\\Syntax\\RemoveFromTable' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Syntax/RemoveFromTable.php',
+        'Way\\Generators\\Syntax\\Table' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/Syntax/Table.php',
+        'Way\\Generators\\Templates\\Data\\Controller' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/templates/Data/Controller.php',
+        'Way\\Generators\\Templates\\Data\\Migration' => __DIR__ . '/..' . '/xethron/laravel-4-generators/src/Way/Generators/templates/Data/Migration.php',
         'Webmozart\\Assert\\Assert' => __DIR__ . '/..' . '/webmozart/assert/src/Assert.php',
         'Whoops\\Exception\\ErrorException' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Exception/ErrorException.php',
         'Whoops\\Exception\\Formatter' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Exception/Formatter.php',
@@ -5287,6 +5339,17 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
         'XdgBaseDir\\Xdg' => __DIR__ . '/..' . '/dnoegel/php-xdg-base-dir/src/Xdg.php',
+        'Xethron\\MigrationsGenerator\\Generators\\FieldGenerator' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Generators/FieldGenerator.php',
+        'Xethron\\MigrationsGenerator\\Generators\\ForeignKeyGenerator' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Generators/ForeignKeyGenerator.php',
+        'Xethron\\MigrationsGenerator\\Generators\\IndexGenerator' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Generators/IndexGenerator.php',
+        'Xethron\\MigrationsGenerator\\Generators\\SchemaGenerator' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Generators/SchemaGenerator.php',
+        'Xethron\\MigrationsGenerator\\MigrateGenerateCommand' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/MigrateGenerateCommand.php',
+        'Xethron\\MigrationsGenerator\\MigrationsGeneratorServiceProvider' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/MigrationsGeneratorServiceProvider.php',
+        'Xethron\\MigrationsGenerator\\Syntax\\AddForeignKeysToTable' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/AddForeignKeysToTable.php',
+        'Xethron\\MigrationsGenerator\\Syntax\\AddToTable' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/AddToTable.php',
+        'Xethron\\MigrationsGenerator\\Syntax\\DroppedTable' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/DroppedTable.php',
+        'Xethron\\MigrationsGenerator\\Syntax\\RemoveForeignKeysFromTable' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/RemoveForeignKeysFromTable.php',
+        'Xethron\\MigrationsGenerator\\Syntax\\Table' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/Table.php',
         'Zend\\Diactoros\\AbstractSerializer' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/AbstractSerializer.php',
         'Zend\\Diactoros\\CallbackStream' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/CallbackStream.php',
         'Zend\\Diactoros\\Exception\\DeserializationException' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/Exception/DeserializationException.php',

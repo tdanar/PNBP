@@ -7,8 +7,8 @@
     {{-- <meta name='generator' content='CRUDBooster 5.4.6'/> --}}
     <meta name='robots' content='noindex,nofollow'/>
     <link rel="shortcut icon"
-          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):'media/favicon.ico' }}">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     <!-- Bootstrap 3.3.2 -->
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css") }}" rel="stylesheet" type="text/css"/>
     <!-- Font Awesome Icons -->
@@ -26,6 +26,18 @@
     @endif
 
     <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css").'?r='.time()}}'/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css">
+    <link rel="stylesheet" href="/css/home.css" type="text/css">
+    <link rel="stylesheet" href="/css/responsive.css" type="text/css">
+    <link rel="shortcut icon" href="/media/6120/favicon.ico" type="image/x-icon" />
+
+    <link href="/css/menu.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/css/mega_menu.min.css" type="text/css"/>
+
+    <link href="/css/mmenu_button.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/jquery.mmenu.all.css" type="text/css"/>
+
 
     <!-- load css -->
     <style type="text/css">
@@ -82,16 +94,23 @@
 
     @stack('head')
 </head>
-<body class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{($sidebar_mode)?:''}}">
-<div id='app' class="wrapper">
-
-    <!-- Header -->
+<body class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo (' layout-top-nav') /* echo ' '; echo config('crudbooster.ADMIN_LAYOUT') */; @endphp {{($sidebar_mode)?:''}}">
+<!-- Header -->
 @include('crudbooster::header')
+
+<div id='my-wrapper'>
+    <div id="scroll"></div>
+	<div id="preload" class="preload">
+			<div class="loader"></div>
+		</div>
+    <div class="mm-page"></div>
+
 
 <!-- Sidebar -->
 @include('crudbooster::sidebar')
 
 <!-- Content Wrapper. Contains page content -->
+<div class="container">
     <div class="content-wrapper">
 
         <section class="content-header">
@@ -159,8 +178,7 @@
                     <li class="active">{{$module->name}}</li>
                 </ol>
             @else
-                <h1>{{Session::get('appname')}}
-                    <small>Selamat Datang</small>
+                <h1>{{--Session::get('appname')--}}
                 </h1>
             @endif
         </section>
@@ -191,11 +209,12 @@
         <!-- Your Page Content Here -->
             @yield('content')
         </section><!-- /.content -->
-    </div><!-- /.content-wrapper -->
+    </div>
+</div>
+    <!-- /.content-wrapper -->
 
     <!-- Footer -->
     @include('crudbooster::footer')
-
 </div><!-- ./wrapper -->
 
 

@@ -25,18 +25,24 @@
 								<div class="clear"></div>
 							</div>
 						</div>
-					</div>
-						<nav id="menu-1" class="mega-menu" data-color="#f00">
-							<section class="menu-list-items">
-								<div class="container">
-									<ul class="menu-logo">
-										<li>
-											<a href="">
-												<img src="/media/6277/logo-atas.png" onerror="this.onerror=null; this.src='/media/6277/logo-atas.png?widht=278'">
-											</a>
-
-										</li>
-									</ul>
+			    </div>
+			<nav id="menu-1" class="mega-menu" data-color="#f00">
+				<section class="menu-list-items">
+						<div class="container">
+							<ul class="menu-logo">
+								<li>
+									<a href="">
+										<img src="/media/6277/logo-atas.png" onerror="this.onerror=null; this.src='/media/6277/logo-atas.png?widht=278'">
+									</a>
+                                    <div id="ikeh" class="container-button icon" >
+                                            <div class="icon">
+                                                <div class="bar1"></div>
+                                                <div class="bar2"></div>
+                                                <div class="bar3"></div>
+                                            </div>
+                                    </div>
+								</li>
+							</ul>
 										<script>
 											function click_menu(tap_id,def){
 												$('.col'+def).html('<ul><li><a onclick="javascript:$(`.col'+def+'`).html(``);$(`.'+def+'`).show()"><i class="fa-ico-left"></i> Kembali</a></li></ul>'+$('.'+tap_id).html());
@@ -70,23 +76,85 @@
 											<a href="\">Beranda<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\ma">e-Reporting<div class="mobileTriggerButton"></div></a>
+											<a href="\ma\lap_awas\add">eReporting<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\">Informasi PNBP<div class="mobileTriggerButton"></div></a>
+											<a href="https://ssdpnbp.kemenkeu.go.id/dashboard">Informasi PNBP<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\">Helpdesk<div class="mobileTriggerButton"></div></a>
+											<a href="\helpdesk">Helpdesk<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\">FAQ<div class="mobileTriggerButton"></div></a>
+											<a href="\faq">FAQ<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\">Tautan<div class="mobileTriggerButton"></div></a>
+                                            <a href="javascript:void(0)">Tautan<div class="mobileTriggerButton"></div></a>
+                                            <div class="drop-down effect-fade " style="transition: all 400ms ease 0s;">
+                                                <div class="grid-row">
+                                                  <div class="grid-col-12">
+                                                     <div class="cls_border">
+                                                         <ul>
+                                                            <li><a href="http://sidatik.kkp.go.id/">Sidatik (Kementerian Kelautan dan Perikanan)</a>
+                                                            </li>
+                                                            <li><a href="http://www.perizinan.kkp.go.id/">SIPEPI (Kementerian Kelautan dan Perikanan)</a>
+                                                            </li>
+                                                            <li><a href="http://calculator2050.esdm.go.id/">Kalkulator Energi (Kementerian ESDM)</a>
+                                                            </li>
+                                                            <li><a href="https://epnbpminerba.esdm.go.id/">E-PNBP Minerba (Kementerian ESDM)</a>
+                                                            </li>
+                                                            <li><a href="https://moms.esdm.go.id/">MOMS (Kementerian ESDM)</a>
+                                                            </li>
+                                                            <li><a href="http://silk.dephut.go.id/">SILK (Kementerian Lingkungan Hidup dan Kehutanan)</a>
+                                                            </li>
+                                                            <li><a href="http://ppkh.menlhk.go.id/">SIPPKH (Kementerian Lingkungan Hidup dan Kehutanan)</a>
+                                                            </li>
+                                                         </ul>
+                                                     </div>
+                                                  </div>
+                                                </div>
+                                            </div>
 										</li>
 									</ul>
 									<div class="mm-page" style="display:none;">
 										<nav id="my-menu" >
+                                            <ul>
+                                                <li>
+                                                    <a href="\">Beranda</a>
+                                                </li>
+                                                <li>
+                                                    <a href="\ma">eReporting</a>
+                                                </li>
+                                                <li>
+                                                    <a href="https://ssdpnbp.kemenkeu.go.id">Informasi PNBP</a>
+                                                </li>
+                                                <li>
+                                                    <a href="\helpdesk">Helpdesk</a>
+                                                </li>
+                                                <li>
+                                                    <a href="\faq">FAQ</a>
+                                                </li>
+                                                <li>
+                                                    <span>
+                                                        <a href="javascript:void(0)">Tautan</a>
+                                                    </span>
+                                                        <ul>
+                                                                <li><a href="http://sidatik.kkp.go.id/">Sidatik (Kementerian Kelautan dan Perikanan)</a>
+                                                                </li>
+                                                                <li><a href="http://www.perizinan.kkp.go.id/">SIPEPI (Kementerian Kelautan dan Perikanan)</a>
+                                                                </li>
+                                                                <li><a href="http://calculator2050.esdm.go.id/">Kalkulator Energi (Kementerian ESDM)</a>
+                                                                </li>
+                                                                <li><a href="https://epnbpminerba.esdm.go.id/">E-PNBP Minerba (Kementerian ESDM)</a>
+                                                                </li>
+                                                                <li><a href="https://moms.esdm.go.id/">MOMS (Kementerian ESDM)</a>
+                                                                </li>
+                                                                <li><a href="http://silk.dephut.go.id/">SILK (Kementerian Lingkungan Hidup dan Kehutanan)</a>
+                                                                </li>
+                                                                <li><a href="http://ppkh.menlhk.go.id/">SIPPKH (Kementerian Lingkungan Hidup dan Kehutanan)</a>
+                                                                </li>
+                                                        </ul>
+                                                </li>
+                                            </ul>
 										</nav>
 									</div>
 								</div>

@@ -19,7 +19,7 @@
 
 						<div class="item">
 
-							<img src='/images/Foto Beranda-1.jpg' />
+							<img src='/images/beranda_1.jpeg' />
 							<div class="search" style="bottom:25%">
 							<div class="text-search">
 								{{-- <a href="" class="linkheader">
@@ -32,7 +32,7 @@
 						</div>
 						<div class="item">
 
-							<img src='/images/Foto Beranda-2.jpg' />
+							<img src='/images/beranda_2.jpeg' />
 							<div class="search" style="bottom:25%">
 							<div class="text-search">
 						</div>
@@ -40,7 +40,7 @@
 						</div>
 						<div class="item">
 
-							<img src='/images/Foto Beranda-3.jpg' />
+							<img src='/images/beranda_3.jpeg' />
 							<div class="search" style="bottom:25%">
 							<div class="text-search">
 
@@ -49,22 +49,22 @@
                         </div>
                         <div class="item">
 
-                                <img src='/images/Foto Beranda-4.jpg' />
+                                <img src='/images/beranda_4.jpeg' />
                                 <div class="search" style="bottom:25%">
                                 <div class="text-search">
-    
+
                             </div>
                             </div>
                             </div>
                             <div class="item">
 
-                                    <img src='/images/Foto Beranda-5.jpg' />
+                                    <img src='/images/beranda_5.jpeg' />
                                     <div class="search" style="bottom:25%">
                                     <div class="text-search">
-        
+
                                 </div>
                                 </div>
-                                </div>    
+                                </div>
 
 					</div>
 					<div class="bg_slider"></div>
@@ -72,7 +72,7 @@
 
 		<div class="clear"></div>
         <div class="bgs122">
-			<div class="container">
+
 
 					<div class="bgs122-title"></div>
 					<span></span>
@@ -84,7 +84,7 @@
                    </marquee>
 
 				</div>
-			</div>
+
 		</div>
 		<div class="container">
 			<form class='search-mobile' action="/hasil-pencarian/" method="GET">
@@ -133,29 +133,30 @@
 								<h1 class="heading">DATA PNBP</h1>
                                     <div id="thumb_graph">
                                         <div class="graph_thumb owl-carousel owl-theme">
-                                                <div class="th_3">
 
-                                                    </div>
                                             <div class="item active th_1">
                                                 <a onclick="javascript:load_graph('1','1');" href="javascript:void(0);">
-                                                    <img src="/media/5793/apbn.jpg">
+                                                    <img src="/media/5793/36cbd014-2a4b-46eb-ae2c-13ccefc0b651.jpg" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
                                                 </a>
                                             </div>
                                             <div class="item active th_2">
                                                 <a onclick="javascript:load_graph('2','2');" href="javascript:void(0);">
-                                                    <img src="/media/5794/infrastruktur.jpg">
+                                                    <img src="/media/5794/8b1fb82d-606d-41d0-ac4e-3dfd46a44add.jpg" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
                                                 </a>
                                             </div>
 
-                                            <div class="th_4">
-
+                                            <div class="item active th_3">
+                                                <a onclick="javascript:load_graph('3','3');" href="javascript:void(0);">
+                                                    <img src="/media/5795/60b64532-dee9-424c-a391-1c864417c244.jpg" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
+                                                </a>
                                             </div>
+
                                         </div>
                                     </div>
 
-                                    <h2 class="heading gra active" id="graphshead1">Tren PNBP per Jenis PNBP <p style="font-size:60%">Tahun 2014 s.d. 2018</p></h2>
-                                    <h2 class="heading gra" id="graphshead2">Tren Perbandingan PNBP dengan Penerimaan Negara <p style="font-size:60%">Tahun 2014 s.d. 2018</p></h2>
-                                    <h2 class="heading gra" id="graphshead3"> </h2>
+                                    <h2 class="heading gra active" id="graphshead1">Tren Realisasi PNBP per Jenis PNBP <p style="font-size:80%">Tahun 2014 s.d. 2018</p><p>Sumber: LKPP Audited </p></h2>
+                                    <h2 class="heading gra" id="graphshead2">Tren Perbandingan Realisasi PNBP dengan Penerimaan Negara <p style="font-size:80%">Tahun 2014 s.d. 2018</p><p>Sumber: LKPP Audited </p></h2>
+                                    <h2 class="heading gra" id="graphshead3">Realisasi PNBP Terbesar pada 10 Kementerian / Lembaga<p style="font-size:80%">Tahun 2018</p><p>Sumber: Aplikasi SIMPONI </p> </h2>
                                     <h2 class="heading gra" id="graphshead4"> </h2>
                                     <h2 class="heading gra" id="graphshead5"> </h2>
                                     <h2 class="heading gra" id="graphshead6"> </h2>
@@ -228,11 +229,13 @@
 							chart.categoryField = "Tahun PNBP";
 							chart.color = "#222222";
 							chart.fontSize = 14;
-							chart.startDuration = 1;
+							//chart.startDuration = 1;
 							chart.plotAreaFillAlphas = 0.2;
 							chart.angle = 30;
 
-								chart.depth3D = 0;
+                                chart.depth3D = 0;
+                                chart.decimalSeparator = ",";
+					            chart.thousandsSeparator = ".";
 
 
 
@@ -263,7 +266,8 @@
 							graph1.lineAlpha = 0;
 							graph1.lineColor = "#FFC300";
 							graph1.fillAlphas = 1;
-							graph1.balloonText = "Penerimaan SDA [[category]] : [[value]]";
+                            graph1.balloonText = "Penerimaan SDA [[category]] : [[value]]";
+
                             chart.addGraph(graph1);
 
                             var graph3 = new AmCharts.AmGraph();
@@ -318,7 +322,7 @@
                             graph0.bulletBorderColor = "#fcd202";
                             graph0.bulletBorderAlpha = 1;
                             graph0.bulletColor = "#ffffff";
-                            graph0.dashLengthField = "dashLengthLine";
+                            //graph0.dashLengthField = "dashLengthLine";
                             chart.addGraph(graph0);
 
                             var legend = new AmCharts.AmLegend();
@@ -331,23 +335,28 @@
 								{
 								"Tahun": "2014",
                                 "Realisasi PNBP": 398.6,
-                                "Realisasi Pendapatan Negara": 1550.5 },
+                                "Realisasi Penerimaan Negara": 1550.5,
+                                "Persentase": ((398.6/1550.5)*100).toFixed(2) },
 								{
 								"Tahun": "2015",
 								"Realisasi PNBP": 255.6,
-                                "Realisasi Pendapatan Negara": 1508 },
+                                "Realisasi Penerimaan Negara": 1508,
+                                "Persentase": ((255.6/1508)*100).toFixed(2) },
 								{
 								"Tahun": "2016",
 								"Realisasi PNBP": 261.9,
-                                "Realisasi Pendapatan Negara": 1555.9 },
+                                "Realisasi Penerimaan Negara": 1555.9,
+                                "Persentase": ((261.9/1555.9)*100).toFixed(2) },
 								{
 								"Tahun": "2017",
 								"Realisasi PNBP": 308.4,
-                                "Realisasi Pendapatan Negara": 1655.8 },
+                                "Realisasi Penerimaan Negara": 1655.8,
+                                "Persentase": ((308.4/1655.8)*100).toFixed(2) },
 								{
 								"Tahun": "2018",
 								"Realisasi PNBP": 409.3,
-                                "Realisasi Pendapatan Negara": 1943.7 },
+                                "Realisasi Penerimaan Negara": 1943.7,
+                                "Persentase": ((409.3/1943.7)*100).toFixed(2) },
 
 						];
 						AmCharts.ready(function () {
@@ -362,6 +371,9 @@
 							chart.angle = 25;
 
 								chart.depth3D = 0;
+                                chart.decimalSeparator = ",";
+                                chart.thousandsSeparator = ".";
+                                chart.percentPrecision = 2;
 
 
 
@@ -378,7 +390,8 @@
 							graph1.lineColor = "#FF0017";
 							graph1.valueField = "Realisasi PNBP";
 							graph1.lineThickness = 10;
-
+                            graph1.labelText = "[[Persentase]]%";
+                            graph1.fontSize = 30
 
 							graph1.customBullet = "/images/point_hijau.png";
                             graph1.bulletSize = 50;
@@ -387,11 +400,10 @@
 
 							var graph2 = new AmCharts.AmGraph();
 							graph2.type = "line";
-							graph2.title = "Realisasi Pendapatan Negara";
+							graph2.title = "Realisasi Penerimaan Negara";
 							graph2.lineColor = "#194C85";
-							graph2.valueField = "Realisasi Pendapatan Negara";
+							graph2.valueField = "Realisasi Penerimaan Negara";
 							graph2.lineThickness = 10;
-
 
                             graph2.customBullet = "/images/point_merah.png";
                             graph2.bulletSize = 50;
@@ -423,9 +435,142 @@
 						});
 								</script>
 
+                        <!-- amCharts javascript code -->
+                        <script type="text/javascript">
+                            AmCharts.makeChart("graphs3",
+                                {
+                                    "type": "serial",
+                                    "categoryField": "category",
+                                    "columnSpacing3D": 5,
+                                    "angle": 30,
+                                    "depth3D": 30,
+                                    "colors": [
+                                        "#e3ed1c","#1ced5b"
+                                    ],
+                                    "startDuration": 1,
+                                    "startEffect": "bounce",
+                                    "decimalSeparator": ",",
+                                    "fontFamily": "Calibri",
+                                    "fontSize": 12,
+                                    "handDrawScatter": 4,
+                                    "handDrawThickness": 4,
+                                    "categoryAxis": {
+                                        "autoRotateAngle": 25.2,
+                                        "autoRotateCount": 1,
+                                        "gridPosition": "start"
+                                    },
+                                    "trendLines": [],
+                                    "graphs": [
+                                        {
+                                            "balloonText": "[[title]] [[category]] : Rp. [[value]] Triliun ",
+                                            "fillAlphas": 1,
+                                            "id": "AmGraph-1",
+                                            "title": "Target",
+                                            "type": "column",
+                                            "valueField": "target"
+                                        },
+                                        {
+                                            "balloonText": "[[title]] [[category]] : Rp. [[value]] Triliun ",
+                                            "bullet": "round",
+                                            "bulletColor": "#FFFFFF",
+                                            "bulletHitAreaSize": 0,
+                                            "bulletOffset": 20,
+                                            "bulletSize": 30,
+                                            "customBullet": "",
+                                            "customBulletField": "bullet",
+                                            "fillAlphas": 1,
+                                            "id": "AmGraph-2",
+                                            "title": "Realisasi",
+                                            "type": "column",
+                                            "valueField": "realization"
+                                        }
+                                    ],
+                                    "guides": [],
+                                    "valueAxes": [
+                                        {
+                                            "id": "ValueAxis-1",
+                                            "stackType": "3d",
+                                            "title": "(dalam Triliun Rupiah)"
+                                        }
+                                    ],
+                                    "allLabels": [],
+                                    "balloon": {},
+                                    "legend": {
+                                        "enabled": true,
+                                        "align": "right",
+                                        "combineLegend": true,
+                                        "position": "absolute",
+                                        "top": 10,
+                                        "useGraphSettings": true
+                                    },
+                                    "titles": [],
+                                    "dataProvider": [
+                                        {
+                                            "category": "Kementerian ESDM",
+                                            "target": "33.35",
+                                            "realization": "65.22",
+                                            "bullet": "https://www.esdm.go.id/assets/imagecache/bodyView/xprofil-arti-logo-cszkz2w.png.pagespeed.ic.pDXwEJXIcZ.png"
+                                        },
+                                        {
+                                            "category": "Kementerian Kominfo",
+                                            "target": "18.67",
+                                            "realization": "21.39",
+                                            "bullet": "https://ppidkemkominfo.files.wordpress.com/2011/03/logo-kominfo-copy.jpg"
+                                        },
+                                        {
+                                            "category": "Kementerian Keuangan",
+                                            "target": "14.43",
+                                            "realization": "21.15",
+                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/7/73/Logo_kementerian_keuangan_republik_indonesia.png"
+                                        },
+                                        {
+                                            "category": "Kementerian Ristek & PT",
+                                            "target": "9.73",
+                                            "realization": "12.82",
+                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Logo_of_the_Ministry_of_Research%2C_Technology%2C_and_Higher_Education_of_the_Republic_of_Indonesia.png"
+                                        },
+                                        {
+                                            "category": "Kementerian Kesehatan",
+                                            "target": "11.72",
+                                            "realization": "12.04",
+                                            "bullet": "https://e-renggar.kemkes.go.id/images/img/logodepan.png"
+                                        },
+                                        {
+                                            "category": "Kepolisian",
+                                            "target": "10.9",
+                                            "realization": "11.51",
+                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Lambang_Polri.png"
+                                        },
+                                        {
+                                            "category": "Kementerian Perhubungan",
+                                            "target": "9",
+                                            "realization": "8.21",
+                                            "bullet": "http://1.bp.blogspot.com/-5A2Yam-5lbI/UOp_hR3aTsI/AAAAAAAAKlc/iFu32z6AH8Q/s1600/LOGO+KEMENTERIAN+PERHUBUNGAN.png"
+                                        },
+                                        {
+                                            "category": "Kementerian Pertahanan",
+                                            "target": "3.99",
+                                            "realization": "6.75",
+                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/6/60/Logo_of_the_Ministry_of_Defence_of_the_Republic_of_Indonesia.svg"
+                                        },
+                                        {
+                                            "category": "Kementerian LHK",
+                                            "target": "4.41",
+                                            "realization": "5.51",
+                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/6/63/Lambang_Kementerian_Lingkungan_Hidup_dan_Kehutanan.png"
+                                        },
+                                        {
+                                            "category": "Kementerian Hukum & HAM",
+                                            "target": "3.25",
+                                            "realization": "3.56",
+                                            "bullet": "https://www.kemenkumham.go.id/images/jux_portfolio_pro/logo_fix.png"
+                                        }
+                                    ]
+                                }
+                            );
+                        </script>
 
 
-                            <p>Sumber: LKPP Audited </p>
 				</div>
 
 			</div>
@@ -433,7 +578,7 @@
 						<div class="bgs123">
 							<div class="container">
 
-									<center class="bgs123-data"><b>Hasil Pengawasan APIP K/L TA 2018</b></center>
+									<center class="bgs123-data"><b>Hasil Pengawasan PNBP oleh APIP K/L TA 2018</b></center>
 							</div>
                         </div>
                         <!-- amCharts javascript sources -->
@@ -443,11 +588,11 @@
                                 AmCharts.makeChart("piegraphs3",
                                     {
                                         "type": "pie",
-                                        "adjustPrecision": false,
-                                        "angle": 60,
+                                        "adjustPrecision": true,
+                                        "angle": 20,
                                         "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
-                                        "depth3D": 60,
-                                        "labelRadius": 35,
+                                        "depth3D": 30,
+                                        "labelRadius": 20,
                                         "labelText": "[[percents]]%<br>[[title]]",
                                         "colors": [
                                             "#88E0B0",
@@ -455,6 +600,8 @@
                                             "#FFCF00",
                                             "#5FABBB"
                                         ],
+                                        "marginBottom": 0,
+					                    "marginTop": 0,
                                         "titleField": "status",
                                         "valueField": "value",
                                         "decimalSeparator": ",",
@@ -477,16 +624,16 @@
                                             {
                                                 "id": "judul",
                                                 "size": 25,
-                                                "text": "Status Tindak Lanjut Temuan Pengawasan PNBP"
+                                                "text": "Status Tindak Lanjut Temuan Pengawasan"
                                             }
                                         ],
                                         "dataProvider": [
                                             {
-                                                "status": "Tuntas",
+                                                "status": "Sesuai",
                                                 "value": "0.5"
                                             },
                                             {
-                                                "status": "Belum Tuntas",
+                                                "status": "Belum Sesuai",
                                                 "value": "0.24"
                                             },
                                             {
@@ -494,7 +641,7 @@
                                                 "value": "0.16"
                                             },
                                             {
-                                                "status": "Tidak Dapat Ditindaklanjuti",
+                                                "status": "Tidak Ditindaklanjuti",
                                                 "value": "0.1"
                                             }
                                         ]
@@ -507,11 +654,11 @@
                             AmCharts.makeChart("piegraphs4",
                                 {
                                     "type": "pie",
-                                    "adjustPrecision": false,
-                                    "angle": 60,
+                                    "adjustPrecision": true,
+                                    "angle": 20,
                                     "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
-                                    "depth3D": 60,
-                                    "labelRadius": 35,
+                                    "depth3D": 30,
+                                    "labelRadius": 20,
                                     "labelText": "[[percents]]%<br>[[title]]",
                                     "colors": [
                                         "#6ABBFC",
@@ -519,6 +666,8 @@
                                         "#2DFF00",
                                         "#8D95F8"
                                     ],
+                                    "marginBottom": 0,
+					                "marginTop": 0,
                                     "titleField": "category",
                                     "valueField": "column-1",
                                     "decimalSeparator": ",",
@@ -541,7 +690,7 @@
                                         {
                                             "id": "judul",
                                             "size": 25,
-                                            "text": "Temuan Pengawasan PNBP"
+                                            "text": "Temuan Pengawasan"
                                         }
                                     ],
                                     "dataProvider": [
@@ -566,10 +715,10 @@
                             );
                         </script>
                         <div class="cls-lintas" style="background:white;">
-                            
-                                        <div id="piegraphs3" class="col-md-6"></div>
+
                                         <div id="piegraphs4" class="col-md-6"></div>
-                                    
+                                        <div id="piegraphs3" class="col-md-6"></div>
+
                         </div>
                         <div class="clear">&nbsp;</div>
 						<div class="bgs123">
@@ -591,7 +740,7 @@
                                     <div class="news" style="background:url('/media/infografis/preview/Infografis Ruang Lingkup Pengawasan PNBP.jpg')center center no-repeat;background-size:100%;">
                                         <div class="mask">
                                             <a href=""></a>
-            
+
                                             <a href="/media/infografis/Infografis Ruang Lingkup Pengawasan PNBP.pdf" target="_blank" class="btn-merah-news">Unduh</a>
                                         </div>
                                     </div>
@@ -600,7 +749,7 @@
                                 <div class="news" style="background:url('/media/infografis/preview/Infografis Realisasi Semester I 2019.jpg')center center no-repeat;background-size:100%;">
                                     <div class="mask">
                                         <a href=""></a>
-        
+
                                     <a href="/media/infografis/Infografis Realisasi Semester I 2019.pdf" target="_blank" class="btn-merah-news">Unduh</a>
                                     </div>
                                 </div>
@@ -609,7 +758,7 @@
                                 <div class="news" style="background:url('/media/infografis/preview/Infografis Pengelolaan BMN.jpg')center center no-repeat;background-size:100%;">
                                     <div class="mask">
                                         <a href=""></a>
-        
+
                                     <a href="/media/infografis/Infografis Pengelolaan BMN.jpg" target="_blank" class="btn-merah-news">Unduh</a>
                                     </div>
                                 </div>
@@ -618,17 +767,17 @@
                                 <div class="news" style="background:url('/media/infografis/preview/Infografis PNBP Kominfo.jpg')center center no-repeat;background-size:100%;">
                                     <div class="mask">
                                         <a href=""></a>
-        
+
                                     <a href="/media/infografis/Infografis PNBP Kominfo.jpg" target="_blank" class="btn-merah-news">Unduh</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                 <div class="cls-peraturan">
                         <div class="container">
                             <div class="text-center">
-                                <h2 class="heading color-white">Peraturan PNBP</h2> 
+                                <h2 class="heading color-white">Peraturan PNBP</h2>
                                 <style>
                                         .peraturantext {
                                             background:transparent !important;
@@ -637,8 +786,8 @@
                                         .peraturantext:hover {
                                             color:#fff !important;
                                         }
-                                        
-                                        
+
+
                                     </style>
                                 <div class="own-peraturan owl-carousel owl-theme">
 
@@ -648,13 +797,13 @@
 
                                     <div class="item">
                                         <span><dd class="ico-1"></dd></span>
-                                        <font>Peraturan Terkait PNBP dari Berbagai Kementerian/Lembaga</font>
-                                        <a href="">Masuk</a>
+                                        {{-- <font>Peraturan Terkait PNBP dari Berbagai Kementerian/Lembaga</font> --}}
+                                        <a href="\peraturan">Masuk</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="infografis owl-carousel owl-theme">
                             <div class="item">
                                 <div class="newsv">
@@ -680,7 +829,7 @@
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
                                                 </p>
                                             </video>
-        
+
                                             <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
                                         </div>
                             </div>
@@ -694,7 +843,7 @@
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
                                                 </p>
                                             </video>
-        
+
                                             <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
                                         </div>
                             </div>
@@ -708,7 +857,7 @@
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
                                                 </p>
                                             </video>
-        
+
                                             <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
                                         </div>
                             </div>
@@ -722,7 +871,7 @@
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
                                                 </p>
                                             </video>
-        
+
                                             <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
                                     </div>
                             </div>
@@ -730,6 +879,23 @@
                     </section>
         </div id="my-footer">
     <div>
-
+            <section class="hidden-desk	">
+                    <div class="container">
+                        <div class="menu-home-mobile">
+                            {{-- <a href="https://www.kemenkeu.go.id/dataapbn"><div class="ico_1"><span>APBN</span></div></a>
+                            <a href="/publikasi/berita/"><div class="ico_2"><span>Berita Terbaru</span></div></a>
+                            <a href="http://simulasiapbn.kemenkeu.go.id"><div class="ico_sapbn"><span>Simulasi APBN</span></div>
+                            <a href="http://visual.kemenkeu.go.id"><div class="ico_vk"><span>Visual Kemenkeu</span></div> --}}
+                            <!--<a href="#"><div class="ico_3"><span>Informasi Terbaru</span></div></a>-->
+                            <!--<a href="http://www.jdih.kemenkeu.go.id"><div class="ico_4"><span>Peraturan Terbaru</span></div></a>-->
+                            <!--<a href="http://spanint.kemenkeu.go.id/spanint/"><div class="ico_5"><span>Online Monitoring Span</span></div></a>-->
+                            {{-- <a href="/publikasi/e-magazine/"><div class="ico_6"><span>E-Magazine</span></div></a>
+                            <a href="/layanan/daftar-layanan/"><div class="ico_7"><span>Layanan</span></div></a>
+                            <a href="/publikasi/siaran-pers"><div class="ico_8"><span>Siaran Pers</span></div></a>
+                            <a href="http://www.fiskal.kemenkeu.go.id/dw-kurs-db.asp"><div class="ico_9"><span>Kurs Pajak</span></div></a> --}}
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </section>
 
 @endsection

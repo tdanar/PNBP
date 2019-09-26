@@ -59,7 +59,7 @@ class AdminController extends CBController
     {
 
         $validator = Validator::make(Request::all(), [
-            'email' => 'required|email|exists:'.config('crudbooster.USER_TABLE'),
+            'username' => 'required|alpha_dash|exists:'.config('crudbooster.USER_TABLE'),
             'password' => 'required',
         ]);
 
@@ -69,9 +69,9 @@ class AdminController extends CBController
             return redirect()->back()->with(['message' => implode(', ', $message), 'message_type' => 'danger']);
         }
 
-        $email = Request::input("email");
+        $username = Request::input("username");
         $password = Request::input("password");
-        $users = DB::table(config('crudbooster.USER_TABLE'))->where("email", $email)->first();
+        $users = DB::table(config('crudbooster.USER_TABLE'))->where("username", $username)->first();
 
         if (\Hash::check($password, $users->password)) {
             $priv = DB::table("cms_privileges")->where("id", $users->id_cms_privileges)->first();
@@ -95,7 +95,7 @@ class AdminController extends CBController
             $cb_hook_session = new \App\Http\Controllers\CBHook;
             $cb_hook_session->afterLogin();
 
-            return redirect(CRUDBooster::adminPath());
+            return redirect(/* CRUDBooster::adminPath() */)->route('home');
         } else {
             return redirect()->route('getLogin')->with('message', trans('crudbooster.alert_password_wrong'));
         }
@@ -113,7 +113,7 @@ class AdminController extends CBController
     public function postForgot()
     {
         $validator = Validator::make(Request::all(), [
-            'email' => 'required|email|exists:'.config('crudbooster.USER_TABLE'),
+            'username' => 'required|username|exists:'.config('crudbooster.USER_TABLE'),
         ]);
 
         if ($validator->fails()) {
@@ -125,7 +125,7 @@ class AdminController extends CBController
         $rand_string = str_random(5);
         $password = \Hash::make($rand_string);
 
-        DB::table(config('crudbooster.USER_TABLE'))->where('email', Request::input('email'))->update(['password' => $password]);
+        DB::table(config('crudbooster.USER_TABLE'))->where('username', Request::input('username'))->update(['password' => $password]);
 
         $appname = CRUDBooster::getSetting('appname');
         $user = CRUDBooster::first(config('crudbooster.USER_TABLE'), ['email' => g('email')]);

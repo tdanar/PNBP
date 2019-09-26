@@ -27,7 +27,8 @@
 
     @if(g('return_url'))
         <p><a href='{{g("return_url")}}'><i class='fa fa-chevron-circle-{{ trans('crudbooster.left') }}'></i>
-                &nbsp; {{trans('crudbooster.form_back_to_list',['module'=>urldecode(g('label'))])}}</a></p>
+                &nbsp; Kembali</a></p>
+{{--                 {{trans('crudbooster.form_back_to_list',['module'=>urldecode(g('label'))])}} --}}
     @endif
 
     @if($parent_table)

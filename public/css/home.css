@@ -181,7 +181,7 @@ color: 	#DF253A !important;
 .bgs122{position:relative;padding:10px;background:#FFCB05;font-size:14px; font-family: nerislight !important; font-size:17px;}
 .bgs122-title{z-index: 2;font-weight: bold;background: #FFCB05;font-size: 17px;padding: 4px 14px 5px 0px;position: absolute;left: 15px;top: 0px;}
 .bgs122-title span{float:right;background:url('../images/icon/circle-right.svg')center center no-repeat;background-size:100% auto;margin-top:3px;margin-left:5px;height:20px;width:20px;}
-.bgs123{position:relative;padding:10px;background:#7F7F7F;font-size:14px; font-family: nerislight !important; font-size:17px;}
+.bgs123{position:relative;padding:10px;background:#02275c;font-size:14px; font-family: nerislight !important; font-size:17px;}
 .bgs123-data{color: #ffffff;padding-top:4px; font-size:30px;}
 .news-data .mask p{
 	font-size:12px;
@@ -226,7 +226,7 @@ color: 	#DF253A !important;
 	padding:15px 20px 0px 20px;
 	right:0;
 	left:0;
-	opacity:0;
+	opacity:1;
 	transition: all 0.9s ease-out;
 	-webkit-transition: opacity 1s;
 	-moz-transition: opacity 1s;
@@ -639,8 +639,9 @@ h3.heading{
 }
 .cls-peraturan{
 	color:#fff;
-	min-height:100px;
-	background: #4c4c4c;
+    min-height:100px;
+    background: #02275c;
+	/* background: #4c4c4c; */
 	padding:20px 0 50px 0;
 }
 .cls-peraturan .own-peraturan .item:hover a{
