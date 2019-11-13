@@ -17,7 +17,7 @@
                                         {{ Session::get('message') }} | <a href="\ma\login">LOGIN</a>
                                     </span>
 									@elseif (!empty($id))
-                                Selamat datang, <a href="\ma\users\profile">{{$nama}} <img src="{{$foto}}" class="user-image" alt="User Image"></a> | <a href="\ma">Member Area</a> | <a href="\ma\logout">LOGOUT</a>
+                                Selamat datang, {{CRUDBooster::myName()}} dari {{CRUDBooster::myUnit()}} <img src="{{CRUDBooster::myPhoto()}}" class="user-image" alt="User Image"> | <a href="\ma\users\profile">Member Area</a> | <a href="\ma\logout">LOGOUT</a>
 									@else
 									<a href="\ma\login">LOGIN</a>
                                     @endif
@@ -70,16 +70,85 @@
 												});
 
 											});
-										</script>
-									<ul class="menu-links" style="display: none; max-height: 400px; overflow: auto;">
-										<li class="hoverTrigger">
+                                        </script>
+                                        @if(!empty(CRUDBooster::myId()))
+                                    <ul class="menu-links" style="display: none; max-height: 400px; overflow: auto;">
+
+                                        @foreach(CRUDBooster::sidebarMenu() as $menu)
+                                            <li class='hoverTrigger {{ (Request::is($menu->url_path."*"))?"active":""}}'>
+                                                @if(!empty($menu->children))
+                                                <a href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":/* $menu->url */"javascript:void(0)" }}'>
+                                                        {{$menu->name}}<div class="mobileTriggerButton"></div>
+                                                </a>
+                                                <div class='drop-down effect-fade' style="transition: all 400ms ease 0s;">
+                                                        <div class="grid-row">
+                                                                <div class="grid-col-12">
+                                                                <div class="cls_border">
+                                                                        <ul>
+                                                                            @foreach($menu->children as $child)
+                                                                                <li data-id='{{$child->id}}' class='{{(Request::is($child->url_path .= !ends_with(Request::decodedPath(), $child->url_path) ? "/*" : ""))?"active":""}}'>
+                                                                                    <a href='{{ ($child->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$child->url}}'>
+                                                                                        {{$child->name}}
+                                                                                    </a>
+                                                                                </li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                @else
+                                                <a href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}'>
+                                                    {{$menu->name}}
+                                                    <div class="mobileTriggerButton"></div>
+                                                </a>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    <div class="mm-page" style="display:none;">
+                                            <nav id="my-menu" >
+                                                <ul>
+                                                        @foreach(CRUDBooster::sidebarMenu() as $menu)
+                                                        <li data-id='{{$menu->id}}' class='{{ (Request::is($menu->url_path."*"))?"active":""}}'>
+                                                            @if(!empty($menu->children))
+                                                            <span>
+                                                            <a href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":/* $menu->url */"javascript:void(0)" }}'>
+                                                            {{$menu->name}}</a>
+                                                                </span>
+                                                                        <ul {{-- class="dropdown-menu" role="menu" --}}>
+                                                                            @foreach($menu->children as $child)
+                                                                                <li data-id='{{$child->id}}' class='{{(Request::is($child->url_path .= !ends_with(Request::decodedPath(), $child->url_path) ? "/*" : ""))?"active":""}}'>
+                                                                                    <a href='{{ ($child->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$child->url}}'>
+                                                                                        {{$child->name}}
+                                                                                    </a>
+                                                                                </li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                            @else
+                                                            <a href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}'
+                                                                >
+                                                                {{$menu->name}}
+                                                            </a>
+                                                            @endif
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </nav>
+                                    </div>
+                                    @endif
+
+                                    @if(empty(CRUDBooster::myId()))
+                                    <ul class="menu-links" style="display: none; max-height: 400px; overflow: auto;">
+                                        <li class="hoverTrigger">
 											<a href="\">Beranda<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\ma\lap_awas\add">eReporting<div class="mobileTriggerButton"></div></a>
+                                            <a href="\ma\lap_awas">eReporting<div class="mobileTriggerButton"></div></a>
+
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="https://ssdpnbp.kemenkeu.go.id/dashboard">Informasi PNBP<div class="mobileTriggerButton"></div></a>
+											<a href="\infopnbp">Informasi PNBP<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
 											<a href="\helpdesk">Helpdesk<div class="mobileTriggerButton"></div></a>
@@ -113,8 +182,9 @@
                                                   </div>
                                                 </div>
                                             </div>
-										</li>
-									</ul>
+                                        </li>
+                                    </ul>
+
 									<div class="mm-page" style="display:none;">
 										<nav id="my-menu" >
                                             <ul>
@@ -122,10 +192,10 @@
                                                     <a href="\">Beranda</a>
                                                 </li>
                                                 <li>
-                                                    <a href="\ma">eReporting</a>
+                                                    <a href="\ma\lap_awas">eReporting</a>
                                                 </li>
                                                 <li>
-                                                    <a href="https://ssdpnbp.kemenkeu.go.id">Informasi PNBP</a>
+                                                    <a href="\infopnbp" target="_blank">Informasi PNBP</a>
                                                 </li>
                                                 <li>
                                                     <a href="\helpdesk">Helpdesk</a>
@@ -156,7 +226,8 @@
                                                 </li>
                                             </ul>
 										</nav>
-									</div>
+                                    </div>
+                                    @endif
 								</div>
 							</section>
 						</nav>

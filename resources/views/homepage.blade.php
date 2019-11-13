@@ -808,8 +808,8 @@
                             <div class="item">
                                 <div class="newsv">
                                     <video id='my-video' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                    width='480' height='480' poster='/media/video/preview/PNBP.jpg' data-setup='{"fluid": true}'>
-                                        <source src='/media/video/PNBP.mp4' type='video/mp4'>
+                                    width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/12/3-2.jpg' data-setup='{"fluid": true}'>
+                                        <source src='https://klcfiles.kemenkeu.go.id/2018/12/PNBP.mp4' type='video/mp4'>
                                         <p class='vjs-no-js'>
                                         To view this video please enable JavaScript, and consider upgrading to a web browser that
                                         <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
@@ -822,8 +822,8 @@
                             <div class="item">
                                     <div class="newsv">
                                             <video id='my-video-1' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='/media/video/preview/KC-1-Pak-Zun.jpg' data-setup='{"fluid": true}'>
-                                                <source src='/media/video/KC-1-Pak-Zun.mp4' type='video/mp4'>
+                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/06/1-3.jpg' data-setup='{"fluid": true}'>
+                                                <source src='https://klcfiles.kemenkeu.go.id/2018/06/KC-1-Pak-Zun.mp4' type='video/mp4'>
                                                 <p class='vjs-no-js'>
                                                 To view this video please enable JavaScript, and consider upgrading to a web browser that
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
@@ -836,8 +836,8 @@
                             <div class="item">
                                     <div class="newsv">
                                             <video id='my-video-2' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='/media/video/preview/KC-1-Pak-Luhut-conv.jpg' data-setup='{"fluid": true}'>
-                                                <source src='/media/video/KC-1-Pak-Luhut-conv.mp4' type='video/mp4'>
+                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/05/1-2.jpg' data-setup='{"fluid": true}'>
+                                                <source src='https://klcfiles.kemenkeu.go.id/2018/05/KC-1-Pak-Luhut-conv.mp4' type='video/mp4'>
                                                 <p class='vjs-no-js'>
                                                 To view this video please enable JavaScript, and consider upgrading to a web browser that
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
@@ -850,8 +850,8 @@
                             <div class="item">
                                     <div class="newsv">
                                             <video id='my-video-3' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='/media/video/preview/4.-Noor-Cholis-Madjid-Tugas-dan-Wewenang-Menteri-Keuangan-dalam-Pengelolaan-PNBP.jpg' data-setup='{"fluid": true}'>
-                                                <source src='/media/video/4.-Noor-Cholis-Madjid-Tugas-dan-Wewenang-Menteri-Keuangan-dalam-Pengelolaan-PNBP.mp4' type='video/mp4'>
+                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/10/4-1.jpg' data-setup='{"fluid": true}'>
+                                                <source src='https://klcfiles.kemenkeu.go.id/2018/10/4.-Noor-Cholis-Madjid-Tugas-dan-Wewenang-Menteri-Keuangan-dalam-Pengelolaan-PNBP.mp4' type='video/mp4'>
                                                 <p class='vjs-no-js'>
                                                 To view this video please enable JavaScript, and consider upgrading to a web browser that
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
@@ -864,8 +864,8 @@
                             <div class="item">
                                     <div class="newsv">
                                             <video id='my-video-4' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='/media/video/preview/4.-Heryanto-Sijabat-MPN-G2.jpg' data-setup='{"fluid": true}'>
-                                                <source src='/media/video/4.-Heryanto-Sijabat-MPN-G2.mp4' type='video/mp4'>
+                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/10/3-3.jpg' data-setup='{"fluid": true}'>
+                                                <source src='https://klcfiles.kemenkeu.go.id/2018/10/4.-Heryanto-Sijabat-MPN-G2.mp4' type='video/mp4'>
                                                 <p class='vjs-no-js'>
                                                 To view this video please enable JavaScript, and consider upgrading to a web browser that
                                                 <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>

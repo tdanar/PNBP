@@ -124,6 +124,8 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        Swap\Laravel\SwapServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -131,6 +133,7 @@ return [
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
         crocodicstudio\crudbooster\CRUDBoosterServiceProvider::class,
+        Emotality\TawkTo\TawkToServiceProvider::class,
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Filesystem\FilesystemServiceProvider::class,
@@ -189,6 +192,7 @@ return [
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
@@ -206,6 +210,8 @@ return [
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
+        'Swap' => Swap\Laravel\Facades\Swap::class,
+        'TawkTo' => Emotality\TawkTo\Facades\TawkTo::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,

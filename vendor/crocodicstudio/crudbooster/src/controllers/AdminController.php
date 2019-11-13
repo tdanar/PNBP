@@ -65,8 +65,8 @@ class AdminController extends CBController
 
         if ($validator->fails()) {
             $message = $validator->errors()->all();
-
-            return redirect()->back()->with(['message' => implode(', ', $message), 'message_type' => 'danger']);
+            //dd($message);
+            return redirect()->back()->with(['message' => /* implode(', ', $message) */'Terjadi kesalahan, silahkan diulang lagi.', 'message_type' => 'danger']);
         }
 
         $username = Request::input("username");
@@ -76,12 +76,15 @@ class AdminController extends CBController
         if (\Hash::check($password, $users->password)) {
             $priv = DB::table("cms_privileges")->where("id", $users->id_cms_privileges)->first();
 
+            $unit = DB::table('t_ref_unit')->where('id',$users->id_kode_unit)->first();
+
             $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', $users->id_cms_privileges)->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
 
             $photo = ($users->photo) ? asset($users->photo) : asset('vendor/crudbooster/avatar.jpg');
             Session::put('admin_id', $users->id);
             Session::put('admin_is_superadmin', $priv->is_superadmin);
             Session::put('admin_name', $users->name);
+            Session::put('admin_unit', $unit->unit);
             Session::put('admin_photo', $photo);
             Session::put('admin_privileges_roles', $roles);
             Session::put("admin_privileges", $users->id_cms_privileges);
@@ -97,7 +100,7 @@ class AdminController extends CBController
 
             return redirect(/* CRUDBooster::adminPath() */)->route('home');
         } else {
-            return redirect()->route('getLogin')->with('message', trans('crudbooster.alert_password_wrong'));
+            return redirect()->route('getLogin')->with('message', 'Terjadi kesalahan, silahkan diulang lagi.');
         }
     }
 

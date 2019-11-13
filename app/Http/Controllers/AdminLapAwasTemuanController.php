@@ -35,7 +35,9 @@
 			$this->col[] = ["label"=>"Klasifikasi Temuan","name"=>"id_kod_temuan","join"=>"t_ref_kod_temuan,Deskripsi"];
 			$this->col[] = ["label"=>"Kondisi","name"=>"kondisi"];
 			$this->col[] = ["label"=>"Mata Uang","name"=>"id_mata_uang","join"=>"t_ref_matauang,kode"];
-			$this->col[] = ["label"=>"Nilai Uang","name"=>"nilai_uang"];
+			$this->col[] = ["label"=>"Nilai Uang","name"=>"nilai_uang","callback"=>function($row) {
+                return number_format($row->nilai_uang,2,",",".");
+                }];
 			$this->col[] = ["label"=>"Lokasi","name"=>"lokasi"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 

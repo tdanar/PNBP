@@ -53,6 +53,11 @@
 <script type="text/javascript" src="/scripts/scripts.js"></script>
 <script type="text/javascript" src="/scripts/mega_menu.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.mmenu.all.js"></script>
+<script type="text/javascript" src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/fbd569b8768155c7a9a62568e66a64115887d7d0/dataTables.rowsGroup.js" ></script>
+<script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.4/js/dataTables.rowReorder.js"></script>
+
+
 
 
 

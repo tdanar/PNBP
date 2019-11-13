@@ -17,6 +17,11 @@
 Route::get('/','homepageController@index')->name('home');
 Route::get('/header','homepageController@header');
 Route::get('/helpdesk','helpdeskController@index')->name('helpdesk');
+Route::get('/infopnbp','perantaraController@getIndex')->name('perantara');
 Route::get('/faq','faqController@index')->name('faq');
 Route::get('/peraturan','peraturanController@index')->name('peraturan');
+Route::get('/ma/importAwas', 'AdminLapAwasController@import');
+Route::post('/ma/importAwasExcel', 'AdminLapAwasController@importExcel');
+
+
 

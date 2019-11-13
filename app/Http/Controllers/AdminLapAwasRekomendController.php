@@ -10,7 +10,7 @@
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "id";
+			$this->title_field = "rekomendasi";
 			$this->limit = "20";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
@@ -33,21 +33,28 @@
 			$this->col[] = ["label"=>"Temuan","name"=>"id_temuan","join"=>"t_lap_awas_temuan,judul"];
 			$this->col[] = ["label"=>"Rekomendasi","name"=>"rekomendasi"];
 			$this->col[] = ["label"=>"Kodifikasi Rekomendasi","name"=>"id_kod_rekomendasi","join"=>"t_ref_kod_rekomendasi,Deskripsi"];
+			$this->col[] = ["label"=>"Tanggal TL","name"=>"tgl_tl",'callback_php'=>'date("d-m-Y",strtotime($row->tgl_tl))'];
+			$this->col[] = ["label"=>"Uraian TL","name"=>"tl"];
+			$this->col[] = ["label"=>"Status TL","name"=>"status_tl"];
+			$this->col[] = ["label"=>"Jenis TL","name"=>"id_kod_tl","join"=>"t_ref_tl,deskripsi"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Temuan','name'=>'id_temuan','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_lap_awas_temuan,judul'];
-			$this->form[] = ['label'=>'Rekomendasi','name'=>'rekomendasi','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-            $this->form[] = ['label'=>'Kodifikasi Rekomendasi','name'=>'id_kod_rekomendasi','type'=>'select2','width'=>'col-sm-10','datatable'=>'t_ref_kod_rekomendasi,Deskripsi'];
-
+			$this->form[] = ['label'=>'Rekomendasi','name'=>'rekomendasi','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Kodifikasi Rekomendasi','name'=>'id_kod_rekomendasi','type'=>'select2','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_rekomendasi,Deskripsi'];
+			$this->form[] = ['label'=>'Tgl. Tindak Lanjut','name'=>'tgl_tl','type'=>'date','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Uraian Tindak Lanjut','name'=>'tl','type'=>'textarea','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Status Tindak Lanjut','name'=>'status_tl','type'=>'select','width'=>'col-sm-10','dataenum'=>'Dalam Proses;Tuntas'];
+			$this->form[] = ['label'=>'Jenis Tindak Lanjut','name'=>'id_kod_tl','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
 			//$this->form[] = ['label'=>'Temuan','name'=>'id_temuan','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_lap_awas_temuan,judul'];
 			//$this->form[] = ['label'=>'Rekomendasi','name'=>'rekomendasi','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			//$this->form[] = ['label'=>'Kod Rekomendasi','name'=>'id_kod_rekomendasi','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_kod_rekomend,Deskripsi'];
+			//$this->form[] = ['label'=>'Kodifikasi Rekomendasi','name'=>'id_kod_rekomendasi','type'=>'select2','width'=>'col-sm-10','datatable'=>'t_ref_kod_rekomendasi,Deskripsi'];
 			# OLD END FORM
 
 			/*
@@ -63,7 +70,7 @@
 	        |
 	        */
 	        //$this->sub_module = array();
-            $this->sub_module[] = ['label'=>'Tindak Lanjut','path'=>'lap_awas_tlanjut','foreign_key'=>'id_rekomendasi','button_color'=>'primary','button_icon'=>'fa fa-bars','parent_columns'=>'rekomendasi'];
+            //$this->sub_module[] = ['label'=>'Tindak Lanjut','path'=>'lap_awas_tlanjut','foreign_key'=>'id_rekomendasi','button_color'=>'primary','button_icon'=>'fa fa-bars','parent_columns'=>'rekomendasi'];
 
 
 	        /*

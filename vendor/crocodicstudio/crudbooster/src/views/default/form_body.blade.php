@@ -68,6 +68,7 @@ $required = (@strpos($form['validation'], 'required') !== FALSE) ? "required" : 
 $readonly = (@$form['readonly']) ? "readonly" : "";
 $disabled = (@$form['disabled']) ? "disabled" : "";
 $placeholder = (@$form['placeholder']) ? "placeholder='".$form['placeholder']."'" : "";
+$title = (@$form['title']) ? $form['title'] : "";
 $col_width = @$form['width'] ?: "col-sm-9";
 
 if ($parent_field == $name) {

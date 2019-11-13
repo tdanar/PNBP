@@ -66,7 +66,7 @@
     </label>
 
     <div class="{{$col_width?:'col-sm-10'}}">
-        <select class='form-control' id="{{$name}}" data-value='{{$value}}' {{$required}} {!!$placeholder!!} {{$readonly}} {{$disabled}} name="{{$name}}">
+    <select class='form-control' id="{{$name}}" data-value='{{$value}}' {{$required}} {!!$placeholder!!} {{$readonly}} {{$disabled}} name="{{$name}}" title='{{$title}}'>
             <option value=''>{{$default}}</option>
             <?php
             if (! $form['parent_select']) {
@@ -166,3 +166,8 @@
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
 </div>
+
+
+
+
+

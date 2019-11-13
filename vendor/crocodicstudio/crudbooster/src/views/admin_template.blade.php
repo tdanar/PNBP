@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/basic.css" type="text/css">
     <link rel="stylesheet" href="/css/home.css" type="text/css">
     <link rel="stylesheet" href="/css/responsive.css" type="text/css">
-    <link rel="shortcut icon" href="/media/6120/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/media/favicon.ico" type="image/x-icon" />
 
     <link href="/css/menu.css" rel="stylesheet" type="text/css">
 
@@ -37,6 +37,9 @@
 
     <link href="/css/mmenu_button.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/css/jquery.mmenu.all.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/datatables.min.css" type="text/css"/>
+
+
 
 
     <!-- load css -->
@@ -90,6 +93,8 @@
         .form-group > label:first-child {
             display: block
         }
+
+
     </style>
 
     @stack('head')
@@ -164,6 +169,7 @@
                                @if($ib['onMouseOut']) onMouseOut='return {{$ib["onMouseOut"]}}' @endif
                                @if($ib['onKeyDown']) onKeyDown='return {{$ib["onKeyDown"]}}' @endif
                                @if($ib['onLoad']) onLoad='return {{$ib["onLoad"]}}' @endif
+                               @if($ib['indexonly'] == true && (CRUDBooster::getCurrentMethod() == 'getIndex') != true) style='display: none' @endif
                             >
                                 <i class='{{$ib["icon"]}}'></i> {{$ib["label"]}}
                             </a>
@@ -173,10 +179,10 @@
                 </h1>
 
 
-                <ol class="breadcrumb">
+                <!--<ol class="breadcrumb">
                     <li><a href="{{CRUDBooster::adminPath()}}"><i class="fa fa-dashboard"></i> {{ trans('crudbooster.home') }}</a></li>
                     <li class="active">{{$module->name}}</li>
-                </ol>
+                </ol>-->
             @else
                 <h1>{{--Session::get('appname')--}}
                 </h1>
