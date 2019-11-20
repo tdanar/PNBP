@@ -52,7 +52,11 @@
 		<script src="/vendor/owlcarousel/owl.carousel.js"></script>
 		<script src="/scripts/scripts.js"></script>
 
-		<!-- End javascript Home -->
+        <!-- End javascript Home -->
+<!-- Bootstrap 3.3.2 JS -->
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
+        <!-- AdminLTE App -->
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/dist/js/app.js') }}" type="text/javascript"></script>
 
 <!-- Facebook Pixel Code --><script>
 /*

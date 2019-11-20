@@ -21,6 +21,8 @@ Route::get('/infopnbp','perantaraController@getIndex')->name('perantara');
 Route::get('/faq','faqController@index')->name('faq');
 Route::get('/peraturan','peraturanController@index')->name('peraturan');
 Route::get('/ma/importAwas', 'AdminLapAwasController@import');
+Route::post('/api/getAwas', 'AdminLapAwasController@getDataWas');
+Route::get('/api/getAwas', 'AdminLapAwasController@getDataWas');
 Route::post('/ma/importAwasExcel', 'AdminLapAwasController@importExcel');
 
 

@@ -4,7 +4,7 @@
 	<div class="alert alert-warning" role="alert">
         <b>Peringatan !</b>
         <br />Harap mengunggah file excel sesuai dengan format yang ditentukan dalam file di bawah ini:
-        <br /><a href='#' class='alert-link'>Format Impor Excel</a>
+        <br /><a href='/media/excel/Formatsheet-Import-perbaikan 18112019_final.xlsx' class='alert-link'>Format Impor Excel</a>
     </div>
 	<br />
 	<form style="border: 4px solid #a1a1a1;margin-top: 15px;padding: 10px;" action="{{ URL::to('/ma/importAwasExcel') }}" class="form-horizontal" method="post" enctype="multipart/form-data">

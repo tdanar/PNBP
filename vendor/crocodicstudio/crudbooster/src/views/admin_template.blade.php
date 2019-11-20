@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="id" xml:lang="id" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>{{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Portal Pengawasan PNBP" }}</title>
@@ -36,9 +36,10 @@
     <link rel="stylesheet" href="/css/mega_menu.min.css" type="text/css"/>
 
     <link href="/css/mmenu_button.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="/css/jquery.mmenu.all.css" type="text/css"/>
-    <link rel="stylesheet" href="/css/datatables.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/jquery.mmenu.all.css" type="text/css">
 
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" type="text/css"/> --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.0/css/buttons.dataTables.min.css" type="text/css"/>
 
 
 
@@ -96,19 +97,21 @@
 
 
     </style>
-
     @stack('head')
-</head>
-<body class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo (' layout-top-nav') /* echo ' '; echo config('crudbooster.ADMIN_LAYOUT') */; @endphp {{($sidebar_mode)?:''}}">
-<!-- Header -->
-@include('crudbooster::header')
 
-<div id='my-wrapper'>
-    <div id="scroll"></div>
+</head>
+<body>
+<!-- Header -->
+<div id="scroll"></div>
 	<div id="preload" class="preload">
 			<div class="loader"></div>
 		</div>
     <div class="mm-page"></div>
+<div id="my-wrapper">
+
+@include('crudbooster::header')
+
+
 
 
 <!-- Sidebar -->
@@ -221,7 +224,8 @@
 
     <!-- Footer -->
     @include('crudbooster::footer')
-</div><!-- ./wrapper -->
+</div>
+<!-- ./wrapper -->
 
 
 @include('crudbooster::admin_template_plugins')

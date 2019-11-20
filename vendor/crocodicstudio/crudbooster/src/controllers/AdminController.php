@@ -61,6 +61,7 @@ class AdminController extends CBController
         $validator = Validator::make(Request::all(), [
             'username' => 'required|alpha_dash|exists:'.config('crudbooster.USER_TABLE'),
             'password' => 'required',
+            'g-recaptcha-response' => 'required|captcha'
         ]);
 
         if ($validator->fails()) {

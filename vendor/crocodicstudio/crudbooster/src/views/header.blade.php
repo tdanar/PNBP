@@ -12,12 +12,38 @@
                                     </font>
                             </div>
                             <div class="right-top">
+                                <ul class="nav navbar-nav">
+                                    <li class="dropdown user user-menu">
+                                            @if (!empty(CRUDBooster::myId()))
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    <!-- The user image in the navbar-->
+                                                    <img src="{{CRUDBooster::myPhoto()}}" class="user-image" alt="User Image">
+                                                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                                    <span class="hidden-xs">{{CRUDBooster::myName()}}</span>
+                                                  </a>
+                                                  <ul class="dropdown-menu">
+                                                        <li class="user-header">
+                                                            <img src="{{CRUDBooster::myPhoto()}}" class="img-circle" alt="User Image">
+                                                            <p>{{CRUDBooster::myName()}}
+                                                                <small>{{CRUDBooster::myUnit()}}</small>
+                                                            </p>
+                                                        </li>
+                                                        <li class="user-footer">
+                                                            <div class="pull-left">
+                                                                <a href="\ma\users\profile" class="btn btn-primary btn-flat">Profil</a>
+                                                            </div>
+                                                            <div class="pull-right">
+                                                                <a href="\ma\logout" class="btn btn-danger btn-flat">Log Out</a>
+                                                            </div>
+                                                        </li>
+                                                  </ul>
+                                            @else
+                                            <a href="\ma\login">LOGIN</a>
+                                            @endif
+                                    </li>
+                                </ul>
                                 {{-- <span><font> </font>134</span> --}}
-                                @if (!empty(CRUDBooster::myId()))
-                                Selamat datang, {{CRUDBooster::myName()}} dari {{CRUDBooster::myUnit()}} <img src="{{CRUDBooster::myPhoto()}}" class="user-image" alt="User Image"> | <a href="\ma\users\profile">Member Area</a> | <a href="\ma\logout">LOGOUT</a>
-                                @else
-                                <a href="\ma\login">LOGIN</a>
-                                @endif
+
                             </div>
                             <div class="clear"></div>
                         </div>
@@ -32,7 +58,7 @@
                                 <a href="/">
                                     <img src="/media/6277/logo-atas.png" onerror="this.onerror=null; this.src='/media/6277/logo-atas.png?widht=278'">
                                 </a>
-                                <div id="ikeh" class="container-button icon" >
+                                <div id="ikeh2" class="container-button icon" >
                                         <div class="icon">
                                           <div class="bar1"></div>
                                           <div class="bar2"></div>
@@ -41,14 +67,17 @@
                                 </div>
                             </li>
                         </ul>
-                        <script type="text/javascript">
+                        @push('bottom')
+                        <script type="text/javascript" src="/scripts/jquery.mmenu.all.js"></script>
+                        <script>
                                 function click_menu(tap_id,def){
                                     $('.col'+def).html('<ul><li><a onclick="javascript:$(`.col'+def+'`).html(``);$(`.'+def+'`).show()"><i class="fa-ico-left"></i> Kembali</a></li></ul>'+$('.'+tap_id).html());
                                     $('.'+def).hide();
                                 }
-
+                            </script>
+                        <script>
                                 $(document).ready(function() {
-                                    $("#my-menu").mmenu({
+                                    var API = $("#my-menu").mmenu({
                                         // options
                                         offCanvas: {
                                         position: "right"
@@ -59,15 +88,16 @@
                                             pageSelector: "#my-wrapper"
 
                                         }
-                                    });
+                                    }).data('mmenu');
 
-                                    var API = $("#my-menu").data( "mmenu" );
-                                    $('#ikeh').click(function() {
+                                    $('#ikeh2').click(function(ev) {
+                                        ev.preventDefault();
                                         API.open();
                                     });
 
                                 });
                             </script>
+                        @endpush
 
                             {{--<ul class="menu-links" >--}}
                                      <ul class="menu-links" style="display: none; max-height: 400px; overflow: auto;">

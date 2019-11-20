@@ -84,6 +84,14 @@
                 <input autocomplete='off' type="password" class="form-control" name='password' required placeholder="Password"/>
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
+            <div class="form-group has-feedback">
+                <center>
+                        {!! app('captcha')->display() !!}
+                @if ($errors->has('g-recaptcha-response'))
+                <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                @endif
+                </center>
+            </div>
             <div style="margin-bottom:10px" class='row'>
                 <div class='col-xs-12'>
                     <button type="submit" class="btn btn-primary btn-block btn-flat"><i class='fa fa-lock'></i> {{trans("crudbooster.button_sign_in")}}</button>
@@ -109,5 +117,6 @@
 <script src="{{asset('vendor/crudbooster/assets/adminlte/plugins/jQuery/jQuery-2.1.4.min.js')}}"></script>
 <!-- Bootstrap 3.3.2 JS -->
 <script src="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>
+<script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script>
 </body>
 </html>

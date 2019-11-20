@@ -4,7 +4,9 @@
 	use DB;
     use CRUDBooster;
     use Excel;
-    use Request;
+	use Request;
+    use Response;
+    use DataTables;
 	use Illuminate\Http\Request as Rikues;
 
 	class AdminLapAwasController extends \crocodicstudio\crudbooster\controllers\CBController {
@@ -23,7 +25,7 @@
 			$this->button_add = true;
 			$this->button_edit = true;
 			$this->button_delete = true;
-			$this->button_detail = false;
+			$this->button_detail = true;
 			$this->button_show = false;
 			$this->button_filter = true;
 			$this->button_import = false;
@@ -53,7 +55,7 @@
 			$this->form = [];
 			$this->form[] = ['label'=>'Tahun Pengawasan','name'=>'tahun','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-5','dataenum'=>((now()->year)-4).';'.((now()->year)-3).';'.((now()->year)-2).';'.((now()->year)-1).';'.((now()->year)),"default" => "Silahkan pilih tahun dilaksanakannya pengawasan","title"=>"Silahkan pilih tahun dilaksanakannya pengawasan"];
 			$this->form[] = ['label'=>'No. Laporan','name'=>'no_lap','type'=>'text','validation'=>'required|min:1|max:255|unique:t_lap_awas,no_lap,id','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Tanggal Laporan','name'=>'tanggal','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Tanggal Laporan','name'=>'tanggal','type'=>'date','validation'=>'required','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Nama Keg. Pengawasan','name'=>'nama_giat_was','type'=>'text','validation'=>'required|min:1|max:300','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Periode Pengawasan','type'=>'label'];
 			$this->form[] = ['label'=>'Tahun Mulai','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5','dataenum'=>((now()->year)-4).';'.((now()->year)-3).';'.((now()->year)-2).';'.((now()->year)-1).';'.((now()->year)),"default" => "Silahkan pilih tahun awal periode pengawasan","title"=>"Silahkan pilih tahun awal periode pengawasan"];
@@ -250,7 +252,8 @@
     {
         if($request->hasFile('import_file')){
             Excel::selectSheetsByIndex(0)->load($request->file('import_file')->getRealPath(), function ($reader) {
-				$datas = $reader->toArray();
+                $datas = $reader->skipRows(1)->toArray();
+                //dd($datas);
 				$notnull = array_filter($datas, function($v) { return !empty($v['no']) || !empty($v['judul_temuan']) || !empty($v['rekomendasi']); });
 
 				/* if($notnull[0]['nomor_laporan'] === NULL){
@@ -277,9 +280,22 @@
                     $data['nama_giat_was'] = $row['nama_kegiatan_pengawasan'];
                     $data['thn_mulai'] = $row['tahun_mulai'];
                     $data['thn_usai'] = $row['tahun_selesai'];
-                    $data['id_jenis_was'] = $row['jenis_pengawasan'];
+                    switch(true) {
+                        case $row['jenis_pengawasan'] = "Audit":
+                            $data['id_jenis_was'] = 1;
+                        break;
+                        case $row['jenis_pengawasan'] = "Reviu":
+                            $data['id_jenis_was'] = 2;
+                        break;
+                        case $row['jenis_pengawasan'] = "Monitoring":
+                            $data['id_jenis_was'] = 3;
+                        break;
+                        case $row['jenis_pengawasan'] = "Evaluasi":
+                            $data['id_jenis_was'] = 4;
+                        break;
+                    }
 					$data['created_at'] = now();
-
+                    //dd($data);
 					$nolapexist = DB::table('t_lap_awas')->select('no_lap')->where('no_lap',$data['no_lap'])->first();
 
                     if(!empty($row['no']) && !empty($data['tahun']) && empty($nolapexist)) {
@@ -294,7 +310,7 @@
 						$id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
 						$data2['id_lap'] = $id_lap->id;
                         $data2['judul'] = $row2['judul_temuan'];
-						$data2['lokasi'] = $row2['lokasi'];
+						$data2['lokasi'] = $row2['lokasi_pengawasan'];
 						$data2['id_kod_temuan'] = $row2['klasifikasi_temuan'];
 						$data2['kondisi'] = $row2['kondisi'];
 						$data2['id_mata_uang'] = $row2['mata_uang'];
@@ -321,10 +337,10 @@
                     $id_temuan = DB::table('t_lap_awas_temuan')->select('id')->where('judul',$row3['judul_temuan'])->first();
                     $data3['id_temuan'] = $id_temuan->id;
                     $data3['rekomendasi'] = $row3['rekomendasi'];
-                    $data3['id_kod_rekomendasi'] = $row3['klasifikasi_rekomendasi'];
+                    $data3['id_kod_rekomendasi'] = (int) substr($row3['klasifikasi_rekomendasi'],0,2);
                     $data3['tl'] = $row3['progres_tl'];
                     $data3['status_tl'] = $row3['status_tl'];
-                    $data3['id_kod_tl'] = $row3['klasifikasi_tl'];
+                    $data3['id_kod_tl'] = (int) substr($row3['klasifikasi_tl'],0,2);
                     if(!empty($row3['tgl_tl'])){
                         $data3['tgl_tl'] = $row3['tgl_tl'];
                     }else{
@@ -452,6 +468,241 @@
              $this->cbView('lapAwas',$data);
     }
 
+    public function getDetail($id) {
+        //First, Add an auth
+         if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+
+         //Create your own query
+         $data = [];
+         $data['page_title'] = 'Laporan Pengawasan PNBP';
+         $data['first'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
+         `t_lap_awas`.`tahun`,
+         `t_lap_awas`.`no_lap`,
+         `t_lap_awas`.`tanggal`,
+         `t_lap_awas`.`nama_giat_was`,
+         `t_lap_awas`.`id`,
+         `t_lap_awas`.`id_status_kirim`,
+         `t_lap_awas`.`thn_mulai`,
+         `t_lap_awas`.`thn_usai`,
+         `t_ref_jenis_awas`.`jenis_awas`,
+         `t_lap_awas`.`created_at`,
+         `t_lap_awas`.`updated_at`,
+         `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
+         `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
+         `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
+         `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
+         `t_lap_awas_temuan`.`id` AS `id_temuan`,
+         `t_lap_awas_temuan`.`judul`,
+         `t_lap_awas_temuan`.`kondisi`,
+         `t_lap_awas_temuan`.`sebab`,
+         `t_lap_awas_temuan`.`akibat`,
+         `t_ref_matauang`.`kode` AS `KodeMatauang`,
+         `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
+         `t_ref_statkirim`.`status` AS `StatKirim`,
+         `t_lap_awas_temuan`.`nilai_uang`,
+         `t_ref_kod_rekomendasi`.`Kode` AS `KodeRekomendasi`,
+         `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
+         `t_ref_tl`.`deskripsi` AS `KodTL`,
+         `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
+         `t_lap_awas_rekomend`.`status_tl`,
+         `t_lap_awas_rekomend`.`rekomendasi`')->
+         leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+         leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+         leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+         leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+         leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+         leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+         leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+         leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+         leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+         where('t_lap_awas.id',$id)->first();
+
+        $data['second'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
+            `t_lap_awas`.`tahun`,
+            `t_lap_awas`.`no_lap`,
+            `t_lap_awas`.`tanggal`,
+            `t_lap_awas`.`nama_giat_was`,
+            `t_lap_awas`.`id`,
+            `t_lap_awas`.`id_status_kirim`,
+            `t_lap_awas`.`thn_mulai`,
+            `t_lap_awas`.`thn_usai`,
+            `t_ref_jenis_awas`.`jenis_awas`,
+            `t_lap_awas`.`created_at`,
+            `t_lap_awas`.`updated_at`,
+            `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
+            `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
+            `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
+            `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
+            `t_lap_awas_temuan`.`id` AS `id_temuan`,
+            `t_lap_awas_temuan`.`judul`,
+            `t_lap_awas_temuan`.`lokasi`,
+            `t_lap_awas_temuan`.`kondisi`,
+            `t_lap_awas_temuan`.`sebab`,
+            `t_lap_awas_temuan`.`akibat`,
+            `t_ref_matauang`.`kode` AS `KodeMatauang`,
+            `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
+            `t_ref_statkirim`.`status` AS `StatKirim`,
+            `t_lap_awas_temuan`.`nilai_uang`')->
+            leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+            leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+            leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+            leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            where('t_lap_awas_temuan.id_lap',$id)->get();
+
+            $data['third'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
+            `t_lap_awas`.`tahun`,
+            `t_lap_awas`.`no_lap`,
+            `t_lap_awas`.`tanggal`,
+            `t_lap_awas`.`nama_giat_was`,
+            `t_lap_awas`.`id`,
+            `t_lap_awas`.`id_status_kirim`,
+            `t_lap_awas`.`thn_mulai`,
+            `t_lap_awas`.`thn_usai`,
+            `t_ref_jenis_awas`.`jenis_awas`,
+            `t_lap_awas`.`created_at`,
+            `t_lap_awas`.`updated_at`,
+            `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
+            `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
+            `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
+            `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
+            `t_lap_awas_temuan`.`id` AS `id_temuan`,
+            `t_lap_awas_temuan`.`judul`,
+            `t_lap_awas_temuan`.`kondisi`,
+            `t_lap_awas_temuan`.`sebab`,
+            `t_lap_awas_temuan`.`akibat`,
+            `t_ref_matauang`.`kode` AS `KodeMatauang`,
+            `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
+            `t_ref_statkirim`.`status` AS `StatKirim`,
+            `t_lap_awas_temuan`.`nilai_uang`,
+            `t_ref_kod_rekomendasi`.`Kode` AS `KodeRekomendasi`,
+            `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
+            `t_ref_tl`.`deskripsi` AS `KodTL`,
+            `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
+            `t_lap_awas_rekomend`.`status_tl`,
+            `t_lap_awas_rekomend`.`tgl_tl`,
+            `t_lap_awas_rekomend`.`tl`,
+            `t_lap_awas_rekomend`.`rekomendasi`')->
+            leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+            leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+            leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+            leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+            leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+            leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+            leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            where('t_lap_awas_temuan.id_lap',$id)->get();
+
+        //dd($data);
+
+         //Create a view. Please use `cbView` method instead of view method from laravel.
+         $this->cbView('lapDetailAwas',$data);
+}
+
+	    public function getDataWas() {
+		    if(Session::has('admin_id')){
+			if(!CRUDBooster::isSuperadmin()){
+                $data = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
+                `t_lap_awas`.`tahun`,
+                `t_lap_awas`.`no_lap`,
+                `t_lap_awas`.`tanggal`,
+                `t_lap_awas`.`nama_giat_was`,
+                `t_lap_awas`.`id`,
+                `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas`.`thn_mulai`,
+                `t_lap_awas`.`thn_usai`,
+                `t_ref_jenis_awas`.`jenis_awas`,
+                `t_lap_awas`.`created_at`,
+                `t_lap_awas`.`updated_at`,
+                `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
+                `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
+                `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
+                `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
+                `t_lap_awas_temuan`.`id` AS `id_temuan`,
+                `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`kondisi`,
+                `t_lap_awas_temuan`.`sebab`,
+                `t_lap_awas_temuan`.`akibat`,
+                `t_ref_matauang`.`kode` AS `KodeMatauang`,
+                `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
+                `t_ref_statkirim`.`status` AS `StatKirim`,
+                `t_lap_awas_temuan`.`nilai_uang`,
+                `t_ref_kod_rekomendasi`.`Kode` AS `KodeRekomendasi`,
+                `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
+                `t_ref_tl`.`deskripsi` AS `KodTL`,
+                `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
+                `t_lap_awas_rekomend`.`status_tl`,
+                `t_lap_awas_rekomend`.`rekomendasi`')->
+                leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+                leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+                leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+                leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+                leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+                leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+                leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                where('id_user',CRUDBooster::myId())->orderby('id','desc')->
+                get()->toArray();
+                // $data['recordsTotal'] = $data['data']->count();
+                // $data['recordsFiltered'] = $data['data']->count();
+                // $data['draw'] = 1;
+             }else{
+                $data = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
+                `t_lap_awas`.`tahun`,
+                `t_lap_awas`.`no_lap`,
+                `t_lap_awas`.`tanggal`,
+                `t_lap_awas`.`nama_giat_was`,
+                `t_lap_awas`.`id`,
+                `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas`.`thn_mulai`,
+                `t_lap_awas`.`thn_usai`,
+                `t_ref_jenis_awas`.`jenis_awas`,
+                `t_lap_awas`.`created_at`,
+                `t_lap_awas`.`updated_at`,
+                `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
+                `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
+                `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
+                `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
+                `t_lap_awas_temuan`.`id` AS `id_temuan`,
+                `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`kondisi`,
+                `t_lap_awas_temuan`.`sebab`,
+                `t_lap_awas_temuan`.`akibat`,
+                `t_ref_matauang`.`kode` AS `KodeMatauang`,
+                `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
+                `t_ref_statkirim`.`status` AS `StatKirim`,
+                `t_lap_awas_temuan`.`nilai_uang`,
+                `t_ref_kod_rekomendasi`.`Kode` AS `KodeRekomendasi`,
+                `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
+                `t_ref_tl`.`deskripsi` AS `KodTL`,
+                `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
+                `t_lap_awas_rekomend`.`status_tl`,
+                `t_lap_awas_rekomend`.`rekomendasi`')->
+                leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+                leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+                leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+                leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+                leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+                leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+                leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                orderby('id','desc')->
+                get()->toArray();
+                // $data['recordsTotal'] = $data['data']->count();
+                // $data['recordsFiltered'] = $data['data']->count();
+                // $data['draw'] = 1;
+			 	}
+				return Datatables::of($data)->make(true);
+			}else{
+				CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+			};
+
+		}
+
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected
@@ -499,9 +750,10 @@
 	    |
 	    */
 	    public function hook_before_add(&$postdata) {
-            //Your code here
-            $date = date_create_from_format('j F Y',$postdata['tanggal']);
-            $postdata['tanggal'] = date_format($date, 'Y-m-d');
+			//Your code here
+			setlocale(LC_ALL, 'ind_ind');
+			$tanggal = strtotime($postdata['tanggal']);
+            $postdata['tanggal'] = date('Y-m-d',$tanggal);
 
 	    }
 

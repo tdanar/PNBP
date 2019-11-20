@@ -1,5 +1,8 @@
 <!-- First you need to extend the CB layout -->
 @extends('crudbooster::admin_template')
+
+
+
 @push('bottom')
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/buttons.flash.min.js"></script>
@@ -8,15 +11,10 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/buttons.print.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.20/dataRender/datetime.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.20/dataRender/ellipsis.js"></script>
 <script>
 $(document).ready(function() {
-    $.fn.dataTable.render.ellipsis = function ( cutoff ) {
-            return function ( data, type, row ) {
-                return type === 'display' && data.length > cutoff ?
-                    data.substr( 0, cutoff ) +'…' :
-                    data;
-            }
-        };
     var unit = {!! json_encode(CRUDBooster::myUnit()) !!};
     var table = $('#lapawas').DataTable({
 
@@ -32,6 +30,8 @@ $(document).ready(function() {
                     sInfoPostFix:  "",
                     sSearch:       "Cari:",
                     sUrl:          "",
+                    thousands:     ".",
+                    decimal:       ",",
                     oPaginate: {
                         sFirst:    "Pertama",
                         sPrevious: "Sebelumnya",
@@ -39,64 +39,184 @@ $(document).ready(function() {
                         sLast:     "Terakhir"
                         }
                     },
-                    order:[[1,'desc']],
-                    lengthChange: false,
+                    order:[[0,'desc'],[1,'desc']],
+                    serverSide: true,
+                    ajax: {
+                                url: '/api/getAwas',
+                                type: 'POST'
+                            },
+                    columns: [
+                                        { 'data': 'tahun'},
+                                        { 'data': 'tanggal', 'render':  function (data, type, full, meta){
+                                            if (data != null && (type === 'display' || type === 'filter')) {
+                                                            return new Date(data).toLocaleString("id-ID",{"dateStyle":"long"});
+                                                }
+                                            return data;
+                                        }},
+                                        { 'data': 'no_lap'},
+                                        { 'data': 'nama_giat_was'},
+                                        { 'data': 'jenis_awas'},
+                                        { 'data': 'judul',
+                                            'render': function (data, type, full, meta) {
+                                                if (data != null && (type === 'display' || type === 'filter') ){
+                                                    var detil = '<div class="row">'+
+                                                                '<div class="col-xs-3 text-right"><b>Kondisi:</b></div>'+
+                                                                '<div class="col-xs-9">'+full.kondisi+'</div>'+
+                                                            '</div>'+
+                                                            '<div class="row">'+
+                                                                '<div class="col-xs-3 text-right"><b>Sebab:</b></div>'+
+                                                                    '<div class="col-xs-9">'+full.sebab+'</div>'+
+                                                            '</div>'+
+                                                            '<div class="row">'+
+                                                                '<div class="col-xs-3 text-right"><b>Akibat:</b></div>'+
+                                                                    '<div class="col-xs-9">'+full.akibat+'</div>'+
+                                                            '</div>';
+                                                    return  data+'<br/><center><a class="btn btn-xs btn-success" href="javascript:void(0)" role="button" data-toggle="popover2" title="Detil" data-content='+'\''+detil+'\''+'><i class="fa fa-angle-down"></i></a></center>';
+
+                                                }
+                                                return data;
+                                            }
+                                        },
+                                        { 'data': 'nilai_uang',
+                                            'render': function (data, type, full, meta) {
+                                                if(full.nilai_uang != null && (type === 'display' || type === 'filter')){
+                                                    return full.KodeMatauang+' '+new Number(full.nilai_uang).toLocaleString("id-ID",{"formatMatcher":"basic"});
+                                                }
+                                                return data;
+                                            }
+                                        },
+                                        { 'data': 'rekomendasi'},
+                                        { 'data': 'status_tl'},
+                                        { 'render': function (data, type, full, meta) {
+                                                    var mainpath = {!! json_encode(CRUDBooster::mainpath()) !!};
+                                                    var temuanpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_temuan')) !!};
+                                                    var rekpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_rekomend')) !!};
+                                                    var delpath = {!! json_encode(CRUDBooster::mainpath()) !!}+'/delete/'+full.id;
+                                                    var begin = "<div class='btn-toolbar' role='toolbar'><div class='btn-group btn-group-xs' role='group'>";
+                                                    var end = "</div></div>";
+                                                    var buttonDtl = '<a class="btn btn-primary" href="'+mainpath+'/detail/'+full.id+'" role="button" data-toggle="popover" title="Detil Laporan" data-content="Klik untuk melihat detil laporan No. '+full.no_lap+' di sini."><i class="fa fa-eye"></i></a>';
+                                                    switch (true) {
+                                                                case ({!! json_encode(CRUDBooster::isUpdate()) !!}):
+                                                                    var button = '<a class="btn btn-success" href="'+mainpath+'/edit/'+full.id+'" role="button" data-toggle="popover" title="Ubah Laporan" data-content="Silahkan mengubah identitas laporan No. '+full.no_lap+' di sini."><i class="fa fa-pencil"></i></a>';
+
+                                                                case ({!! json_encode(CRUDBooster::isView()) !!}):
+                                                                    var button2 = '<a class="btn btn-primary" href="'+temuanpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='+full.id+'&foreign_key=id_lap&label=Temuan" role="button" data-toggle="popover" title="Tambah/Hapus Temuan" data-content="Silahkan mengubah temuan-temuan laporan No. '+full.no_lap+' di sini."><i class="fa fa-bars"></i></a>';
+                                                                    var button3 = '<a class="btn btn-warning" href="'+rekpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='+full.id_temuan+'&foreign_key=id_temuan&label=Rekomendasi" role="button" data-toggle="popover" title="Tambah/Hapus Rekomendasi" data-content="Silahkan mengubah rekomendasi-rekomendasi laporan No. '+full.no_lap+' di sini."><i class="fa fa-bars"></i></a>';
+
+                                                                case ({!! json_encode(CRUDBooster::isDelete()) !!}):
+                                                                    var button4 = '<a class="btn btn-danger" href="#" onclick="klikDelete('+'\''+delpath+'\''+')" role="button" data-toggle="popover" title="Hapus Laporan" data-content="Anda dapat menghapus laporan No. '+full.no_lap+' di sini. Penghapusan ini tidak dapat dikembalikan."><i class="fa fa-trash"></i></a>';
+
+                                                                break;
+
+                                                                default:
+                                                                    var button = '';
+                                                                    var button2 = '';
+                                                                    var button3 = '';
+                                                                    var button4 = '';
+
+                                                            };
+                                                    if (full.id_status_kirim === "1"){
+                                                        return begin+buttonDtl+button+button2+button3+button4+end;
+                                                    }else{
+                                                        return begin+buttonDtl+end;
+                                                    }
+
+                                                    },
+                                        'orderable': false,
+                                        }
+                                    ],
+                    processing: true,
                     searching: true,
+                    deferRender: true,
                     paging: true,
-                    fixedColumns: true,
                     scrollX: true,
-                    dom: "Bfrtip",
+                    dom:'B<"col-xs-3 col-xs-offset-9"f>tr<"col-xs-6 col-sm-6"i><"col-xs-6 col-sm-6"p>',
                     buttons: [{
                                     extend: 'excel',
-                                    messageTop: unit
+                                    header: true,
+                                    messageTop: unit,
+                                    exportOptions: {
+                                        columns: [0,1,2,3,5,6,7,8],
+                                        orthogonal: {
+                                            'type': null
+                                        }
+                                    }
                                 }],
+                    columnDefs: [ {
+                                targets: [2,7],
+                                render: $.fn.dataTable.render.ellipsis(20)
+                                },{
+                                targets: [4],
+                                searchable: true,
+                                visible: false,
+                                } ],
                     initComplete: function() {
                                     var $buttons = $('.dt-buttons').hide();
                                     $('#export-ke-excel').on('click', function() {
                                         var btnClass = '.buttons-excel'
                                         $buttons.find(btnClass).click();
-                                    })
+                                    });
+
+
                                 },
                     drawCallback: function ( settings ) {
-                                        drawCallback(this.api());
-                                        }
+                                    $('#table-filter').on('change', function(e){
+                                                table.column(0).search(this.value).draw();
+                                                e.preventDefault();
+                                                });
+                                    $('#table-filter2').on('change', function(e){
+                                                table.column(4).search(this.value).draw();
+                                                e.preventDefault();
+                                                });
+                                    $('#table-filter3').on('change', function(e){
+                                                table.column(8).search(this.value).draw();
+                                                e.preventDefault();
+                                                });
+
+                                    $('[data-toggle="popover"]').popover({
+                                        trigger: "hover",
+                                        container: "body",
+                                        placement: "bottom"
+                                    });
+                                    $('[data-toggle="popover2"]').popover({
+                                        trigger: "focus",
+                                        animation: true,
+                                        container: "table",
+                                        placement: "bottom",
+                                        delay: { "show": 100, "hide": 100 },
+                                        template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 style="background-color:green;color:white;" class="popover-title text-uppercase"></h3><div class="popover-content"></div></div>',
+                                        html: true
+                                    });
+                                    drawCallback(this.api());
+                            }
             });
 
-            $('#table-filter').on('change', function(){
-                        table.column(0).search(this.value).draw();
-                        });
-            $('#table-filter2').on('change', function(){
-                        table.column(3).search(this.value).draw();
-                        });
-            $('#table-filter3').on('change', function(){
-                        table.column(7).search(this.value).draw();
-                        });
-
-            $('[data-toggle="popover"]').popover({
-                trigger: "hover",
-                container: "body",
-                placement: "bottom"
-            });
-            $('[data-toggle="popover2"]').popover({
-                trigger: "focus",
-                animation: true,
-                container: "body",
-                placement: "bottom",
-                delay: { "show": 100, "hide": 100 },
-                template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 style="background-color:green;color:white;" class="popover-title text-uppercase"></h3><div class="popover-content"></div></div>',
-                html: true
-            });
 });
+
+    function klikDelete(link) {
+         swal({
+            title: "Apakah anda yakin ?",
+            text: "Anda tidak akan dapat mengembalikan data anda!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ff0000",
+            confirmButtonText: "Ya",
+            cancelButtonText: "Tidak",
+            closeOnConfirm: false },
+            function(){  location.href=link });
+            null;
+        };
+
     function drawCallback(api) {
         var rows = api.rows( {page:'current'} ).nodes(),
             settings = {
-                    "COLUMN_THEME" : 1,
-                    "COLUMN_SUBTHEME" : 3,
-                    "COLUMN_SUBTHEME2" : 5,
-                    "COLUMN_SUBTHEME3" : 7,
-                    "COLUMN_SUBTHEME4" : 9,
-                    "COLUMN_SUBTHEME5" : 11,
-                    "COLUMN_THEME2" : 17
+                    "COLUMN_THEME" : 0,
+                    "COLUMN_SUBTHEME" : 1,
+                    "COLUMN_SUBTHEME2" : 2,
+                    "COLUMN_SUBTHEME3" : 3,
+                    "COLUMN_SUBTHEME4" : 4,
+                    "COLUMN_SUBTHEME5" : 5,
+                    //"COLUMN_THEME2" : 7
 
             };
 
@@ -107,7 +227,7 @@ $(document).ready(function() {
                 mergeCells(rows, settings.COLUMN_SUBTHEME3);
                 mergeCells(rows, settings.COLUMN_SUBTHEME4);
                 mergeCells(rows, settings.COLUMN_SUBTHEME5);
-                mergeCells(rows, settings.COLUMN_THEME2);
+                //mergeCells(rows, settings.COLUMN_THEME2);
 
             }
     function mergeCells(rows, rowIndex) {
@@ -139,7 +259,8 @@ $(document).ready(function() {
             });
 
             // for the last group
-            rows[refLine].childNodes[rowIndex].rowSpan = ++k;
+                rows[refLine].childNodes[rowIndex].rowSpan = ++k;
+
         }
 
 
@@ -197,25 +318,25 @@ $(document).ready(function() {
 </div>
 </div>
 </div>
-<table id="lapawas" class="display" style="width:100%">
+<table id="lapawas" border="1" class="display" style="width:100%">
   <thead>
       <tr>
-        {{-- <th>No</th>--}}
-        <th>Thn. Penga- wasan</th>
-        <th>Tgl. Lap.</th>
-        <th>No. Lap.</th>
-        <th>Nama Keg. Pengawasan</th>
-        <th>Temuan</th>
-        <th>Nilai</th>
-        <th>Rekomendasi</th>
-        <th>Status TL</th>
+        <th title="Tahun Pengawasan">Thn. Pgwsn</th>
+        <th title="Tanggal Laporan">Tgl. Lap.</th>
+        <th title="Nomor Laporan">No. Lap.</th>
+        <th title="Nama Kegiatan Pengawasan">Nama Keg. Pgwsn</th>
+        <th>Jenis Pgwsn</th>
+        <th title="Judul Temuan">Temuan</th>
+        <th title="Nilai Temuan">Nilai</th>
+        <th title="Rekomendasi">Rekomendasi</th>
+        <th title="Status Tindak Lanjut">Status TL</th>
         <th>Aksi</th>
     </tr>
   </thead>
-  <tbody>
+  {{--<tbody>
     @foreach($result as $row)
       <tr>
-        {{-- <td width="1%" align="center"></td> --}}
+         <td width="1%" align="center"></td>
         <td>{{$row->tahun}}</td>
         <td data-sort="{{strtotime($row->tanggal)}}">{{date('d M Y', strtotime($row->tanggal))}}</td>
         <td>{{$row->no_lap}}</td>
@@ -237,7 +358,7 @@ $(document).ready(function() {
             </div>';
             @endphp
             <br/><center>
-            <a class="btn btn-xs btn-success" href="javascript:void(0)" role="button" data-toggle="popover2" title="Detil" data-content='<?php echo $mydata ?>'><i class="fa fa-angle-down"></i>
+            <a class="btn btn-xs btn-success" href="javascript:void(0)" role="button" data-toggle="popover2" title="Detil" data-content=''><i class="fa fa-angle-down"></i>
             </a>
             </center>
             @endif
@@ -274,7 +395,7 @@ $(document).ready(function() {
         </td>
        </tr>
     @endforeach
-  </tbody>
+  </tbody>--}}
 </table>
 
 <!-- ADD A PAGINATION -->

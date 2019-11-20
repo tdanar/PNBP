@@ -17,6 +17,7 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'cf97c57bfe0f23854afd2f3818abb7a0' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/create_uploaded_file.php',
@@ -27,11 +28,12 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         '0b0974a5566a1077e4f2e111341112c1' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_server.php',
         '1ca3bc274755662169f9629d5412a1da' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_uploaded_files.php',
         '40360c0b9b437e69bcbb7f1349ce029e' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/parse_cookie_header.php',
-        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
+        '0b47d6d4a00ca9112ba3953b49e7c9a4' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/helper.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
+        'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
         'e94defb743a4d9da5bb973e78c1fa8ff' => __DIR__ . '/..' . '/imanghafoori/laravel-terminator/src/helpers.php',
         '95779e373bd3ef5069868a995b5280ab' => __DIR__ . '/..' . '/imanghafoori/laravel-heyman/src/helpers.php',
@@ -53,6 +55,10 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'Z' => 
         array (
             'Zend\\Diactoros\\' => 15,
+        ),
+        'Y' => 
+        array (
+            'Yajra\\DataTables\\' => 17,
         ),
         'X' => 
         array (
@@ -130,6 +136,7 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         ),
         'L' => 
         array (
+            'League\\Fractal\\' => 15,
             'League\\Flysystem\\' => 17,
             'Lcobucci\\JWT\\' => 13,
             'Laravel\\Tinker\\' => 15,
@@ -189,6 +196,7 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'C' => 
         array (
             'Cron\\' => 5,
+            'Collective\\Html\\' => 16,
             'Clue\\StreamFilter\\' => 18,
         ),
         'B' => 
@@ -199,6 +207,7 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'A' => 
         array (
             'App\\' => 4,
+            'Anhskohbo\\NoCaptcha\\' => 20,
         ),
     );
 
@@ -216,6 +225,14 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'Zend\\Diactoros\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-diactoros/src',
+        ),
+        'Yajra\\DataTables\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
+            1 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
+            2 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
+            3 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
+            4 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
         ),
         'XdgBaseDir\\' => 
         array (
@@ -394,6 +411,10 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'League\\Fractal\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/fractal/src',
+        ),
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
@@ -537,6 +558,10 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         array (
             0 => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron',
         ),
+        'Collective\\Html\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravelcollective/html/src',
+        ),
         'Clue\\StreamFilter\\' => 
         array (
             0 => __DIR__ . '/..' . '/clue/stream-filter/src',
@@ -552,6 +577,10 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+        'Anhskohbo\\NoCaptcha\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/anhskohbo/no-captcha/src',
         ),
     );
 
@@ -617,6 +646,9 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
     );
 
     public static $classMap = array (
+        'Anhskohbo\\NoCaptcha\\Facades\\NoCaptcha' => __DIR__ . '/..' . '/anhskohbo/no-captcha/src/Facades/NoCaptcha.php',
+        'Anhskohbo\\NoCaptcha\\NoCaptcha' => __DIR__ . '/..' . '/anhskohbo/no-captcha/src/NoCaptcha.php',
+        'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider' => __DIR__ . '/..' . '/anhskohbo/no-captcha/src/NoCaptchaServiceProvider.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\AdminCmsUsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminCmsUsersController.php',
@@ -680,6 +712,13 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'Cms_privileges_rolesSeeder' => __DIR__ . '/../..' . '/database/seeds/CBSeeder.php',
         'Cms_settingsSeeder' => __DIR__ . '/../..' . '/database/seeds/CBSeeder.php',
         'Cms_usersSeeder' => __DIR__ . '/../..' . '/database/seeds/CBSeeder.php',
+        'Collective\\Html\\Componentable' => __DIR__ . '/..' . '/laravelcollective/html/src/Componentable.php',
+        'Collective\\Html\\Eloquent\\FormAccessible' => __DIR__ . '/..' . '/laravelcollective/html/src/Eloquent/FormAccessible.php',
+        'Collective\\Html\\FormBuilder' => __DIR__ . '/..' . '/laravelcollective/html/src/FormBuilder.php',
+        'Collective\\Html\\FormFacade' => __DIR__ . '/..' . '/laravelcollective/html/src/FormFacade.php',
+        'Collective\\Html\\HtmlBuilder' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlBuilder.php',
+        'Collective\\Html\\HtmlFacade' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlFacade.php',
+        'Collective\\Html\\HtmlServiceProvider' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlServiceProvider.php',
         'Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'Cron\\AbstractField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/AbstractField.php',
         'Cron\\CronExpression' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/CronExpression.php',
@@ -3000,6 +3039,31 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'League\\Flysystem\\Util\\ContentListingFormatter' => __DIR__ . '/..' . '/league/flysystem/src/Util/ContentListingFormatter.php',
         'League\\Flysystem\\Util\\MimeType' => __DIR__ . '/..' . '/league/flysystem/src/Util/MimeType.php',
         'League\\Flysystem\\Util\\StreamHasher' => __DIR__ . '/..' . '/league/flysystem/src/Util/StreamHasher.php',
+        'League\\Fractal\\Manager' => __DIR__ . '/..' . '/league/fractal/src/Manager.php',
+        'League\\Fractal\\Pagination\\Cursor' => __DIR__ . '/..' . '/league/fractal/src/Pagination/Cursor.php',
+        'League\\Fractal\\Pagination\\CursorInterface' => __DIR__ . '/..' . '/league/fractal/src/Pagination/CursorInterface.php',
+        'League\\Fractal\\Pagination\\DoctrinePaginatorAdapter' => __DIR__ . '/..' . '/league/fractal/src/Pagination/DoctrinePaginatorAdapter.php',
+        'League\\Fractal\\Pagination\\IlluminatePaginatorAdapter' => __DIR__ . '/..' . '/league/fractal/src/Pagination/IlluminatePaginatorAdapter.php',
+        'League\\Fractal\\Pagination\\PagerfantaPaginatorAdapter' => __DIR__ . '/..' . '/league/fractal/src/Pagination/PagerfantaPaginatorAdapter.php',
+        'League\\Fractal\\Pagination\\PaginatorInterface' => __DIR__ . '/..' . '/league/fractal/src/Pagination/PaginatorInterface.php',
+        'League\\Fractal\\Pagination\\PhalconFrameworkPaginatorAdapter' => __DIR__ . '/..' . '/league/fractal/src/Pagination/PhalconFrameworkPaginatorAdapter.php',
+        'League\\Fractal\\Pagination\\ZendFrameworkPaginatorAdapter' => __DIR__ . '/..' . '/league/fractal/src/Pagination/ZendFrameworkPaginatorAdapter.php',
+        'League\\Fractal\\ParamBag' => __DIR__ . '/..' . '/league/fractal/src/ParamBag.php',
+        'League\\Fractal\\Resource\\Collection' => __DIR__ . '/..' . '/league/fractal/src/Resource/Collection.php',
+        'League\\Fractal\\Resource\\Item' => __DIR__ . '/..' . '/league/fractal/src/Resource/Item.php',
+        'League\\Fractal\\Resource\\NullResource' => __DIR__ . '/..' . '/league/fractal/src/Resource/NullResource.php',
+        'League\\Fractal\\Resource\\Primitive' => __DIR__ . '/..' . '/league/fractal/src/Resource/Primitive.php',
+        'League\\Fractal\\Resource\\ResourceAbstract' => __DIR__ . '/..' . '/league/fractal/src/Resource/ResourceAbstract.php',
+        'League\\Fractal\\Resource\\ResourceInterface' => __DIR__ . '/..' . '/league/fractal/src/Resource/ResourceInterface.php',
+        'League\\Fractal\\Scope' => __DIR__ . '/..' . '/league/fractal/src/Scope.php',
+        'League\\Fractal\\ScopeFactory' => __DIR__ . '/..' . '/league/fractal/src/ScopeFactory.php',
+        'League\\Fractal\\ScopeFactoryInterface' => __DIR__ . '/..' . '/league/fractal/src/ScopeFactoryInterface.php',
+        'League\\Fractal\\Serializer\\ArraySerializer' => __DIR__ . '/..' . '/league/fractal/src/Serializer/ArraySerializer.php',
+        'League\\Fractal\\Serializer\\DataArraySerializer' => __DIR__ . '/..' . '/league/fractal/src/Serializer/DataArraySerializer.php',
+        'League\\Fractal\\Serializer\\JsonApiSerializer' => __DIR__ . '/..' . '/league/fractal/src/Serializer/JsonApiSerializer.php',
+        'League\\Fractal\\Serializer\\Serializer' => __DIR__ . '/..' . '/league/fractal/src/Serializer/Serializer.php',
+        'League\\Fractal\\Serializer\\SerializerAbstract' => __DIR__ . '/..' . '/league/fractal/src/Serializer/SerializerAbstract.php',
+        'League\\Fractal\\TransformerAbstract' => __DIR__ . '/..' . '/league/fractal/src/TransformerAbstract.php',
         'Maatwebsite\\Excel\\Classes\\Cache' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Classes/Cache.php',
         'Maatwebsite\\Excel\\Classes\\FormatIdentifier' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Classes/FormatIdentifier.php',
         'Maatwebsite\\Excel\\Classes\\LaravelExcelWorksheet' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Classes/LaravelExcelWorksheet.php',
@@ -5519,6 +5583,55 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'Xethron\\MigrationsGenerator\\Syntax\\DroppedTable' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/DroppedTable.php',
         'Xethron\\MigrationsGenerator\\Syntax\\RemoveForeignKeysFromTable' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/RemoveForeignKeysFromTable.php',
         'Xethron\\MigrationsGenerator\\Syntax\\Table' => __DIR__ . '/..' . '/xethron/migrations-generator/src/Xethron/MigrationsGenerator/Syntax/Table.php',
+        'Yajra\\DataTables\\ApiResourceDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/ApiResourceDataTable.php',
+        'Yajra\\DataTables\\ButtonsServiceProvider' => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src/ButtonsServiceProvider.php',
+        'Yajra\\DataTables\\CollectionDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/CollectionDataTable.php',
+        'Yajra\\DataTables\\Commands\\TransformerMakeCommand' => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src/Commands/TransformerMakeCommand.php',
+        'Yajra\\DataTables\\Contracts\\DataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Contracts/DataTable.php',
+        'Yajra\\DataTables\\Contracts\\DataTableButtons' => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src/Contracts/DataTableButtons.php',
+        'Yajra\\DataTables\\Contracts\\DataTableScope' => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src/Contracts/DataTableScope.php',
+        'Yajra\\DataTables\\DataTableAbstract' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTableAbstract.php',
+        'Yajra\\DataTables\\DataTables' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTables.php',
+        'Yajra\\DataTables\\DataTablesEditor' => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src/DataTablesEditor.php',
+        'Yajra\\DataTables\\DataTablesEditorException' => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src/DataTablesEditorException.php',
+        'Yajra\\DataTables\\DataTablesServiceProvider' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTablesServiceProvider.php',
+        'Yajra\\DataTables\\EditorServiceProvider' => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src/EditorServiceProvider.php',
+        'Yajra\\DataTables\\EloquentDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/EloquentDataTable.php',
+        'Yajra\\DataTables\\Exceptions\\Exception' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Exceptions/Exception.php',
+        'Yajra\\DataTables\\Facades\\DataTables' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Facades/DataTables.php',
+        'Yajra\\DataTables\\FractalServiceProvider' => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src/FractalServiceProvider.php',
+        'Yajra\\DataTables\\Generators\\DataTablesEditorCommand' => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src/Generators/DataTablesEditorCommand.php',
+        'Yajra\\DataTables\\Generators\\DataTablesMakeCommand' => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src/Generators/DataTablesMakeCommand.php',
+        'Yajra\\DataTables\\Generators\\DataTablesScopeCommand' => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src/Generators/DataTablesScopeCommand.php',
+        'Yajra\\DataTables\\HtmlServiceProvider' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/HtmlServiceProvider.php',
+        'Yajra\\DataTables\\Html\\Builder' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Builder.php',
+        'Yajra\\DataTables\\Html\\Column' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Column.php',
+        'Yajra\\DataTables\\Html\\Editor' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor.php',
+        'Yajra\\DataTables\\Html\\Editor\\Boolean' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Boolean.php',
+        'Yajra\\DataTables\\Html\\Editor\\Checkbox' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Checkbox.php',
+        'Yajra\\DataTables\\Html\\Editor\\Date' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Date.php',
+        'Yajra\\DataTables\\Html\\Editor\\DateTime' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/DateTime.php',
+        'Yajra\\DataTables\\Html\\Editor\\Field' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Field.php',
+        'Yajra\\DataTables\\Html\\Editor\\Hidden' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Hidden.php',
+        'Yajra\\DataTables\\Html\\Editor\\Number' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Number.php',
+        'Yajra\\DataTables\\Html\\Editor\\Options' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Options.php',
+        'Yajra\\DataTables\\Html\\Editor\\Password' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Password.php',
+        'Yajra\\DataTables\\Html\\Editor\\Radio' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Radio.php',
+        'Yajra\\DataTables\\Html\\Editor\\ReadOnly' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/ReadOnly.php',
+        'Yajra\\DataTables\\Html\\Editor\\Select' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Select.php',
+        'Yajra\\DataTables\\Html\\Editor\\Text' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Text.php',
+        'Yajra\\DataTables\\Html\\Editor\\TextArea' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/TextArea.php',
+        'Yajra\\DataTables\\Html\\Editor\\Time' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Editor/Time.php',
+        'Yajra\\DataTables\\Html\\Parameters' => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src/Html/Parameters.php',
+        'Yajra\\DataTables\\Processors\\DataProcessor' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Processors/DataProcessor.php',
+        'Yajra\\DataTables\\Processors\\RowProcessor' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Processors/RowProcessor.php',
+        'Yajra\\DataTables\\QueryDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/QueryDataTable.php',
+        'Yajra\\DataTables\\Services\\DataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src/Services/DataTable.php',
+        'Yajra\\DataTables\\Transformers\\DataArrayTransformer' => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src/Transformers/DataArrayTransformer.php',
+        'Yajra\\DataTables\\Transformers\\FractalTransformer' => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src/Transformers/FractalTransformer.php',
+        'Yajra\\DataTables\\Utilities\\Config' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Config.php',
+        'Yajra\\DataTables\\Utilities\\Helper' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Helper.php',
+        'Yajra\\DataTables\\Utilities\\Request' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Request.php',
         'Zend\\Diactoros\\AbstractSerializer' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/AbstractSerializer.php',
         'Zend\\Diactoros\\CallbackStream' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/CallbackStream.php',
         'Zend\\Diactoros\\Exception\\DeserializationException' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/Exception/DeserializationException.php',

@@ -10,7 +10,7 @@
 						<form class='search-box' id='searchforms' action="/hasil-pencarian/" method="GET">
 							<p id="searchbart">
 								<input class="input-search" id="txt_search" type="text" name="query" placeholder="Masukan Kata Pencarian.">
-								<input type="submit" class="submit-search" value="Cari");">
+								<input type="submit" class="submit-search" value="Cari");>
 							</p>
 						</form>
 					</div>
