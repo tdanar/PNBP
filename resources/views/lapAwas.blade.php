@@ -1,4 +1,4 @@
-<!-- First you need to extend the CB layout -->
+
 @extends('crudbooster::admin_template')
 
 
@@ -86,25 +86,45 @@ $(document).ready(function() {
                                             }
                                         },
                                         { 'data': 'rekomendasi'},
-                                        { 'data': 'status_tl'},
+                                        { 'data': 'KodTL'},
                                         { 'render': function (data, type, full, meta) {
                                                     var mainpath = {!! json_encode(CRUDBooster::mainpath()) !!};
                                                     var temuanpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_temuan')) !!};
                                                     var rekpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_rekomend')) !!};
                                                     var delpath = {!! json_encode(CRUDBooster::mainpath()) !!}+'/delete/'+full.id;
+                                                    var verpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/validasi/'+full.id;
                                                     var begin = "<div class='btn-toolbar' role='toolbar'><div class='btn-group btn-group-xs' role='group'>";
                                                     var end = "</div></div>";
-                                                    var buttonDtl = '<a class="btn btn-primary" href="'+mainpath+'/detail/'+full.id+'" role="button" data-toggle="popover" title="Detil Laporan" data-content="Klik untuk melihat detil laporan No. '+full.no_lap+' di sini."><i class="fa fa-eye"></i></a>';
+                                                    var penanda = '<span style="color: #ffffff; opacity: 0.0;">'+full.id+'</span>';
+                                                    var modalDtl = '<div id="detilmodal'+full.id+'" class="modal fade" role="dialog">'+
+                                                                                        '<div class="modal-dialog modal-lg" role="document">'+
+                                                                                            '<div class="modal-content">'+
+                                                                                                '</div>'+
+                                                                                            '</div>'+
+                                                                                        '</div>';
+
                                                     switch (true) {
                                                                 case ({!! json_encode(CRUDBooster::isUpdate()) !!}):
-                                                                    var button = '<a class="btn btn-success" href="'+mainpath+'/edit/'+full.id+'" role="button" data-toggle="popover" title="Ubah Laporan" data-content="Silahkan mengubah identitas laporan No. '+full.no_lap+' di sini."><i class="fa fa-pencil"></i></a>';
+                                                                    var button = '<a class="btn btn-success btn-xs btn-block" href="'+mainpath+'/edit/'+full.id+'" role="button" data-toggle="popover" title="Ubah Laporan" data-content="Silahkan mengubah identitas laporan No. '+full.no_lap+' di sini."><i class="fa fa-pen-nib"></i></a>';
+                                                                    var button5 = '<a class="btn btn-warning btn-xs btn-block" href="'+verpath+'" role="button" data-toggle="modal" title="Kirim Laporan" data-target="#verifmodal'+full.id+'"><i class="fa fa-paper-plane"></i></a>'+
+                                                                                    '<div id="verifmodal'+full.id+'" class="modal fade" role="dialog">'+
+                                                                                        '<div class="modal-dialog" role="document">'+
+                                                                                            '<div class="modal-content">'+
+                                                                                                '</div>'+
+                                                                                            '</div>'+
+                                                                                        '</div>';
+
+
 
                                                                 case ({!! json_encode(CRUDBooster::isView()) !!}):
-                                                                    var button2 = '<a class="btn btn-primary" href="'+temuanpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='+full.id+'&foreign_key=id_lap&label=Temuan" role="button" data-toggle="popover" title="Tambah/Hapus Temuan" data-content="Silahkan mengubah temuan-temuan laporan No. '+full.no_lap+' di sini."><i class="fa fa-bars"></i></a>';
-                                                                    var button3 = '<a class="btn btn-warning" href="'+rekpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='+full.id_temuan+'&foreign_key=id_temuan&label=Rekomendasi" role="button" data-toggle="popover" title="Tambah/Hapus Rekomendasi" data-content="Silahkan mengubah rekomendasi-rekomendasi laporan No. '+full.no_lap+' di sini."><i class="fa fa-bars"></i></a>';
+                                                                var buttonDtl = '<a class="btn btn-primary btn-xs btn-block" href="'+mainpath+'/detail/'+full.id+'" role="button" data-toggle="modal" title="Detil Laporan" data-target="#detilmodal'+full.id+'"><i class="fa fa-eye"></i></a>';
+
+                                                                    var button2 = '<a class="btn btn-info btn-xs btn-block" href="'+temuanpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='+full.id+'&foreign_key=id_lap&label=Temuan" role="button" data-toggle="popover" title="Tambah/Hapus Temuan" data-content="Silahkan mengubah temuan-temuan laporan No. '+full.no_lap+' di sini."><i class="fa fa-plus"></i></a>';
+                                                                    var button3 = '<a class="btn btn-success btn-xs btn-block" href="'+rekpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='+full.id_temuan+'&foreign_key=id_temuan&label=Rekomendasi" role="button" data-toggle="popover" title="Tambah/Hapus Rekomendasi" data-content="Silahkan mengubah rekomendasi-rekomendasi laporan No. '+full.no_lap+' di sini."><i class="fa fa-tasks"></i></a>';
+
 
                                                                 case ({!! json_encode(CRUDBooster::isDelete()) !!}):
-                                                                    var button4 = '<a class="btn btn-danger" href="#" onclick="klikDelete('+'\''+delpath+'\''+')" role="button" data-toggle="popover" title="Hapus Laporan" data-content="Anda dapat menghapus laporan No. '+full.no_lap+' di sini. Penghapusan ini tidak dapat dikembalikan."><i class="fa fa-trash"></i></a>';
+                                                                    var button4 = '<a class="btn btn-danger btn-xs btn-block" href="#" onclick="klikDelete('+'\''+delpath+'\''+')" role="button" data-toggle="popover" title="Hapus Laporan" data-content="Anda dapat menghapus laporan No. '+full.no_lap+' di sini. Penghapusan ini tidak dapat dikembalikan."><i class="fa fa-trash"></i></a>';
 
                                                                 break;
 
@@ -113,12 +133,19 @@ $(document).ready(function() {
                                                                     var button2 = '';
                                                                     var button3 = '';
                                                                     var button4 = '';
+                                                                    var button5 = '';
+
 
                                                             };
                                                     if (full.id_status_kirim === "1"){
-                                                        return begin+buttonDtl+button+button2+button3+button4+end;
+                                                        // if(!full.id_temuan){
+                                                            return button2+button+buttonDtl+button4+button5+penanda+modalDtl;
+                                                        /* }else{
+                                                            return button2+buttonDtl+button+button4+button5+penanda+modalDtl;
+                                                        } */
+
                                                     }else{
-                                                        return begin+buttonDtl+end;
+                                                        return buttonDtl+penanda+modalDtl;
                                                     }
 
                                                     },
@@ -160,18 +187,6 @@ $(document).ready(function() {
 
                                 },
                     drawCallback: function ( settings ) {
-                                    $('#table-filter').on('change', function(e){
-                                                table.column(0).search(this.value).draw();
-                                                e.preventDefault();
-                                                });
-                                    $('#table-filter2').on('change', function(e){
-                                                table.column(4).search(this.value).draw();
-                                                e.preventDefault();
-                                                });
-                                    $('#table-filter3').on('change', function(e){
-                                                table.column(8).search(this.value).draw();
-                                                e.preventDefault();
-                                                });
 
                                     $('[data-toggle="popover"]').popover({
                                         trigger: "hover",
@@ -187,16 +202,49 @@ $(document).ready(function() {
                                         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 style="background-color:green;color:white;" class="popover-title text-uppercase"></h3><div class="popover-content"></div></div>',
                                         html: true
                                     });
+                                    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                                        e.target // newly activated tab
+                                        e.relatedTarget // previous active tab
+                                        });
                                     drawCallback(this.api());
+                                    $('#table-filter').on('change', function(){
+                                                val = this.value;
+                                                table.column(0).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
+                                    $('#table-filter2').on('change', function(){
+                                                val = this.value;
+                                                table.column(4).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
+                                    $('#table-filter3').on('change', function(){
+                                                val = this.value;
+                                                table.column(8).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
                             }
             });
 
 });
+/*         $(".modal").on("hidden.bs.modal", function(){
+            $(".modal-body").html("");
+        }); */
 
     function klikDelete(link) {
          swal({
-            title: "Apakah anda yakin ?",
+            title: "Apakah anda yakin menghapus laporan ini?",
             text: "Anda tidak akan dapat mengembalikan data anda!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ff0000",
+            confirmButtonText: "Hapus",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false },
+            function(){  location.href=link });
+            null;
+        };
+
+    function klikKirim(link){
+        swal({
+            title: "Yakin mengirimkan laporan?",
+            text: "Anda yakin ingin lanjut mengirimkan laporan ini? Setelah kirim Anda tidak dapat mengubah data laporan lagi.",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#ff0000",
@@ -205,10 +253,16 @@ $(document).ready(function() {
             closeOnConfirm: false },
             function(){  location.href=link });
             null;
-        };
+    };
+
+
+
 
     function drawCallback(api) {
-        var rows = api.rows( {page:'current'} ).nodes(),
+        var info = api.page.info();
+
+        if(info.recordsDisplay != 0){
+            var rows = api.rows( {page:'current'} ).nodes(),
             settings = {
                     "COLUMN_THEME" : 0,
                     "COLUMN_SUBTHEME" : 1,
@@ -216,7 +270,7 @@ $(document).ready(function() {
                     "COLUMN_SUBTHEME3" : 3,
                     "COLUMN_SUBTHEME4" : 4,
                     "COLUMN_SUBTHEME5" : 5,
-                    //"COLUMN_THEME2" : 7
+                    "COLUMN_THEME2" : 8
 
             };
 
@@ -227,16 +281,18 @@ $(document).ready(function() {
                 mergeCells(rows, settings.COLUMN_SUBTHEME3);
                 mergeCells(rows, settings.COLUMN_SUBTHEME4);
                 mergeCells(rows, settings.COLUMN_SUBTHEME5);
-                //mergeCells(rows, settings.COLUMN_THEME2);
+                mergeCells(rows, settings.COLUMN_THEME2);
+        }else{
+        }
 
             }
     function mergeCells(rows, rowIndex) {
-
-            var last = null,
+        var last = null,
                 currentRow = null,
                 k = null,
                 gNum = 0,
                 refLine = null;
+
 
             rows.each( function (line, i) {
                 currentRow = line.childNodes[rowIndex];
@@ -260,6 +316,10 @@ $(document).ready(function() {
 
             // for the last group
                 rows[refLine].childNodes[rowIndex].rowSpan = ++k;
+
+
+
+
 
         }
 
@@ -311,8 +371,9 @@ $(document).ready(function() {
     <div class="col-xs-2">
         <select id="table-filter3">
             <option value="">All</option>
-            <option>Dalam Proses</option>
-            <option>Tuntas</option>
+            @foreach($result->unique('KodTL')->where('KodTL','!=',null) as $row)
+            <option>{{$row->KodTL}}</option>
+            @endforeach
             </select>
     </div>
 </div>
@@ -329,8 +390,8 @@ $(document).ready(function() {
         <th title="Judul Temuan">Temuan</th>
         <th title="Nilai Temuan">Nilai</th>
         <th title="Rekomendasi">Rekomendasi</th>
-        <th title="Status Tindak Lanjut">Status TL</th>
-        <th>Aksi</th>
+        <th title="Klasifikasi Tindak Lanjut">Status TL</th>
+        <th style="width:50px">Aksi</th>
     </tr>
   </thead>
   {{--<tbody>
@@ -398,7 +459,6 @@ $(document).ready(function() {
   </tbody>--}}
 </table>
 
-<!-- ADD A PAGINATION -->
-<p></p>
+
 
 @endsection

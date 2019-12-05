@@ -882,17 +882,10 @@
             <section class="hidden-desk	">
                     <div class="container">
                         <div class="menu-home-mobile">
-                            {{-- <a href="https://www.kemenkeu.go.id/dataapbn"><div class="ico_1"><span>APBN</span></div></a>
-                            <a href="/publikasi/berita/"><div class="ico_2"><span>Berita Terbaru</span></div></a>
-                            <a href="http://simulasiapbn.kemenkeu.go.id"><div class="ico_sapbn"><span>Simulasi APBN</span></div>
-                            <a href="http://visual.kemenkeu.go.id"><div class="ico_vk"><span>Visual Kemenkeu</span></div> --}}
-                            <!--<a href="#"><div class="ico_3"><span>Informasi Terbaru</span></div></a>-->
-                            <!--<a href="http://www.jdih.kemenkeu.go.id"><div class="ico_4"><span>Peraturan Terbaru</span></div></a>-->
-                            <!--<a href="http://spanint.kemenkeu.go.id/spanint/"><div class="ico_5"><span>Online Monitoring Span</span></div></a>-->
-                            {{-- <a href="/publikasi/e-magazine/"><div class="ico_6"><span>E-Magazine</span></div></a>
-                            <a href="/layanan/daftar-layanan/"><div class="ico_7"><span>Layanan</span></div></a>
-                            <a href="/publikasi/siaran-pers"><div class="ico_8"><span>Siaran Pers</span></div></a>
-                            <a href="http://www.fiskal.kemenkeu.go.id/dw-kurs-db.asp"><div class="ico_9"><span>Kurs Pajak</span></div></a> --}}
+                            <a href="/ma/lap_awas"><div class="ico_1"><span>E-Reporting</span></div></a>
+                            <a href="/infopnbp"><div class="ico_2"><span>Info PNBP</span></div></a>
+                            <a href="/helpdesk"><div class="ico_3"><span>Hubungi Kami</span></div></a>
+                            <a href="/faq"><div class="ico_4"><span>F.A.Q.</span></div></a>
                             <div class="clear"></div>
                         </div>
                     </div>

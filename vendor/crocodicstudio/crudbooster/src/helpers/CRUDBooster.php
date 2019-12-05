@@ -219,6 +219,11 @@ class CRUDBooster
         return Session::get('admin_unit');
     }
 
+    public static function myUnitId()
+    {
+        return Session::get('admin_unit_id');
+    }
+
     public static function myPhoto()
     {
         return Session::get('admin_photo');
@@ -1420,7 +1425,8 @@ class CRUDBooster
 			$this->global_privilege    = '.$global_privilege.';
 			$this->button_table_action = '.$button_table_action.';
 			$this->button_action_style = "'.$button_action_style.'";
-			$this->button_add          = '.$button_add.';
+            $this->button_add          = '.$button_add.';
+            $this->label_add_button    = '.$label_add_button.';
 			$this->button_delete       = '.$button_delete.';
 			$this->button_edit         = '.$button_edit.';
 			$this->button_detail       = '.$button_detail.';

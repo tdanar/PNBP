@@ -14,7 +14,7 @@
                                     {{-- <span><font> </font>134</span> --}}
                                     @if ( Session::get('message') != '' )
                                     <span>
-                                        {{ Session::get('message') }} | <a href="\ma\login">LOGIN</a>
+                                        {{ Session::get('message') }} | <a href="#" data-toggle="popover-login" data-content="<div class='holds-the-iframe'><iframe src='/ma/login' style='height:600px;width:450px;' frameborder='0'></iframe></div>">LOGIN</a>
                                     </span>
                                     @elseif (!empty($id))
                                     <ul class="nav navbar-nav">
@@ -44,7 +44,7 @@
                                             </li>
                                         </ul>
 									@else
-									<a href="\ma\login">LOGIN</a>
+									<a href="#" data-toggle="popover-login" data-content="<div class='holds-the-iframe'><iframe src='/ma/login' style='height:600px;width:450px;' frameborder='0'></iframe></div>">LOGIN</a>
                                     @endif
 								</div>
 								<div class="clear"></div>
@@ -74,28 +74,7 @@
 												$('.'+def).hide();
 											}
 										</script>
-										<script type="text/javascript">
-											$(document).ready(function() {
-												$("#my-menu").mmenu({
-													// options
-													offCanvas: {
-													position: "right"
-													}
-												}, {
-													// configuration
-													offCanvas: {
-														pageSelector: "#my-wrapper"
 
-													}
-												});
-
-												var API = $("#my-menu").data( "mmenu" );
-												$('#ikeh').click(function() {
-													API.open();
-												});
-
-											});
-                                        </script>
                                         @if(!empty(CRUDBooster::myId()))
                                     <ul class="menu-links" style="display: none; max-height: 400px; overflow: auto;">
 
@@ -257,4 +236,5 @@
 							</section>
 						</nav>
 			</header>
-    	</div>
+        </div>
+

@@ -20,17 +20,14 @@
         <link rel="stylesheet" href="/css/responsive.css" type="text/css">
         <link rel="shortcut icon" href="/media/favicon.ico" type="image/x-icon" />
         <link href="https://vjs.zencdn.net/7.6.0/video-js.css" rel="stylesheet">
-        <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
-        <script type="text/javascript" src="/scripts/jquery.min.js"></script>
 
-        <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
         <link href="/css/menu.css" rel="stylesheet" type="text/css">
 
-        <script type="text/javascript" src="/scripts/mega_menu.min.js"></script>
+
         <link rel="stylesheet" href="/css/mega_menu.min.css" type="text/css"/>
 
         <link href="/css/mmenu_button.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="/scripts/jquery.mmenu.all.js"></script>
+
         <link rel="stylesheet" href="/css/jquery.mmenu.all.css" type="text/css"/>
         <link href="/css/font/fontawesome/css/all.css" rel="stylesheet">
 
@@ -73,6 +70,10 @@
             .form-group > label:first-child {
                 display: block
             }
+
+            .holds-the-iframe {
+                background:url(/vendor/crudbooster/assets/lightbox/dist/images/loading.gif) center center no-repeat;
+                }
 
 
         </style>

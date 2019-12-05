@@ -43,14 +43,19 @@
     </div>
 
 <!-- Star javascript Home -->
+<script type="text/javascript" src="https://unpkg.com/popper.js@latest/dist/umd/popper.js"></script>
 <script src="/vendor/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
 <script src="/vendor/amcharts/amcharts/serial.js" type="text/javascript"></script>
-<script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+
+
 <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+<script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
 <script type="text/javascript" src="/scripts/home.js"></script>
 <script type="text/javascript" src="/vendor/owlcarousel/owl.carousel.js"></script>
 <script type="text/javascript" src="/scripts/scripts.js"></script>
 <script type="text/javascript" src="/scripts/mega_menu.min.js"></script>
+
+
 
 
 

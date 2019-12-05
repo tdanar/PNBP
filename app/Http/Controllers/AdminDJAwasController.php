@@ -224,53 +224,142 @@
         public function getIndex() {
             //First, Add an auth
              if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
-
-             //Create your own query
              $data = [];
              $data['page_title'] = 'Laporan Pengawasan PNBP';
-             $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
-                                    ->leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
-                                    ->groupBy('t_ref_jenis_awas.jenis_awas')
-                                    ->get());
-            $data['result2'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`')
-                                    ->leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
-                                    ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
-                                    ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.Id_up','=','t_ref_kod_temuan1.id')
-                                    ->groupBy('t_ref_kod_temuan1.Deskripsi')
-                                    ->get());
-            $data['result3'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`')
-                                    ->leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
-                                    ->join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
-                                    ->join('t_ref_kod_sebab AS t_ref_kod_sebab1','t_ref_kod_sebab.Id_up_sebab','=','t_ref_kod_sebab1.id')
-                                    ->groupBy('t_ref_kod_sebab1.Deskripsi')
-                                    ->get());
-            $data['result4'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`')
-                                    ->leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
-                                    ->leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
-                                    ->join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
-                                    ->groupBy('t_ref_kod_rekomendasi.Deskripsi')
-                                    ->get());
-            $data['result5'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
-                                    ->leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
-                                    ->leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+             if(CRUDBooster::myPrivilegeId() === 2){
+                $data['unit'] = CRUDBooster::myUnit();
+                //$data['idunit'] = CRUDBooster::myUnitId();
+                $data['result1'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
+                                       ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                       ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                       ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_jenis_awas.jenis_awas')
+                                       ->get());
+
+                $data['result2'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`')
+                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
+                                       ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
+                                       ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_kod_temuan1.Deskripsi')
+                                       ->get());
+                $data['result3'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`')
+                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                       ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                       ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
+                                       ->join('t_ref_kod_sebab AS t_ref_kod_sebab1','t_ref_kod_sebab.Id_up_sebab','=','t_ref_kod_sebab1.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_kod_sebab1.Deskripsi')
+                                       ->get());
+                $data['result4'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`')
+                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                                       ->join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_kod_rekomendasi.Deskripsi')
+                                       ->get());
+                $data['result5'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
+                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                       ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                                       ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_tl.deskripsi')
+                                       ->get());
+                $data['batang1'] = json_encode(DB::table('t_ref_unit')->selectRaw('SUM(t_lap_awas_temuan.nilai_uang) AS `NilaiUang`,t_ref_kod_temuan1.Deskripsi AS `KodTemuan`,t_ref_matauang.kode')
+                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                        ->join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
+                                       ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
+                                       ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_kod_temuan1.Deskripsi')
+                                       ->groupBy('t_ref_matauang.kode')
+                                       ->get());
+               $data['batang2'] = json_encode(DB::table('t_ref_unit')->selectRaw('`t_ref_matauang`.`kode`, SUM(`t_lap_awas_temuan`.`nilai_uang`) AS `NilaiUang`, `t_ref_tl`.`deskripsi` AS `statusTL`')
+                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
+                                       ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                                       ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_tl.deskripsi')
+                                       ->groupBy('t_ref_matauang.kode')
+                                       ->get());
+                $data['matauang'] = DB::table('t_ref_unit')->selectRaw('DISTINCT `t_ref_matauang`.`kode`')
+                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
+                                       ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                                       ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                                       ->where('t_ref_unit.id', CRUDBooster::myUnitId())
+                                       ->groupBy('t_ref_tl.deskripsi')
+                                       ->groupBy('t_ref_matauang.kode')
+                                       ->get();
+             }else{
+                $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
+                                       ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
+                                       ->groupBy('t_ref_jenis_awas.jenis_awas')
+                                       ->get());
+               $data['result2'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`')
+                                       ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
+                                       ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
+                                       ->groupBy('t_ref_kod_temuan1.Deskripsi')
+                                       ->get());
+               $data['result3'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`')
+                                       ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
+                                       ->join('t_ref_kod_sebab AS t_ref_kod_sebab1','t_ref_kod_sebab.Id_up_sebab','=','t_ref_kod_sebab1.id')
+                                       ->groupBy('t_ref_kod_sebab1.Deskripsi')
+                                       ->get());
+               $data['result4'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`')
+                                       ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                                       ->join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
+                                       ->groupBy('t_ref_kod_rekomendasi.Deskripsi')
+                                       ->get());
+               $data['result5'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
+                                       ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+                                       ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                                       ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                                       ->groupBy('t_ref_tl.deskripsi')
+                                       ->get());
+               $data['batang1'] = json_encode(DB::table('t_lap_awas_temuan')->selectRaw('SUM(t_lap_awas_temuan.nilai_uang) AS `NilaiUang`,t_ref_kod_temuan1.Deskripsi AS `KodTemuan`,t_ref_matauang.kode')
+                                       ->join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
+                                       ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
+                                       ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
+                                       ->groupBy('t_ref_kod_temuan1.Deskripsi')
+                                       ->groupBy('t_ref_matauang.kode')
+                                       ->get());
+               $data['batang2'] = json_encode(DB::table('t_lap_awas_temuan')->selectRaw('`t_ref_matauang`.`kode`, SUM(`t_lap_awas_temuan`.`nilai_uang`) AS `NilaiUang`, `t_ref_tl`.`deskripsi` AS `statusTL`')
+                                       ->join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
+                                       ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                                       ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                                       ->groupBy('t_ref_tl.deskripsi')
+                                       ->groupBy('t_ref_matauang.kode')
+                                       ->get());
+                $data['matauang'] = DB::table('t_lap_awas_temuan')->selectRaw('DISTINCT `t_ref_matauang`.`kode`')
+                                    ->join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
+                                    ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
                                     ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
                                     ->groupBy('t_ref_tl.deskripsi')
-                                    ->get());
-            $data['batang1'] = json_encode(DB::table('t_lap_awas_temuan')->selectRaw('SUM(t_lap_awas_temuan.nilai_uang) AS `NilaiUang`,t_ref_kod_temuan1.Deskripsi AS `Kodifikasi Temuan`,t_ref_matauang.kode')
-                                    ->leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
-                                    ->leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
-                                    ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
-                                    ->groupBy('t_ref_kod_temuan1.Deskripsi')
                                     ->groupBy('t_ref_matauang.kode')
-                                    ->get());
-            $data['batang2'] = json_encode(DB::table('t_lap_awas_temuan')->selectRaw('SUM(t_lap_awas_temuan.nilai_uang) AS `NilaiUang`,t_ref_kod_temuan1.Deskripsi AS `Kodifikasi Temuan`,t_ref_matauang.kode')
-                                    ->leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')
-                                    ->leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
-                                    ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
-                                    ->groupBy('t_ref_kod_temuan1.Deskripsi')
-                                    ->groupBy('t_ref_matauang.kode')
-                                    ->get());
-            //dd($data['result2']);
+                                    ->get();
+             }
+
+            //dd($data['matauang']);
 
              //Create a view. Please use `cbView` method instead of view method from laravel.
              $this->cbView('diagAwas',$data);

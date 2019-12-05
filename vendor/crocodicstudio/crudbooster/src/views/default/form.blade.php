@@ -15,13 +15,19 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title or "Page Title" !!}</strong>
+                <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}</strong>
             </div>
 
             <div class="panel-body" style="padding:20px 0px 0px 0px">
                 <?php
-                $action = (@$row) ? CRUDBooster::mainpath("edit-save/$row->id") : CRUDBooster::mainpath("add-save");
-                $return_url = ($return_url) ?: g('return_url');
+                if ($button_addmore==TRUE){
+                    $action = (@$row) ? CRUDBooster::mainpath("edit-save/$row->id") : CRUDBooster::mainpath("add-save");
+                    $return_url = ($return_url) ?: g('return_url');
+                }elseif($button_addtemuan==TRUE){
+                    $action = (@$row) ? CRUDBooster::mainpath("edit-temuan/$row->id") : CRUDBooster::mainpath("add-temuan");
+
+                }
+
                 ?>
                 <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data" action='{{$action}}'>
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -62,6 +68,12 @@
 
                                     @if($button_save && $command != 'detail')
                                         <input type="submit" name="submit" value='{{trans("crudbooster.button_save")}}' class='btn btn-success'>
+                                    @endif
+
+                                    @if(CRUDBooster::isCreate() && $button_addtemuan==TRUE && $command == 'add')
+                                        <input type="submit" name="submit" value='{{$button_addtemuan_label}}' class='btn btn-success'>
+                                    @elseif(CRUDBooster::isUpdate() && $button_addtemuan==TRUE && $command == 'edit')
+                                        <input type="submit" name="submit" value='{{$button_edittemuan_label}}' class='btn btn-success'>
                                     @endif
 
                                 @endif

@@ -17,12 +17,13 @@
 			$this->button_table_action = true;
 			$this->button_bulk_action = true;
 			$this->button_action_style = "button_icon";
-			$this->button_add = true;
+            $this->button_add = true;
+            $this->label_add_button = "Tambah Rekomendasi";
 			$this->button_edit = true;
 			$this->button_delete = true;
-			$this->button_detail = true;
+			$this->button_detail = false;
 			$this->button_show = false;
-			$this->button_filter = true;
+			$this->button_filter = false;
 			$this->button_import = false;
 			$this->button_export = false;
 			$this->table = "t_lap_awas_rekomend";
@@ -32,11 +33,11 @@
 			$this->col = [];
 			$this->col[] = ["label"=>"Temuan","name"=>"id_temuan","join"=>"t_lap_awas_temuan,judul"];
 			$this->col[] = ["label"=>"Rekomendasi","name"=>"rekomendasi"];
-			$this->col[] = ["label"=>"Kodifikasi Rekomendasi","name"=>"id_kod_rekomendasi","join"=>"t_ref_kod_rekomendasi,Deskripsi"];
+			$this->col[] = ["label"=>"Klasifikasi Rekomendasi","name"=>"id_kod_rekomendasi","join"=>"t_ref_kod_rekomendasi,Deskripsi"];
 			$this->col[] = ["label"=>"Tanggal TL","name"=>"tgl_tl",'callback_php'=>'date("d-m-Y",strtotime($row->tgl_tl))'];
 			$this->col[] = ["label"=>"Uraian TL","name"=>"tl"];
-			$this->col[] = ["label"=>"Status TL","name"=>"status_tl"];
-			$this->col[] = ["label"=>"Jenis TL","name"=>"id_kod_tl","join"=>"t_ref_tl,deskripsi"];
+			// $this->col[] = ["label"=>"Status TL","name"=>"status_tl"];
+			$this->col[] = ["label"=>"Status TL","name"=>"id_kod_tl","join"=>"t_ref_tl,deskripsi"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
@@ -46,8 +47,8 @@
 			$this->form[] = ['label'=>'Kodifikasi Rekomendasi','name'=>'id_kod_rekomendasi','type'=>'select2','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_rekomendasi,Deskripsi'];
 			$this->form[] = ['label'=>'Tgl. Tindak Lanjut','name'=>'tgl_tl','type'=>'date','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Uraian Tindak Lanjut','name'=>'tl','type'=>'textarea','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Status Tindak Lanjut','name'=>'status_tl','type'=>'select','width'=>'col-sm-10','dataenum'=>'Dalam Proses;Tuntas'];
-			$this->form[] = ['label'=>'Jenis Tindak Lanjut','name'=>'id_kod_tl','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
+			// $this->form[] = ['label'=>'Status Tindak Lanjut','name'=>'status_tl','type'=>'select','width'=>'col-sm-10','dataenum'=>'Dalam Proses;Tuntas'];
+			$this->form[] = ['label'=>'Status Tindak Lanjut','name'=>'id_kod_tl','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM

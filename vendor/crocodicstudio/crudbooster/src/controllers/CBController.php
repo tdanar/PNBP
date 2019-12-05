@@ -67,11 +67,19 @@ class CBController extends Controller
 
     public $button_addmore = true;
 
+    public $button_addtemuan = false;
+    public $button_edittemuan = false;
+    public $button_addtemuan_label;
+
+    public $button_edittemuan_label;
+
     public $button_table_action = true;
 
     public $button_bulk_action = true;
 
     public $button_add = true;
+
+    public $label_add_button;
 
     public $button_delete = true;
 
@@ -146,10 +154,15 @@ class CBController extends Controller
         $this->data['button_edit'] = $this->button_edit;
         $this->data['button_show'] = $this->button_show;
         $this->data['button_add'] = $this->button_add;
+        $this->data['label_add_button'] = $this->label_add_button;
         $this->data['button_delete'] = $this->button_delete;
         $this->data['button_filter'] = $this->button_filter;
         $this->data['button_export'] = $this->button_export;
         $this->data['button_addmore'] = $this->button_addmore;
+        $this->data['button_addtemuan'] = $this->button_addtemuan;
+        $this->data['button_edittemuan'] = $this->button_edittemuan;
+        $this->data['button_addtemuan_label'] = $this->button_addtemuan_label;
+        $this->data['button_edittemuan_label'] = $this->button_edittemuan_label;
         $this->data['button_cancel'] = $this->button_cancel;
         $this->data['button_save'] = $this->button_save;
         $this->data['button_table_action'] = $this->button_table_action;
@@ -1263,8 +1276,9 @@ class CBController extends Controller
         $page_title = trans("crudbooster.edit_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name, 'name' => $row->{$this->title_field}]);
         $command = 'edit';
         Session::put('current_row_id', $id);
-
+        
         return view('crudbooster::default.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+
     }
 
     public function postEditSave($id)

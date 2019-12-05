@@ -61,7 +61,7 @@ class AdminController extends CBController
         $validator = Validator::make(Request::all(), [
             'username' => 'required|alpha_dash|exists:'.config('crudbooster.USER_TABLE'),
             'password' => 'required',
-            'g-recaptcha-response' => 'required|captcha'
+            'captcha' => 'required|captcha'
         ]);
 
         if ($validator->fails()) {
@@ -86,6 +86,7 @@ class AdminController extends CBController
             Session::put('admin_is_superadmin', $priv->is_superadmin);
             Session::put('admin_name', $users->name);
             Session::put('admin_unit', $unit->unit);
+            Session::put('admin_unit_id', $unit->id);
             Session::put('admin_photo', $photo);
             Session::put('admin_privileges_roles', $roles);
             Session::put("admin_privileges", $users->id_cms_privileges);
@@ -153,4 +154,6 @@ class AdminController extends CBController
 
         //return redirect()->route('getLogin')->with('message', trans("crudbooster.message_after_logout"));
     }
+
+
 }

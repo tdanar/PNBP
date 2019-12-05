@@ -3,7 +3,9 @@
 	use Session;
 	use Request;
 	use DB;
-	use CRUDBooster;
+    use CRUDBooster;
+    use Schema;
+    use crocodicstudio\crudbooster\controllers\LogsController;
 
 	class AdminLapAwasTemuanController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -17,14 +19,18 @@
 			$this->button_table_action = true;
 			$this->button_bulk_action = true;
 			$this->button_action_style = "button_icon";
-			$this->button_add = true;
+            $this->button_add = true;
+            $this->label_add_button = "Tambah Temuan";
 			$this->button_edit = true;
 			$this->button_delete = true;
-			$this->button_detail = true;
+			$this->button_detail = false;
 			$this->button_show = false;
-			$this->button_filter = true;
+			$this->button_filter = false;
 			$this->button_import = false;
-			$this->button_export = false;
+            $this->button_export = false;
+            $this->button_addmore = true;
+            $this->button_addtemuan = false;
+            $this->button_addtemuan_label = "Simpan dan Tambah Rekomendasi";
 			$this->table = "t_lap_awas_temuan";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
@@ -235,6 +241,259 @@
 
 	    }
 
+        public function getEdit($id){
+            $this->button_addmore = FALSE;
+            $this->button_cancel  = TRUE;
+            $this->button_show    = FALSE;
+            $this->button_add     = FALSE;
+            $this->button_delete  = FALSE;
+            $this->hide_form 	  = ['id_lap'];
+            $this->button_edittemuan_label = "Edit Rekomendasi";
+
+
+            $data['page_title'] = 'Edit Temuan';
+            $data['row']        = CRUDBooster::first('t_lap_awas_temuan',$id);
+            $data['command']        = 'edit';
+            $id_up = CRUDBooster::first('t_ref_kod_temuan',$data['row']->id_kod_temuan)->Id_up;
+            $id_up2 = CRUDBooster::first('t_ref_kod_temuan',$data['row']->id_kod_temuan)->id_up2;
+            $Id_up_sebab = CRUDBooster::first('t_ref_kod_sebab',$data['row']->id_kod_sebab)->Id_up_sebab;
+            $data['row']->id_up = $id_up;
+            $data['row']->id_up2 = $id_up2;
+            $data['row']->Id_up_sebab = $Id_up_sebab;
+
+            //dd($data['row']);
+
+
+            $this->cbView('crudbooster::default.form',$data);
+        }
+
+        public function postAddTemuan()
+    {
+        $this->cbLoader();
+        //dd($this->sub_module[0]['path']);
+        if (! CRUDBooster::isCreate() && $this->global_privilege == false) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add_save', [
+                'name' => Request::input($this->title_field),
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
+        $this->validation();
+        $this->input_assignment();
+
+        if (Schema::hasColumn($this->table, 'created_at')) {
+            $this->arr['created_at'] = date('Y-m-d H:i:s');
+        }
+
+        $this->hook_before_add($this->arr);
+
+//         $this->arr[$this->primary_key] = $id = CRUDBooster::newId($this->table); //error on sql server
+        $lastInsertId = $id = DB::table($this->table)->insertGetId($this->arr);
+
+        $up_id = DB::table($this->table)->select('id_lap')->where('id',$lastInsertId)->first();
+
+        //Looping Data Input Again After Insert
+        foreach ($this->data_inputan as $ro) {
+            $name = $ro['name'];
+            if (! $name) {
+                continue;
+            }
+
+            $inputdata = Request::get($name);
+
+            //Insert Data Checkbox if Type Datatable
+            if ($ro['type'] == 'checkbox') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        $relationship_table_pk = CB::pk($ro['relationship_table']);
+                        foreach ($inputdata as $input_id) {
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'select2') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        foreach ($inputdata as $input_id) {
+                            $relationship_table_pk = CB::pk($row['relationship_table']);
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'child') {
+                $name = str_slug($ro['label'], '');
+                $columns = $ro['columns'];
+                $getColName = Request::get($name.'-'.$columns[0]['name']);
+                $count_input_data = ($getColName)?(count($getColName) - 1):0;
+                $child_array = [];
+
+                for ($i = 0; $i <= $count_input_data; $i++) {
+                    $fk = $ro['foreign_key'];
+                    $column_data = [];
+                    $column_data[$fk] = $id;
+                    foreach ($columns as $col) {
+                        $colname = $col['name'];
+                        $column_data[$colname] = Request::get($name.'-'.$colname)[$i];
+                    }
+                    $child_array[] = $column_data;
+                }
+
+                $childtable = CRUDBooster::parseSqlTable($ro['table'])['table'];
+                DB::table($childtable)->insert($child_array);
+            }
+        }
+
+        $this->hook_after_add($lastInsertId);
+
+        $this->return_url = CRUDBooster::adminPath($slug='lap_awas_rekomend').'?return_url='.urlencode(CRUDBooster::adminPath($slug='lap_awas_temuan').'foreign_key=id_lap&label=Temuan&parent_columns=nama_giat_was%2Cno_lap&parent_columns_alias=Nama%20Kegiatan%2CNo.%20Lap&parent_id='.$up_id.'&parent_table=t_lap_awas&return_url='.urlencode(CRUDBooster::adminPath($slug='lap_awas'))).'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='.$lastInsertId.'&foreign_key=id_temuan&label=Rekomendasi';
+
+        //insert log
+        CRUDBooster::insertLog(trans("crudbooster.log_add", ['name' => $this->arr[$this->title_field], 'module' => CRUDBooster::getCurrentModule()->name]));
+
+        return redirect($this->return_url);
+
+    }
+    public function postEditTemuan($id)
+    {
+        $this->cbLoader();
+        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+        if (! CRUDBooster::isUpdate() && $this->global_privilege == false) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_add", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+        $this->validation($id);
+        $this->input_assignment($id);
+
+        if (Schema::hasColumn($this->table, 'updated_at')) {
+            $this->arr['updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        $this->hook_before_edit($this->arr, $id);
+        DB::table($this->table)->where($this->primary_key, $id)->update($this->arr);
+
+        //Looping Data Input Again After Insert
+        foreach ($this->data_inputan as $ro) {
+            $name = $ro['name'];
+            if (! $name) {
+                continue;
+            }
+
+            $inputdata = Request::get($name);
+
+            //Insert Data Checkbox if Type Datatable
+            if ($ro['type'] == 'checkbox') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        foreach ($inputdata as $input_id) {
+                            $relationship_table_pk = CB::pk($ro['relationship_table']);
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'select2') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        foreach ($inputdata as $input_id) {
+                            $relationship_table_pk = CB::pk($ro['relationship_table']);
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'child') {
+                $name = str_slug($ro['label'], '');
+                $columns = $ro['columns'];
+                $getColName = Request::get($name.'-'.$columns[0]['name']);
+                $count_input_data = ($getColName)?(count($getColName) - 1):0;
+                $child_array = [];
+                $childtable = CRUDBooster::parseSqlTable($ro['table'])['table'];
+                $fk = $ro['foreign_key'];
+
+                DB::table($childtable)->where($fk, $id)->delete();
+                $lastId = CRUDBooster::newId($childtable);
+                $childtablePK = CB::pk($childtable);
+
+                for ($i = 0; $i <= $count_input_data; $i++) {
+
+                    $column_data = [];
+                    $column_data[$childtablePK] = $lastId;
+                    $column_data[$fk] = $id;
+                    foreach ($columns as $col) {
+                        $colname = $col['name'];
+                        $column_data[$colname] = Request::get($name.'-'.$colname)[$i];
+                    }
+                    $child_array[] = $column_data;
+
+                    $lastId++;
+                }
+
+                $child_array = array_reverse($child_array);
+
+                DB::table($childtable)->insert($child_array);
+            }
+        }
+
+        $this->hook_after_edit($id);
+
+        $this->return_url = CRUDBooster::adminPath($slug='lap_awas_rekomend').'?return_url='.CRUDBooster::adminPath($slug='lap_awas_temuan/edit').'/'.$id.'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='.$id.'&foreign_key=id_temuan&label=Rekomendasi';
+
+        //insert log
+        $old_values = json_decode(json_encode($row), true);
+        CRUDBooster::insertLog(trans("crudbooster.log_update", [
+            'name' => $this->arr[$this->title_field],
+            'module' => CRUDBooster::getCurrentModule()->name,
+        ]), LogsController::displayDiff($old_values, $this->arr));
+
+        return redirect($this->return_url);
+    }
 
 	    /*
 	    | ----------------------------------------------------------------------

@@ -12,13 +12,13 @@
     <!-- Bootstrap 3.3.2 -->
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css") }}" rel="stylesheet" type="text/css"/>
     <!-- Font Awesome Icons -->
-    <link href="{{asset("vendor/crudbooster/assets/adminlte/font-awesome/css")}}/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    {{-- <link href="{{asset("vendor/crudbooster/assets/adminlte/font-awesome/css")}}/font-awesome.min.css" rel="stylesheet" type="text/css"/> --}}
     <!-- Ionicons -->
     <link href="{{asset("vendor/crudbooster/ionic/css/ionicons.min.css")}}" rel="stylesheet" type="text/css"/>
     <!-- Theme style -->
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css")}}" rel="stylesheet" type="text/css"/>
-
+    <script src="https://kit.fontawesome.com/8e694ba070.js" crossorigin="anonymous"></script>
     <!-- support rtl-->
     @if (in_array(App::getLocale(), ['ar', 'fa']))
         <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
@@ -95,6 +95,10 @@
             display: block
         }
 
+        .holds-the-iframe {
+                background:url(/vendor/crudbooster/assets/lightbox/dist/images/loading.gif) center center no-repeat;
+                }
+
 
     </style>
     @stack('head')
@@ -141,8 +145,8 @@
 
                         @if($button_add && CRUDBooster::isCreate())
                             <a href="{{ CRUDBooster::mainpath('add').'?return_url='.urlencode(Request::fullUrl()).'&parent_id='.g('parent_id').'&parent_field='.$parent_field }}"
-                               id='btn_add_new_data' class="btn btn-sm btn-success" title="{{trans('crudbooster.action_add_data')}}">
-                                <i class="fa fa-plus-circle"></i> {{trans('crudbooster.action_add_data')}}
+                               id='btn_add_new_data' class="btn btn-sm btn-success" title="{{ $label_add_button ? $label_add_button : trans('crudbooster.action_add_data')}}">
+                                <i class="fa fa-plus-circle"></i> {{ $label_add_button ? $label_add_button : trans('crudbooster.action_add_data')}}
                             </a>
                         @endif
                     @endif
@@ -224,11 +228,7 @@
 
     <!-- Footer -->
     @include('crudbooster::footer')
-</div>
-<!-- ./wrapper -->
-
-
-@include('crudbooster::admin_template_plugins')
+    @include('crudbooster::admin_template_plugins')
 
 <!-- load js -->
 @if($load_js)
@@ -245,8 +245,9 @@
 
 @stack('bottom')
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-      Both of these plugins are recommended to enhance the
-      user experience -->
+</div>
+<!-- ./wrapper -->
+
+
 </body>
 </html>

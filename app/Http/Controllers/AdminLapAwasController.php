@@ -4,17 +4,22 @@
 	use DB;
     use CRUDBooster;
     use Excel;
+    use Illuminate\Support\Arr;
+    use Rap2hpoutre\FastExcel\FastExcel;
 	use Request;
     use Response;
     use DataTables;
-	use Illuminate\Http\Request as Rikues;
+    use Schema;
+    use crocodicstudio\crudbooster\controllers\LogsController;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request as Rikues;
 
 	class AdminLapAwasController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "nama_giat_was";
+            $this->title_field = "nama_giat_was";
 			$this->limit = "10";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
@@ -31,6 +36,9 @@
 			$this->button_import = false;
             $this->button_export = false;
             $this->button_addmore = false;
+            $this->label_add_button = "Tambah Laporan";
+            $this->button_addtemuan = true;
+            $this->button_addtemuan_label = "Simpan dan Tambah Temuan";
             $this->table = "t_lap_awas";
             $this->show_numbering = true;
 
@@ -53,16 +61,18 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Tahun Pengawasan','name'=>'tahun','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-5','dataenum'=>((now()->year)-4).';'.((now()->year)-3).';'.((now()->year)-2).';'.((now()->year)-1).';'.((now()->year)),"default" => "Silahkan pilih tahun dilaksanakannya pengawasan","title"=>"Silahkan pilih tahun dilaksanakannya pengawasan"];
+			$this->form[] = ['label'=>'Tahun Pengawasan','name'=>'tahun','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-5','dataenum'=>((now()->year)-4).';'.((now()->year)-3).';'.((now()->year)-2).';'.((now()->year)-1).';'.((now()->year)),"default" => "Pilih tahun dilaksanakannya pengawasan","title"=>"Silahkan pilih tahun dilaksanakannya pengawasan"];
 			$this->form[] = ['label'=>'No. Laporan','name'=>'no_lap','type'=>'text','validation'=>'required|min:1|max:255|unique:t_lap_awas,no_lap,id','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Tanggal Laporan','name'=>'tanggal','type'=>'date','validation'=>'required','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Nama Keg. Pengawasan','name'=>'nama_giat_was','type'=>'text','validation'=>'required|min:1|max:300','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Periode Pengawasan','type'=>'label'];
-			$this->form[] = ['label'=>'Tahun Mulai','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5','dataenum'=>((now()->year)-4).';'.((now()->year)-3).';'.((now()->year)-2).';'.((now()->year)-1).';'.((now()->year)),"default" => "Silahkan pilih tahun awal periode pengawasan","title"=>"Silahkan pilih tahun awal periode pengawasan"];
-			$this->form[] = ['label'=>'Tahun Usai','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5','dataenum'=>((now()->year)-4).';'.((now()->year)-3).';'.((now()->year)-2).';'.((now()->year)-1).';'.((now()->year)),"default" => "Silahkan pilih tahun akhir periode pengawasan","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
-            $this->form[] = ['label'=>'Jenis Pengawasan','name'=>'id_jenis_was','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_jenis_awas,jenis_awas'];
+			$this->form[] = ['label'=>'Tahun Mulai','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun awal periode yang diawasi","title"=>"Silahkan pilih tahun awal periode pengawasan"];
+			$this->form[] = ['label'=>'Tahun Usai','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
+            $this->form[] = ['label'=>'Jenis Pengawasan','name'=>'id_jenis_was','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_jenis_awas,jenis_awas',"default" => "Pilih Jenis Pengawasan"];
+            $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:10000'];
             $this->form[] = ['label'=>'Id User','name'=>'id_user','type'=>'hidden','value' => CRUDBooster::myId()];
-			$this->form[] = ['label'=>'Status Kirim','name'=>'id_status_kirim','type'=>'hidden','value' => 1];
+            $this->form[] = ['label'=>'Status Kirim','name'=>'id_status_kirim','type'=>'hidden','value' => 1];
+            //dd($this->form[5]['value']);
 
 			# END FORM DO NOT REMOVE THIS LINE
 
@@ -145,8 +155,7 @@
 	        */
             //$this->index_button = array();
             $this->index_button[] = ['label'=>'Import dari Excel','url'=>'/ma/importAwas','icon'=>'fa fa-upload','indexonly' => 'true'];
-            $this->index_button[] = ['label'=>'Export ke Excel','url'=>'#','icon'=>'fa fa-download','indexonly' => 'true'];
-
+            $this->index_button[] = ['label'=>'Export ke Excel','url'=>'#','icon'=>'fa fa-download','indexonly' => 'false'];
 
 
 	        /*
@@ -243,6 +252,23 @@
 
         }
 
+    public function getEdit($id){
+        $this->button_addmore = FALSE;
+		$this->button_cancel  = TRUE;
+		$this->button_show    = FALSE;
+		$this->button_add     = FALSE;
+		$this->button_delete  = FALSE;
+        $this->hide_form 	  = ['no_lap'];
+        $this->button_edittemuan_label = "Edit Temuan";
+
+
+		$data['page_title'] = 'Edit Laporan Pengawasan PNBP';
+        $data['row']        = CRUDBooster::first('t_lap_awas',$id);
+		$data['command']        = 'edit';
+
+		$this->cbView('crudbooster::default.form',$data);
+    }
+
         public function import()
     {
         return view('lapAwasImport');
@@ -251,6 +277,9 @@
         public function importExcel(Rikues $request)
     {
         if($request->hasFile('import_file')){
+            $request->validate([
+                    'import_file' => 'required|mimes:xls,xlsx|max:10000'
+                ]);
             Excel::selectSheetsByIndex(0)->load($request->file('import_file')->getRealPath(), function ($reader) {
                 $datas = $reader->skipRows(1)->toArray();
                 //dd($datas);
@@ -302,7 +331,10 @@
 						DB::table('t_lap_awas')->insert($data);
 					}
 					if(!empty($row['no']) && !empty($data['tahun']) && !empty($nolapexist)) {
-                        DB::table('t_lap_awas')->where('no_lap',$data['no_lap'])->update($data);
+                        //DB::table('t_lap_awas')->where('no_lap',$data['no_lap'])->update($data);
+                        $backlink = CRUDBooster::adminPath($slug='importAwas');
+                        exit('Nomor laporan yang dimaksud telah ada, mohon memasukkan laporan yang belum diinput. <br/><a href="'.$backlink.'">Kembali</a>');
+
                     }
 				}
 				foreach($notnullsip as $key => $row2){
@@ -339,7 +371,7 @@
                     $data3['rekomendasi'] = $row3['rekomendasi'];
                     $data3['id_kod_rekomendasi'] = (int) substr($row3['klasifikasi_rekomendasi'],0,2);
                     $data3['tl'] = $row3['progres_tl'];
-                    $data3['status_tl'] = $row3['status_tl'];
+                    // $data3['status_tl'] = $row3['status_tl'];
                     $data3['id_kod_tl'] = (int) substr($row3['klasifikasi_tl'],0,2);
                     if(!empty($row3['tgl_tl'])){
                         $data3['tgl_tl'] = $row3['tgl_tl'];
@@ -366,6 +398,8 @@
 
         return redirect('/ma/lap_awas')->with('status','File Anda sudah berhasil diunggah ke database!');
     }
+
+
          public function getIndex() {
             //First, Add an auth
              if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
@@ -473,62 +507,31 @@
          if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
 
          //Create your own query
-         $data = [];
-         $data['page_title'] = 'Laporan Pengawasan PNBP';
-         $data['first'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
+         $detail = [];
+         $detail['page_title'] = 'Laporan Pengawasan PNBP';
+         $detail['first'] = DB::table('t_lap_awas')->selectRaw('
+         `t_lap_awas`.`id`,
+         `cms_users`.`name` AS `inputer`,
          `t_lap_awas`.`tahun`,
          `t_lap_awas`.`no_lap`,
          `t_lap_awas`.`tanggal`,
          `t_lap_awas`.`nama_giat_was`,
-         `t_lap_awas`.`id`,
          `t_lap_awas`.`id_status_kirim`,
+         `t_ref_statkirim`.`status` AS `StatKirim`,
          `t_lap_awas`.`thn_mulai`,
          `t_lap_awas`.`thn_usai`,
+         `t_lap_awas`.`filename`,
+         substring_index(`t_lap_awas`.`filename`, "/", -1) AS namafile,
          `t_ref_jenis_awas`.`jenis_awas`,
          `t_lap_awas`.`created_at`,
-         `t_lap_awas`.`updated_at`,
-         `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
-         `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
-         `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
-         `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
-         `t_lap_awas_temuan`.`id` AS `id_temuan`,
-         `t_lap_awas_temuan`.`judul`,
-         `t_lap_awas_temuan`.`kondisi`,
-         `t_lap_awas_temuan`.`sebab`,
-         `t_lap_awas_temuan`.`akibat`,
-         `t_ref_matauang`.`kode` AS `KodeMatauang`,
-         `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
-         `t_ref_statkirim`.`status` AS `StatKirim`,
-         `t_lap_awas_temuan`.`nilai_uang`,
-         `t_ref_kod_rekomendasi`.`Kode` AS `KodeRekomendasi`,
-         `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
-         `t_ref_tl`.`deskripsi` AS `KodTL`,
-         `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
-         `t_lap_awas_rekomend`.`status_tl`,
-         `t_lap_awas_rekomend`.`rekomendasi`')->
-         leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
-         leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
-         leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
-         leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
-         leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
-         leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
-         leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
-         leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-         leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+         `t_lap_awas`.`updated_at`')->
+         join('cms_users','t_lap_awas.id_user','=','cms_users.id')->
+         join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+         join('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
          where('t_lap_awas.id',$id)->first();
 
-        $data['second'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
-            `t_lap_awas`.`tahun`,
-            `t_lap_awas`.`no_lap`,
-            `t_lap_awas`.`tanggal`,
-            `t_lap_awas`.`nama_giat_was`,
+        $detail['second'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
             `t_lap_awas`.`id`,
-            `t_lap_awas`.`id_status_kirim`,
-            `t_lap_awas`.`thn_mulai`,
-            `t_lap_awas`.`thn_usai`,
-            `t_ref_jenis_awas`.`jenis_awas`,
-            `t_lap_awas`.`created_at`,
-            `t_lap_awas`.`updated_at`,
             `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
             `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
             `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
@@ -541,28 +544,15 @@
             `t_lap_awas_temuan`.`akibat`,
             `t_ref_matauang`.`kode` AS `KodeMatauang`,
             `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
-            `t_ref_statkirim`.`status` AS `StatKirim`,
             `t_lap_awas_temuan`.`nilai_uang`')->
-            leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
-            leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
-            leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
-            leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
-            leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
-            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+            join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+            join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
             where('t_lap_awas_temuan.id_lap',$id)->get();
 
-            $data['third'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
-            `t_lap_awas`.`tahun`,
-            `t_lap_awas`.`no_lap`,
-            `t_lap_awas`.`tanggal`,
-            `t_lap_awas`.`nama_giat_was`,
+            $detail['third'] = DB::table('t_lap_awas')->selectRaw('
             `t_lap_awas`.`id`,
-            `t_lap_awas`.`id_status_kirim`,
-            `t_lap_awas`.`thn_mulai`,
-            `t_lap_awas`.`thn_usai`,
-            `t_ref_jenis_awas`.`jenis_awas`,
-            `t_lap_awas`.`created_at`,
-            `t_lap_awas`.`updated_at`,
             `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
             `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
             `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
@@ -584,21 +574,25 @@
             `t_lap_awas_rekomend`.`tgl_tl`,
             `t_lap_awas_rekomend`.`tl`,
             `t_lap_awas_rekomend`.`rekomendasi`')->
-            leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
-            leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
-            leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
-            leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
-            leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
-            leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
-            leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
-            leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+            join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+            join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+            join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+            join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+            join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+            join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+            join('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
             where('t_lap_awas_temuan.id_lap',$id)->get();
 
-        //dd($data);
+            $detail['countTemuan'] = DB::table('t_lap_awas_temuan')->where('id_lap',$id)->count();
+            $detail['countRekomend'] = DB::table('t_lap_awas_rekomend')->join('t_lap_awas_temuan','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('id_lap',$id)->count();
+
+
+        //dd($detail);
 
          //Create a view. Please use `cbView` method instead of view method from laravel.
-         $this->cbView('lapDetailAwas',$data);
+         $this->cbView('lapDetailAwas',$detail);
 }
 
 	    public function getDataWas() {
@@ -701,7 +695,95 @@
 				CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
 			};
 
-		}
+        }
+
+
+        public function exporExcel($id){
+            if(!Session::has('admin_id')) CRUDBooster::redirect(CRUDBooster::adminPath($slug='lap_awas'),trans('crudbooster.denied_access'));
+                $detail = DB::table('t_lap_awas')->selectRaw('
+                    `cms_users`.`name` AS `inputer`,
+                    `t_lap_awas`.`tahun`,
+                    `t_lap_awas`.`thn_mulai`,
+                    `t_lap_awas`.`thn_usai`,
+                    `t_lap_awas`.`no_lap`,
+                    `t_lap_awas`.`tanggal`,
+                    `t_lap_awas`.`nama_giat_was`,
+                    `t_ref_statkirim`.`status` AS `StatKirim`,
+                    substring_index(`t_lap_awas`.`filename`, "/", -1) AS namafile,
+                    `t_ref_jenis_awas`.`jenis_awas`,
+                    `t_lap_awas`.`created_at`,
+                    `t_lap_awas`.`updated_at`,
+                    `t_lap_awas_temuan`.`id` AS `id_temuan`,
+                    `t_ref_kod_temuan`.`Deskripsi` AS `jenis_temuan`,
+                    `t_lap_awas_temuan`.`judul` AS `judul_temuan`,
+                    `t_lap_awas_temuan`.`kondisi`,
+                    `t_ref_kod_sebab`.`Deskripsi` AS `jenis_sebab`,
+                    `t_lap_awas_temuan`.`sebab`,
+                    `t_lap_awas_temuan`.`akibat`,
+                    `t_ref_matauang`.`kode` AS `KodeMatauang`,
+                    `t_lap_awas_temuan`.`nilai_uang`,
+                    `t_ref_kod_rekomendasi`.`Deskripsi` AS `jenis_rekomendasi`,
+                    `t_lap_awas_rekomend`.`rekomendasi`,
+                    `t_lap_awas_rekomend`.`tgl_tl`,
+                    `t_ref_tl`.`deskripsi` AS `KodTL`,
+                    `t_lap_awas_rekomend`.`tl` AS `tindak_lanjut`')->
+                    leftjoin('cms_users','t_lap_awas.id_user','=','cms_users.id')->
+                    leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                    leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                    leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+                    leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+                    leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+                    leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+                    leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+                    leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+                    leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+                    where('t_lap_awas.id',$id)->get();
+
+
+
+
+            //dd($detail);
+            return (new FastExcel($detail))->download('ekspor_lap_pnbp_'.$id.'_'.date("d-m-Y").'.xlsx');
+        }
+
+        public function Validasi($id){
+            $data['data'] = DB::table('t_lap_awas')->
+                where('t_lap_awas.id',$id)->
+                first();
+            $data['countTemuan'] = DB::table('t_lap_awas_temuan')->where('id_lap',$id)->count();
+            $data['countRekomend'] = DB::table('t_lap_awas_rekomend')->join('t_lap_awas_temuan','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('id_lap',$id)->count();
+            $ceks = DB::table('t_lap_awas_temuan')->selectRaw('DISTINCT `t_lap_awas_temuan`.`id` AS `id_temuan`,COUNT(`t_lap_awas_rekomend`.`id`) AS `count_rek`')
+            ->join('t_lap_awas','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
+            ->leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+            ->where('t_lap_awas.id',$id)
+            ->groupBy('t_lap_awas_temuan.id')
+            ->get();
+
+            foreach ($ceks as $i => $v){
+                $v->count_rek == 0 ? $cek[$i] = 1 : $cek[$i] = 0;
+            }
+
+            $data['cekRek'] = array_sum($cek);
+
+            //dd(array_sum($cek));
+
+            return view('modal.verifikasi',$data);
+
+        }
+
+        public function Kirim($id){
+            try {
+                DB::table('t_lap_awas')
+                    ->where('id', $id)
+                    ->update(['id_status_kirim' => 2]);
+
+            return redirect('/ma/lap_awas')->with('status','Laporan telah berhasil dikirim!');
+            } catch (Exception $e) {
+                report ($e);
+                return false;
+            }
+
+        }
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -751,9 +833,9 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 			//Your code here
-			setlocale(LC_ALL, 'ind_ind');
+			/* setlocale(LC_ALL, 'ind_ind');
 			$tanggal = strtotime($postdata['tanggal']);
-            $postdata['tanggal'] = date('Y-m-d',$tanggal);
+            $postdata['tanggal'] = date('Y-m-d',$tanggal); */
 
 	    }
 
@@ -763,7 +845,243 @@
 	    | ----------------------------------------------------------------------
 	    | @id = last insert id
 	    |
-	    */
+        */
+        public function postAddTemuan()
+    {
+        $this->cbLoader();
+        //dd($this->sub_module[0]['path']);
+        if (! CRUDBooster::isCreate() && $this->global_privilege == false) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add_save', [
+                'name' => Request::input($this->title_field),
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
+        $this->validation();
+        $this->input_assignment();
+
+        if (Schema::hasColumn($this->table, 'created_at')) {
+            $this->arr['created_at'] = date('Y-m-d H:i:s');
+        }
+
+        $this->hook_before_add($this->arr);
+
+//         $this->arr[$this->primary_key] = $id = CRUDBooster::newId($this->table); //error on sql server
+        $lastInsertId = $id = DB::table($this->table)->insertGetId($this->arr);
+
+        //Looping Data Input Again After Insert
+        foreach ($this->data_inputan as $ro) {
+            $name = $ro['name'];
+            if (! $name) {
+                continue;
+            }
+
+            $inputdata = Request::get($name);
+
+            //Insert Data Checkbox if Type Datatable
+            if ($ro['type'] == 'checkbox') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        $relationship_table_pk = CB::pk($ro['relationship_table']);
+                        foreach ($inputdata as $input_id) {
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'select2') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        foreach ($inputdata as $input_id) {
+                            $relationship_table_pk = CB::pk($row['relationship_table']);
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'child') {
+                $name = str_slug($ro['label'], '');
+                $columns = $ro['columns'];
+                $getColName = Request::get($name.'-'.$columns[0]['name']);
+                $count_input_data = ($getColName)?(count($getColName) - 1):0;
+                $child_array = [];
+
+                for ($i = 0; $i <= $count_input_data; $i++) {
+                    $fk = $ro['foreign_key'];
+                    $column_data = [];
+                    $column_data[$fk] = $id;
+                    foreach ($columns as $col) {
+                        $colname = $col['name'];
+                        $column_data[$colname] = Request::get($name.'-'.$colname)[$i];
+                    }
+                    $child_array[] = $column_data;
+                }
+
+                $childtable = CRUDBooster::parseSqlTable($ro['table'])['table'];
+                DB::table($childtable)->insert($child_array);
+            }
+        }
+
+        $this->hook_after_add($lastInsertId);
+
+        $this->return_url = CRUDBooster::adminPath($slug='lap_awas_temuan').'?return_url='.CRUDBooster::adminPath($slug='lap_awas').'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='.$lastInsertId.'&foreign_key=id_lap&label=Temuan';
+
+        //insert log
+        CRUDBooster::insertLog(trans("crudbooster.log_add", ['name' => $this->arr[$this->title_field], 'module' => CRUDBooster::getCurrentModule()->name]));
+
+        if (Request::get('submit') == $this->button_addtemuan_label){
+            return redirect($this->return_url);
+        }else{
+            CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
+        }
+
+
+    }
+    public function postEditTemuan($id)
+    {
+        $this->cbLoader();
+        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+        if (! CRUDBooster::isUpdate() && $this->global_privilege == false) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_add", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+        $this->validation($id);
+        $this->input_assignment($id);
+
+        if (Schema::hasColumn($this->table, 'updated_at')) {
+            $this->arr['updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        $this->hook_before_edit($this->arr, $id);
+        DB::table($this->table)->where($this->primary_key, $id)->update($this->arr);
+
+        //Looping Data Input Again After Insert
+        foreach ($this->data_inputan as $ro) {
+            $name = $ro['name'];
+            if (! $name) {
+                continue;
+            }
+
+            $inputdata = Request::get($name);
+
+            //Insert Data Checkbox if Type Datatable
+            if ($ro['type'] == 'checkbox') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        foreach ($inputdata as $input_id) {
+                            $relationship_table_pk = CB::pk($ro['relationship_table']);
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'select2') {
+                if ($ro['relationship_table']) {
+                    $datatable = explode(",", $ro['datatable'])[0];
+
+                    $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
+                    $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
+                    DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
+
+                    if ($inputdata) {
+                        foreach ($inputdata as $input_id) {
+                            $relationship_table_pk = CB::pk($ro['relationship_table']);
+                            DB::table($ro['relationship_table'])->insert([
+//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                $foreignKey => $id,
+                                $foreignKey2 => $input_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($ro['type'] == 'child') {
+                $name = str_slug($ro['label'], '');
+                $columns = $ro['columns'];
+                $getColName = Request::get($name.'-'.$columns[0]['name']);
+                $count_input_data = ($getColName)?(count($getColName) - 1):0;
+                $child_array = [];
+                $childtable = CRUDBooster::parseSqlTable($ro['table'])['table'];
+                $fk = $ro['foreign_key'];
+
+                DB::table($childtable)->where($fk, $id)->delete();
+                $lastId = CRUDBooster::newId($childtable);
+                $childtablePK = CB::pk($childtable);
+
+                for ($i = 0; $i <= $count_input_data; $i++) {
+
+                    $column_data = [];
+                    $column_data[$childtablePK] = $lastId;
+                    $column_data[$fk] = $id;
+                    foreach ($columns as $col) {
+                        $colname = $col['name'];
+                        $column_data[$colname] = Request::get($name.'-'.$colname)[$i];
+                    }
+                    $child_array[] = $column_data;
+
+                    $lastId++;
+                }
+
+                $child_array = array_reverse($child_array);
+
+                DB::table($childtable)->insert($child_array);
+            }
+        }
+
+        $this->hook_after_edit($id);
+
+        $this->return_url = CRUDBooster::adminPath($slug='lap_awas_temuan').'?return_url='.CRUDBooster::adminPath($slug='lap_awas/edit').'/'.$id.'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='.$id.'&foreign_key=id_lap&label=Temuan';
+
+        //insert log
+        $old_values = json_decode(json_encode($row), true);
+        CRUDBooster::insertLog(trans("crudbooster.log_update", [
+            'name' => $this->arr[$this->title_field],
+            'module' => CRUDBooster::getCurrentModule()->name,
+        ]), LogsController::displayDiff($old_values, $this->arr));
+
+        if (Request::get('submit') == $this->button_edittemuan_label){
+            return redirect($this->return_url);
+        }else{
+            CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
+        }
+    }
+
+
 	    public function hook_after_add($id) {
 	        //Your code here
 
@@ -779,7 +1097,9 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
+            /* setlocale(LC_ALL, 'ind_ind');
+			$tanggal = strtotime($postdata['tanggal']);
+            $postdata['tanggal'] = date('Y-m-d',$tanggal); */
 	    }
 
 	    /*

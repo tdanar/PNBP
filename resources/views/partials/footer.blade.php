@@ -44,10 +44,15 @@
 
 </script>
 
-	<!-- Star javascript Home -->
+    <!-- Star javascript Home -->
+    <script type="text/javascript" src="https://unpkg.com/popper.js@latest/dist/umd/popper.js"></script>
+    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+        <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
     <script src="/vendor/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
 		<script src="/vendor/amcharts/amcharts/serial.js" type="text/javascript"></script>
-
+        <script type="text/javascript" src="/scripts/mega_menu.min.js"></script>
+        <script type="text/javascript" src="/scripts/jquery.mmenu.all.js"></script>
 		<script src="/scripts/home.js"></script>
 		<script src="/vendor/owlcarousel/owl.carousel.js"></script>
 		<script src="/scripts/scripts.js"></script>
@@ -57,17 +62,36 @@
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
         <!-- AdminLTE App -->
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/dist/js/app.js') }}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#my-menu").mmenu({
+            // options
+            offCanvas: {
+            position: "right"
+            }
+        }, {
+            // configuration
+            offCanvas: {
+                pageSelector: "#my-wrapper"
 
-<!-- Facebook Pixel Code --><script>
-/*
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '211940415910761');
-fbq('track', 'PageView'); */
-</script><!--<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=211940415910761&ev=PageView&noscript=1"
-/></noscript><!-- DO NOT MODIFY --><!-- End Facebook Pixel Code -->
-		</footer>
+            }
+        });
+
+        var API = $("#my-menu").data( "mmenu" );
+        $('#ikeh').click(function() {
+            API.open();
+        });
+
+    });
+</script>
+<script>
+        $(document).ready(function () {
+                    $('[data-toggle="popover-login"]').popover({
+                        placement: 'bottom',
+                        viewport: { selector: 'body', padding: 0 },
+                        html: 'true'
+                    })
+                })
+    </script>
+
+</footer>
