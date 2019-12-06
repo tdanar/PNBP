@@ -39,6 +39,7 @@ use Illuminate\Http\Request as Rikues;
             $this->label_add_button = "Tambah Laporan";
             $this->button_addtemuan = true;
             $this->button_addtemuan_label = "Simpan dan Tambah Temuan";
+            $this->button_edittemuan_label = "Edit Temuan";
             $this->table = "t_lap_awas";
             $this->show_numbering = true;
 
@@ -259,7 +260,7 @@ use Illuminate\Http\Request as Rikues;
 		$this->button_add     = FALSE;
 		$this->button_delete  = FALSE;
         $this->hide_form 	  = ['no_lap'];
-        $this->button_edittemuan_label = "Edit Temuan";
+
 
 
 		$data['page_title'] = 'Edit Laporan Pengawasan PNBP';
@@ -953,7 +954,7 @@ use Illuminate\Http\Request as Rikues;
 
         $this->hook_after_add($lastInsertId);
 
-        $this->return_url = CRUDBooster::adminPath($slug='lap_awas_temuan').'?return_url='.CRUDBooster::adminPath($slug='lap_awas').'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='.$lastInsertId.'&foreign_key=id_lap&label=Temuan';
+        $this->return_url = CRUDBooster::adminPath($slug='lap_awas_temuan/add').'?return_url='.urlencode(CRUDBooster::adminPath($slug='lap_awas_temuan').'?foreign_key=id_lap&label=Temuan&parent_columns=nama_giat_was%2Cno_lap&parent_columns_alias=Nama%20Kegiatan%2CNo.%20Lap&parent_id='.$lastInsertId.'&parent_table=t_lap_awas&return_url='.urlencode(CRUDBooster::adminPath($slug='lap_awas'))).'&parent_id='.$lastInsertId.'&parent_field=id_lap';
 
         //insert log
         CRUDBooster::insertLog(trans("crudbooster.log_add", ['name' => $this->arr[$this->title_field], 'module' => CRUDBooster::getCurrentModule()->name]));
@@ -1085,7 +1086,7 @@ use Illuminate\Http\Request as Rikues;
         if (Request::get('submit') == $this->button_edittemuan_label){
             return redirect($this->return_url);
         }else{
-            CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
+            CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
         }
     }
 

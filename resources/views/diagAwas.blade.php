@@ -49,9 +49,8 @@
                     "enabled": true,
                     "align": "center",
                     "labelText": "[[title]]:",
-                    "truncateLabels": 10,
                     "reversedOrder": true,
-                    "maxColumns": 4,
+                    "maxColumns": 1,
                     "valueAlign": "left",
                     "verticalGap": 0
                     }
@@ -123,9 +122,9 @@
                     "enabled": true,
                     "align": "center",
                     "labelText": "[[title]]:",
-                    "truncateLabels": 5,
+                    "truncateLabels": 20,
                     "reversedOrder": true,
-                    "maxColumns": 4,
+                    "maxColumns": 1,
                     "valueAlign": "left",
                     "verticalGap": 0
                     }
@@ -176,9 +175,9 @@
                     "enabled": true,
                     "align": "center",
                     "labelText": "[[title]]:",
-                    "truncateLabels": 5,
+
                     "reversedOrder": true,
-                    "maxColumns": 4,
+                    "maxColumns": 1,
                     "valueAlign": "left",
                     "verticalGap": 0
                     }
@@ -235,11 +234,11 @@
                     "enabled": true,
                     "align": "center",
                     "labelText": "[[title]]:",
-                    "truncateLabels": 5,
+                    "truncateLabels": 15,
                     "reversedOrder": true,
                     "maxColumns": 4,
                     "valueAlign": "left",
-                    "position": "right",
+                    "position": "bottom",
                     "verticalGap": 0
                     }
         }
@@ -287,11 +286,11 @@
                     "enabled": true,
                     "align": "center",
                     "labelText": "[[title]]:",
-                    "truncateLabels": 5,
+                    "truncateLabels": 15,
                     "reversedOrder": true,
-                    "maxColumns": 4,
+                    "maxColumns": 1,
                     "valueAlign": "left",
-                    "position": "right",
+                    "position": "bottom",
                     "verticalGap": 0
                     }
         }
@@ -527,18 +526,21 @@ AmCharts.addInitHandler(function(chart) {
 <div class="col-sm-12"><center><h2>STATISTIK LAPORAN HASIL PENGAWASAN<br/><small>{{$unit}}</small></h2></center></div>
 </div>
 <div class="row">
-    <div id="piegraphs1" style="height:400px; background-color: #FFFFFF;" class="col-sm-4"></div>
-    <div id="piegraphs2" style="height:400px; background-color: #FFFFFF;" class="col-sm-4"></div>
-    <div id="piegraphs3" style="height:400px; background-color: #FFFFFF;" class="col-sm-4"></div>
+    <div id="piegraphs1" style="height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
+    <div id="piegraphs2" style="height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
+
 </div>
+<h3>&nbsp;</h3>
 <div class="row">
-
-        <div id="piegraphs4" style="height:400px; background-color: #FFFFFF;" class="col-sm-6"></div>
-        <div id="piegraphs5" style="height:400px; background-color: #FFFFFF;" class="col-sm-6"></div>
-
+        <div id="piegraphs3" style="max-height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
+        <div id="piegraphs4" style="max-height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
+    </div>
+    <h3>&nbsp;</h3>
+    <div class="row">
+        <div id="piegraphs5" style="height:500px; background-color: #FFFFFF;" class="col-md-12"></div>
     </div>
 @if($matauang)
-<div class="row"><h3>Nilai Temuan Berdasarkan Kodifikasi Temuan</h3>
+<div class="row"><h3>Nilai Temuan Berdasarkan Kodefikasi Temuan</h3>
 @foreach ($matauang as $uang)
 <div class="row">
     <div id="batang1{{$uang->kode}}" style="min-height:400px; background-color: #FFFFFF;" class="col-sm-12"></div>

@@ -26,12 +26,13 @@
 			$this->button_filter = false;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "t_lap_awas_rekomend";
+            $this->table = "t_lap_awas_rekomend";
+            $this->show_numbering = TRUE;
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Temuan","name"=>"id_temuan","join"=>"t_lap_awas_temuan,judul"];
+			//$this->col[] = ["label"=>"Temuan","name"=>"id_temuan","join"=>"t_lap_awas_temuan,judul"];
 			$this->col[] = ["label"=>"Rekomendasi","name"=>"rekomendasi"];
 			$this->col[] = ["label"=>"Klasifikasi Rekomendasi","name"=>"id_kod_rekomendasi","join"=>"t_ref_kod_rekomendasi,Deskripsi"];
 			$this->col[] = ["label"=>"Tanggal TL","name"=>"tgl_tl",'callback_php'=>'date("d-m-Y",strtotime($row->tgl_tl))'];

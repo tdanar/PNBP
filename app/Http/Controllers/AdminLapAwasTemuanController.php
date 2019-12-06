@@ -14,7 +14,7 @@
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "judul";
 			$this->limit = "20";
-			$this->orderby = "id,desc";
+			$this->orderby = "id,asc";
 			$this->global_privilege = false;
 			$this->button_table_action = true;
 			$this->button_bulk_action = true;
@@ -31,18 +31,19 @@
             $this->button_addmore = true;
             $this->button_addtemuan = false;
             $this->button_addtemuan_label = "Simpan dan Tambah Rekomendasi";
-			$this->table = "t_lap_awas_temuan";
+            $this->table = "t_lap_awas_temuan";
+            $this->show_numbering = TRUE;
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Lap","name"=>"id_lap","join"=>"t_lap_awas,no_lap"];
+			//$this->col[] = ["label"=>"Lap","name"=>"id_lap","join"=>"t_lap_awas,no_lap"];
 			$this->col[] = ["label"=>"Judul","name"=>"judul"];
 			$this->col[] = ["label"=>"Klasifikasi Temuan","name"=>"id_kod_temuan","join"=>"t_ref_kod_temuan,Deskripsi"];
 			$this->col[] = ["label"=>"Kondisi","name"=>"kondisi"];
 			$this->col[] = ["label"=>"Mata Uang","name"=>"id_mata_uang","join"=>"t_ref_matauang,kode"];
 			$this->col[] = ["label"=>"Nilai Uang","name"=>"nilai_uang","callback"=>function($row) {
-                return number_format($row->nilai_uang,2,",",".");
+                return number_format($row->nilai_uang,0,",",".");
                 }];
 			$this->col[] = ["label"=>"Lokasi","name"=>"lokasi"];
 			# END COLUMNS DO NOT REMOVE THIS LINE

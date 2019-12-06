@@ -18,7 +18,8 @@
     <!-- Theme style -->
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css")}}" rel="stylesheet" type="text/css"/>
-    <script src="https://kit.fontawesome.com/8e694ba070.js" crossorigin="anonymous"></script>
+    {{-- <script src="https://kit.fontawesome.com/8e694ba070.js" crossorigin="anonymous"></script> --}}
+    <link href="/css/font/fontawesome/css/all.css" rel="stylesheet" type="text/css"/>
     <!-- support rtl-->
     @if (in_array(App::getLocale(), ['ar', 'fa']))
         <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
@@ -98,6 +99,11 @@
         .holds-the-iframe {
                 background:url(/vendor/crudbooster/assets/lightbox/dist/images/loading.gif) center center no-repeat;
                 }
+
+        .sweet-alert p {
+            color: #ff0000 !important;
+            font-family: sans-serif !important;
+            }
 
 
     </style>

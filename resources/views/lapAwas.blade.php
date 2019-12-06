@@ -119,7 +119,7 @@ $(document).ready(function() {
                                                                 case ({!! json_encode(CRUDBooster::isView()) !!}):
                                                                 var buttonDtl = '<a class="btn btn-primary btn-xs btn-block" href="'+mainpath+'/detail/'+full.id+'" role="button" data-toggle="modal" title="Detil Laporan" data-target="#detilmodal'+full.id+'"><i class="fa fa-eye"></i></a>';
 
-                                                                    var button2 = '<a class="btn btn-info btn-xs btn-block" href="'+temuanpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='+full.id+'&foreign_key=id_lap&label=Temuan" role="button" data-toggle="popover" title="Tambah/Hapus Temuan" data-content="Silahkan mengubah temuan-temuan laporan No. '+full.no_lap+' di sini."><i class="fa fa-plus"></i></a>';
+                                                                    var button2 = '<a class="btn btn-info btn-xs btn-block" href="'+temuanpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='+full.id+'&foreign_key=id_lap&label=Temuan" role="button" data-toggle="popover" title="Manajemen Temuan & Rekomendasi" data-content="Silahkan mengubah Temuan dan atau Rekomendasi laporan No. '+full.no_lap+' di sini."><i class="fa fa-tasks"></i></a>';
                                                                     var button3 = '<a class="btn btn-success btn-xs btn-block" href="'+rekpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='+full.id_temuan+'&foreign_key=id_temuan&label=Rekomendasi" role="button" data-toggle="popover" title="Tambah/Hapus Rekomendasi" data-content="Silahkan mengubah rekomendasi-rekomendasi laporan No. '+full.no_lap+' di sini."><i class="fa fa-tasks"></i></a>';
 
 
@@ -243,13 +243,13 @@ $(document).ready(function() {
 
     function klikKirim(link){
         swal({
-            title: "Yakin mengirimkan laporan?",
-            text: "Anda yakin ingin lanjut mengirimkan laporan ini? Setelah kirim Anda tidak dapat mengubah data laporan lagi.",
+            title: "Anda yakin ingin lanjut mengirimkan laporan ini? ",
+            text: "Setelah Kirim, Anda tidak dapat mengubah data laporan lagi",
             type: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#ff0000",
-            confirmButtonText: "Ya",
-            cancelButtonText: "Tidak",
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Kirim",
+            cancelButtonText: "Batal",
             closeOnConfirm: false },
             function(){  location.href=link });
             null;
@@ -373,12 +373,12 @@ $(document).ready(function() {
 </div>
 <table id="lapawas" border="1" class="display" style="width:100%">
   <thead>
-      <tr>
+      <tr style="background-color:#A9A9A9;">
         <th title="Tahun Pengawasan">Thn. Pgwsn</th>
         <th title="Tanggal Laporan">Tgl. Lap.</th>
         <th title="Nomor Laporan">No. Lap.</th>
         <th title="Nama Kegiatan Pengawasan">Nama Keg. Pgwsn</th>
-        <th>Jenis Pgwsn</th>
+        <th title="Jenis Pengawasan">Jenis Pgwsn</th>
         <th title="Judul Temuan">Temuan</th>
         <th title="Nilai Temuan">Nilai</th>
         <th title="Rekomendasi">Rekomendasi</th>
