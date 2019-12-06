@@ -23,9 +23,10 @@
                     <img src="/media/9769/logo-kemenkeu-w250px-02.png" onerror="this.onerror=null; this.src='/media/9769/logo-kemenkeu-w250px-02.png'" style="margin-top:-15px;" class="imgdesklogo"> 						 <img src="/media/9770/logo-kemenkeu-w250px-01.png" onerror="this.onerror=null; this.src='media/9770/logo-kemenkeu-w250px-02.png'" style="margin-top:-15px;display:none;" class="imgmoblogo"> </span>
                 <font><br><br><br>
                     Hak Cipta Kementerian Keuangan Republik Indonesia<br>
-                    Manajemen Situs Kemenkeu - Gedung Djuanda I Lt. 9<br />
+                    Inspektorat V, Inspektorat Jenderal Kementerian Keuangan<br />
+                    Gedung Djuanda II Lt. 9<br />
                     Jl. Dr.Wahidin Raya No 1 Jakarta 10710<br />
-                    Telp: 134 Fax: 021-3500842<br />
+                    Telp: (021) 3454647 Fax: (021) 3454647<br />
                     <div><h3 style="text-align:center;">
                         <div style="text-align:center;">
 </div></h3></div>

@@ -333,7 +333,8 @@ use Illuminate\Http\Request as Rikues;
 					if(!empty($row['no']) && !empty($data['tahun']) && !empty($nolapexist)) {
                         //DB::table('t_lap_awas')->where('no_lap',$data['no_lap'])->update($data);
                         $backlink = CRUDBooster::adminPath($slug='importAwas');
-                        exit('Nomor laporan yang dimaksud telah ada, mohon memasukkan laporan yang belum diinput. <br/><a href="'.$backlink.'">Kembali</a>');
+                        //exit('Nomor laporan yang dimaksud telah ada, mohon memasukkan laporan yang belum diinput. <br/><a href="'.$backlink.'">Kembali</a>');
+                        CRUDBooster::redirect($backlink, 'Nomor laporan yang dimaksud telah ada, mohon memasukkan laporan yang belum diinput.', 'warning');
 
                     }
 				}
@@ -394,9 +395,12 @@ use Illuminate\Http\Request as Rikues;
             }
 
             });
+
+            CRUDBooster::redirect(CRUDBooster::mainpath(), 'File Anda sudah berhasil diunggah ke database!', 'success');
+        }else{
+            CRUDBooster::redirect(CRUDBooster::mainpath(), 'Terjadi kesalahan! Silahkan diulang kembali.', 'warning');
         }
 
-        return redirect('/ma/lap_awas')->with('status','File Anda sudah berhasil diunggah ke database!');
     }
 
 
@@ -762,8 +766,12 @@ use Illuminate\Http\Request as Rikues;
             foreach ($ceks as $i => $v){
                 $v->count_rek == 0 ? $cek[$i] = 1 : $cek[$i] = 0;
             }
+            if ($cek){
+                $data['cekRek'] = array_sum($cek);
+            }else{
+                $data['cekRek'] = 1;
+            }
 
-            $data['cekRek'] = array_sum($cek);
 
             //dd(array_sum($cek));
 

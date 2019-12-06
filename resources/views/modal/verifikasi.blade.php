@@ -91,7 +91,7 @@
                         echo 'disabled="disabled"';
                     }elseif($countTemuan > 0 && $countRekomend <= 0){
                         echo 'disabled="disabled"';
-                    }elseif($cekRek > 0){
+                    }elseif($countTemuan > 0 && $cekRek > 0){
                         echo 'disabled="disabled"';
                     }
                     else{

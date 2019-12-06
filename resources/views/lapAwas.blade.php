@@ -328,14 +328,6 @@ $(document).ready(function() {
 @endpush
 @section('content')
 <!-- Your custom  HTML goes here -->
-@if (session('status'))
-    <div class="alert alert-info alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-        <strong>Sukses!</strong> {{ session('status') }}
-      </div>
-@endif
 <div class="col-xs-12 col-sm-12">
 <div class="form-horizontal">
 <div class="row">
