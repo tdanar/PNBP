@@ -71,13 +71,13 @@ use Illuminate\Http\Request as Rikues;
             $this->form[] = ['label'=>'Judul Keg. Pengawasan','name'=>'nama_giat_was','type'=>'text','validation'=>'required|min:1|max:300','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Jenis Pengawasan','name'=>'id_jenis_was','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_jenis_awas,jenis_awas',"default" => "Pilih Jenis Pengawasan"];
             $this->form[] = ['label'=>'Periode Pengawasan','type'=>'label'];
-            $this->form[] = ['label'=>'Periode','name'=>'periode','type'=>'custom','html'=>$periode,'validation'=>'required|integer|min:0'];
+            $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'custom','html'=>$periode,'validation'=>'required|integer|min:0'];
 			// $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun awal periode yang diawasi","title"=>"Silahkan pilih tahun awal periode pengawasan"];
 			// $this->form[] = ['label'=>'-','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
             $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:10000'];
             $this->form[] = ['label'=>'Id User','name'=>'id_user','type'=>'hidden','value' => CRUDBooster::myId()];
             $this->form[] = ['label'=>'Status Kirim','name'=>'id_status_kirim','type'=>'hidden','value' => 1];
-            
+
             //dd($this->form[5]['value']);
 
 			# END FORM DO NOT REMOVE THIS LINE
@@ -884,6 +884,7 @@ use Illuminate\Http\Request as Rikues;
 			/* setlocale(LC_ALL, 'ind_ind');
 			$tanggal = strtotime($postdata['tanggal']);
             $postdata['tanggal'] = date('Y-m-d',$tanggal); */
+            $postdata['thn_usai'] = $_POST['thn_usai'];
 
 	    }
 
@@ -1148,6 +1149,7 @@ use Illuminate\Http\Request as Rikues;
             /* setlocale(LC_ALL, 'ind_ind');
 			$tanggal = strtotime($postdata['tanggal']);
             $postdata['tanggal'] = date('Y-m-d',$tanggal); */
+            $postdata['thn_usai'] = $_POST['thn_usai'];
 	    }
 
 	    /*
