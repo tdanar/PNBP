@@ -226,7 +226,7 @@
              if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
              $data = [];
              $data['page_title'] = 'Laporan Pengawasan PNBP';
-             if(CRUDBooster::myPrivilegeId() === 2){
+             if(CRUDBooster::myPrivilegeId() == 2){
                 $data['unit'] = CRUDBooster::myUnit();
                 //$data['idunit'] = CRUDBooster::myUnitId();
                 $data['result1'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')

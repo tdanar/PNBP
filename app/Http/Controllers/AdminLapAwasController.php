@@ -10,6 +10,7 @@
     use Response;
     use DataTables;
     use Schema;
+    use File;
     use crocodicstudio\crudbooster\controllers\LogsController;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request as Rikues;
@@ -59,20 +60,24 @@ use Illuminate\Http\Request as Rikues;
 			//$this->col[] = ["label"=>"Inputer","name"=>"id_user","join"=>"cms_users,name"];
 
 			# END COLUMNS DO NOT REMOVE THIS LINE
-
-			# START FORM DO NOT REMOVE THIS LINE
+            $id = CRUDBooster::getCurrentId();
+            $row = CRUDBooster::first($this->table,$id);
+            # START FORM DO NOT REMOVE THIS LINE
+            $periode = view('partials.periode', compact('row'))->render();
 			$this->form = [];
 			$this->form[] = ['label'=>'Tahun Pengawasan','name'=>'tahun','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-5','dataenum'=>((now()->year)-4).';'.((now()->year)-3).';'.((now()->year)-2).';'.((now()->year)-1).';'.((now()->year)),"default" => "Pilih tahun dilaksanakannya pengawasan","title"=>"Silahkan pilih tahun dilaksanakannya pengawasan"];
 			$this->form[] = ['label'=>'No. Laporan','name'=>'no_lap','type'=>'text','validation'=>'required|min:1|max:255|unique:t_lap_awas,no_lap,id','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Tanggal Laporan','name'=>'tanggal','type'=>'date','validation'=>'required','width'=>'col-sm-10'];
-            $this->form[] = ['label'=>'Nama Keg. Pengawasan','name'=>'nama_giat_was','type'=>'text','validation'=>'required|min:1|max:300','width'=>'col-sm-10'];
-            $this->form[] = ['label'=>'Periode Pengawasan','type'=>'label'];
-			$this->form[] = ['label'=>'Tahun Mulai','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun awal periode yang diawasi","title"=>"Silahkan pilih tahun awal periode pengawasan"];
-			$this->form[] = ['label'=>'Tahun Usai','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
+            $this->form[] = ['label'=>'Judul Keg. Pengawasan','name'=>'nama_giat_was','type'=>'text','validation'=>'required|min:1|max:300','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Jenis Pengawasan','name'=>'id_jenis_was','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_jenis_awas,jenis_awas',"default" => "Pilih Jenis Pengawasan"];
+            $this->form[] = ['label'=>'Periode Pengawasan','type'=>'label'];
+            $this->form[] = ['label'=>'Periode','name'=>'periode','type'=>'custom','html'=>$periode,'validation'=>'required|integer|min:0'];
+			// $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun awal periode yang diawasi","title"=>"Silahkan pilih tahun awal periode pengawasan"];
+			// $this->form[] = ['label'=>'-','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
             $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:10000'];
             $this->form[] = ['label'=>'Id User','name'=>'id_user','type'=>'hidden','value' => CRUDBooster::myId()];
             $this->form[] = ['label'=>'Status Kirim','name'=>'id_status_kirim','type'=>'hidden','value' => 1];
+            
             //dd($this->form[5]['value']);
 
 			# END FORM DO NOT REMOVE THIS LINE
@@ -278,33 +283,48 @@ use Illuminate\Http\Request as Rikues;
         public function importExcel(Rikues $request)
     {
         if($request->hasFile('import_file')){
+            $ext = $request->import_file->getClientOriginalExtension();
+            //dd($request->import_file->getClientOriginalExtension());
+        if ($ext === 'xls' || $ext === 'xlsx'){
             $request->validate([
-                    'import_file' => 'required|mimes:xls,xlsx|max:10000'
-                ]);
-            Excel::selectSheetsByIndex(0)->load($request->file('import_file')->getRealPath(), function ($reader) {
+                'import_file' => 'required|mimes:xls,xlsx|max:10000'
+            ]);
+
+            $path = $request->file('import_file')->getRealPath();
+
+            Excel::selectSheetsByIndex(0)->load($path, function ($reader) {
                 $datas = $reader->skipRows(1)->toArray();
-                //dd($datas);
+
 				$notnull = array_filter($datas, function($v) { return !empty($v['no']) || !empty($v['judul_temuan']) || !empty($v['rekomendasi']); });
 
 				/* if($notnull[0]['nomor_laporan'] === NULL){
 					$notnull[0] = "defaultValue";
 				  } */
+                  //dd($notnull);
+                  if (count($notnull)===1 || count($notnull)===0) {
+                    $notnullsip = $notnull;
+                  }else{
+                    $rearray = array_values($notnull);
+                    for($i=1; $i < count($rearray); $i++){
+                        if($rearray[$i]['nomor_laporan'] === NULL){
+                        $rearray[$i]['nomor_laporan'] = $rearray[$i-1]['nomor_laporan'];
 
-				  for($i=1; $i < count($notnull); $i++){
-					if($notnull[$i]['nomor_laporan'] === NULL){
-					  $notnull[$i]['nomor_laporan'] = $notnull[$i-1]['nomor_laporan'];
+                            if($rearray[$i]['judul_temuan'] === NULL){
+                                $rearray[$i]['judul_temuan'] = $rearray[$i-1]['judul_temuan'];
 
-					  if($notnull[$i]['judul_temuan'] === NULL){
-						$notnull[$i]['judul_temuan'] = $notnull[$i-1]['judul_temuan'];
-					  }
-					  $notnullsip = array_filter($notnull, function($v) { return !empty($v['no']) || !empty($v['rekomendasi']); });
-					}
-				  }
-				//dd($notnullsip);
+                            }
+                        }
+                        $notnullsip = array_filter($rearray, function($v) { return !empty($v['no']) || !empty($v['rekomendasi']); });
+
+                    }
+
+                  }
+                //dd($notnullsip);
+
                 foreach ($notnullsip as $key => $row) {
                     $data['id_user'] = CRUDBooster::myId();
                     $data['id_status_kirim'] = 1;
-                    $data['tahun'] = $row['tahun_mulai'];
+                    $data['tahun'] = $row['tahun_selesai'];
                     $data['no_lap'] = $row['nomor_laporan'];
                     $data['tanggal'] = $row['tanggal'];
                     $data['nama_giat_was'] = $row['nama_kegiatan_pengawasan'];
@@ -333,8 +353,8 @@ use Illuminate\Http\Request as Rikues;
 					}
 					if(!empty($row['no']) && !empty($data['tahun']) && !empty($nolapexist)) {
                         //DB::table('t_lap_awas')->where('no_lap',$data['no_lap'])->update($data);
+
                         $backlink = CRUDBooster::adminPath($slug='importAwas');
-                        //exit('Nomor laporan yang dimaksud telah ada, mohon memasukkan laporan yang belum diinput. <br/><a href="'.$backlink.'">Kembali</a>');
                         CRUDBooster::redirect($backlink, 'Nomor laporan yang dimaksud telah ada, mohon memasukkan laporan yang belum diinput.', 'warning');
 
                     }
@@ -395,11 +415,25 @@ use Illuminate\Http\Request as Rikues;
 
             }
 
+
             });
 
-            CRUDBooster::redirect(CRUDBooster::mainpath(), 'File Anda sudah berhasil diunggah ke database!', 'success');
+            CRUDBooster::redirect(CRUDBooster::mainpath(), 'File Excel Anda sudah berhasil diunggah ke database!', 'success');
+
+        }else if ($ext === 'csv'){
+            $request->validate([
+                'import_file' => 'required|max:10000'
+            ]);
+
+            CRUDBooster::redirect(CRUDBooster::mainpath(), 'File CSV Anda sudah berhasil diunggah ke database!', 'success');
         }else{
-            CRUDBooster::redirect(CRUDBooster::mainpath(), 'Terjadi kesalahan! Silahkan diulang kembali.', 'warning');
+            $backlink = CRUDBooster::adminPath($slug='importAwas');
+            CRUDBooster::redirect($backlink, 'Maaf! Tidak menerima file selain xlsx, xlx, dan csv', 'warning');
+        }
+        }else{
+            $backlink = CRUDBooster::adminPath($slug='importAwas');
+            CRUDBooster::redirect($backlink, 'Terjadi kesalahan! Harus ada file yang diunggah.', 'warning');
+
         }
 
     }
@@ -748,7 +782,12 @@ use Illuminate\Http\Request as Rikues;
 
 
             //dd($detail);
-            return (new FastExcel($detail))->download('ekspor_lap_pnbp_'.$id.'_'.date("d-m-Y").'.xlsx');
+            try {
+                return (new FastExcel($detail))->download('ekspor_lap_pnbp_'.$id.'_'.date("d-m-Y").'.xlsx');
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+
         }
 
         public function Validasi($id){

@@ -96,12 +96,6 @@ $(document).ready(function() {
                                                     var begin = "<div class='btn-toolbar' role='toolbar'><div class='btn-group btn-group-xs' role='group'>";
                                                     var end = "</div></div>";
                                                     var penanda = '<span style="color: #ffffff; opacity: 0.0;">'+full.id+'</span>';
-                                                    var modalDtl = '<div id="detilmodal'+full.id+'" class="modal fade" role="dialog">'+
-                                                                                        '<div class="modal-dialog modal-lg" role="document">'+
-                                                                                            '<div class="modal-content">'+
-                                                                                                '</div>'+
-                                                                                            '</div>'+
-                                                                                        '</div>';
 
                                                     switch (true) {
                                                                 case ({!! json_encode(CRUDBooster::isUpdate()) !!}):
@@ -109,7 +103,7 @@ $(document).ready(function() {
                                                                     var button5 = '<a class="btn btn-warning btn-xs btn-block" href="'+verpath+'" role="button" data-toggle="modal" title="Kirim Laporan" data-target="#verifmodal'+full.id+'"><i class="fa fa-paper-plane"></i></a>'+
                                                                                     '<div id="verifmodal'+full.id+'" class="modal fade" role="dialog">'+
                                                                                         '<div class="modal-dialog" role="document">'+
-                                                                                            '<div class="modal-content">'+
+                                                                                            '<div class="modal-content"><div class="text-center">Memproses...</div>'+
                                                                                                 '</div>'+
                                                                                             '</div>'+
                                                                                         '</div>';
@@ -117,7 +111,13 @@ $(document).ready(function() {
 
 
                                                                 case ({!! json_encode(CRUDBooster::isView()) !!}):
-                                                                var buttonDtl = '<a class="btn btn-primary btn-xs btn-block" href="'+mainpath+'/detail/'+full.id+'" role="button" data-toggle="modal" title="Detil Laporan" data-target="#detilmodal'+full.id+'"><i class="fa fa-eye"></i></a>';
+                                                                var buttonDtl = '<a class="btn btn-primary btn-xs btn-block" href="'+mainpath+'/detail/'+full.id+'" role="button" title="Detil Laporan" data-toggle="modal" data-target="#detilmodal'+full.id+'"><i class="fa fa-eye"></i></a>'+
+                                                                                    '<div id="detilmodal'+full.id+'" class="modal fade" role="dialog" aria-labelledby="detilmodal'+full.id+'" aria-hidden="true">'+
+                                                                                                            '<div class="modal-dialog modal-lg" role="document">'+
+                                                                                                                '<div class="modal-content"><div class="text-center">Memproses...</div>'+
+                                                                                                                    '</div>'+
+                                                                                                                '</div>'+
+                                                                                                            '</div>';
 
                                                                     var button2 = '<a class="btn btn-info btn-xs btn-block" href="'+temuanpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='+full.id+'&foreign_key=id_lap&label=Temuan" role="button" data-toggle="popover" title="Manajemen Temuan & Rekomendasi" data-content="Silahkan mengubah Temuan dan atau Rekomendasi laporan No. '+full.no_lap+' di sini."><i class="fa fa-tasks"></i></a>';
                                                                     var button3 = '<a class="btn btn-success btn-xs btn-block" href="'+rekpath+'/?return_url='+{!! json_encode(urlencode(Request::fullUrl())) !!}+'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='+full.id_temuan+'&foreign_key=id_temuan&label=Rekomendasi" role="button" data-toggle="popover" title="Tambah/Hapus Rekomendasi" data-content="Silahkan mengubah rekomendasi-rekomendasi laporan No. '+full.no_lap+' di sini."><i class="fa fa-tasks"></i></a>';
@@ -134,18 +134,19 @@ $(document).ready(function() {
                                                                     var button3 = '';
                                                                     var button4 = '';
                                                                     var button5 = '';
+                                                                    var buttonDtl = '';
 
 
                                                             };
                                                     if (full.id_status_kirim === "1"){
                                                         // if(!full.id_temuan){
-                                                            return button2+button+buttonDtl+button4+button5+penanda+modalDtl;
+                                                            return button2+button+buttonDtl+button4+button5+penanda;
                                                         /* }else{
                                                             return button2+buttonDtl+button+button4+button5+penanda+modalDtl;
                                                         } */
 
                                                     }else{
-                                                        return buttonDtl+penanda+modalDtl;
+                                                        return buttonDtl+penanda;
                                                     }
 
                                                     },
@@ -171,7 +172,7 @@ $(document).ready(function() {
                                 }],
                     columnDefs: [ {
                                 targets: [2,7],
-                                render: $.fn.dataTable.render.ellipsis(20)
+                                render: $.fn.dataTable.render.ellipsis(40)
                                 },{
                                 targets: [4],
                                 searchable: true,
@@ -202,10 +203,7 @@ $(document).ready(function() {
                                         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 style="background-color:green;color:white;" class="popover-title text-uppercase"></h3><div class="popover-content"></div></div>',
                                         html: true
                                     });
-                                    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                                        e.target // newly activated tab
-                                        e.relatedTarget // previous active tab
-                                        });
+                                    
                                     drawCallback(this.api());
                                     $('#table-filter').on('change', function(){
                                                 val = this.value;
@@ -222,6 +220,12 @@ $(document).ready(function() {
                             }
             });
 
+            $(document.body).on('hide.bs.modal', function (e) {
+                                            //divid = '#'+e.target.id;
+                                            //$(e.target).removeData('bs.modal');
+                                            table.draw(false);
+                                            
+        });
 });
 /*         $(".modal").on("hidden.bs.modal", function(){
             $(".modal-body").html("");
@@ -323,7 +327,7 @@ $(document).ready(function() {
 
         }
 
-
+        
 </script>
 @endpush
 @section('content')

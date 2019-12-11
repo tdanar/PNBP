@@ -56,14 +56,14 @@
 			$this->form[] = ['label'=>'Kodifikasi Temuan','name'=>'id_up','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_temuan,Deskripsi','datatable_where'=>'id_up is null'];
             $this->form[] = ['label'=>'','name'=>'id_up2','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_temuan,Deskripsi','datatable_where'=>'id_up2 = 0','parent_select'=>'id_up'];
 			$this->form[] = ['label'=>'','name'=>'id_kod_temuan','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_temuan,Deskripsi','datatable_where'=>'id_up is not null and id_up2 != 0','parent_select'=>'id_up2'];
-            $this->form[] = ['label'=>'Kondisi','name'=>'kondisi','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Kondisi','name'=>'kondisi','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Mata Uang','name'=>'id_mata_uang','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_matauang,kode'];
 			$this->form[] = ['label'=>'Nilai Uang','name'=>'nilai_uang','type'=>'money','validation'=>'required','width'=>'col-sm-10','decimals'=>'0'];
-			$this->form[] = ['label'=>'Lokasi','name'=>'lokasi','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Lokasi','name'=>'lokasi','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Sebab','name'=>'sebab','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Kodifikasi Sebab','name'=>'Id_up_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','datatable_where'=>'Id_up_sebab is null'];
             $this->form[] = ['label'=>'','name'=>'id_kod_sebab','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','parent_select'=>'Id_up_sebab'];
-			$this->form[] = ['label'=>'Sebab','name'=>'sebab','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Akibat','name'=>'akibat','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Akibat','name'=>'akibat','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM

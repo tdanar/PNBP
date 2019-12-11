@@ -44,7 +44,7 @@
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Temuan','name'=>'id_temuan','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_lap_awas_temuan,judul'];
-			$this->form[] = ['label'=>'Rekomendasi','name'=>'rekomendasi','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Rekomendasi','name'=>'rekomendasi','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Kodifikasi Rekomendasi','name'=>'id_kod_rekomendasi','type'=>'select2','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_rekomendasi,Deskripsi'];
 			$this->form[] = ['label'=>'Tgl. Tindak Lanjut','name'=>'tgl_tl','type'=>'date','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Uraian Tindak Lanjut','name'=>'tl','type'=>'textarea','width'=>'col-sm-10'];

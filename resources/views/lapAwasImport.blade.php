@@ -11,7 +11,7 @@
 	<br />
 	<form style="border: 4px solid #a1a1a1;margin-top: 15px;padding: 10px;" action="{{ URL::to('/ma/importAwasExcel') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
 		{{ csrf_field() }}
-		<input type="file" name="import_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+		<input type="file" name="import_file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
                                     @if(g('return_url'))
                                         <a href='{{g("return_url")}}' class='btn btn-default'><i
                                                     class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}</a>
