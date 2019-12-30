@@ -57,6 +57,23 @@
                                 <td>
                                     @if ($countTemuan == 0)
                                     <span class="text-danger">Wajib isi temuan bila jenis pengawasan audit.</span>
+                                    @elseif ($countTemuan > 0 && $kod_temuan != 0)
+                                    <span class="text-danger">Kodefikasi temuan harus diisi.</span>
+                                    @elseif ($countTemuan > 0 && $kod_sebab != 0)
+                                    <span class="text-danger">Kodefikasi sebab harus diisi.</span>
+                                    @else
+                                    <span class="text-success">Input Temuan sudah sesuai ketentuan.</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            @elseif($data->id_jenis_was != 1 && $countTemuan > 0)
+                            <tr>
+                                <td>Temuan</td>
+                                <td>
+                                    @if ($kod_temuan != 0)
+                                    <span class="text-danger">Kodefikasi temuan harus diisi.</span>
+                                    @elseif ($kod_sebab != 0)
+                                    <span class="text-danger">Kodefikasi sebab harus diisi.</span>
                                     @else
                                     <span class="text-success">Input Temuan sudah sesuai ketentuan.</span>
                                     @endif
@@ -71,6 +88,10 @@
                                     <span class="text-danger">Wajib isi rekomendasi bila ada temuan.</span>
                                     @elseif ($cekRek > 0)
                                     <span class="text-danger">Ada temuan yang belum memiliki rekomendasi.</span>
+                                    @elseif ($cekRek == 0 && $kod_rekomend != 0)
+                                    <span class="text-danger">Kodefikasi rekomendasi harus diisi.</span>
+                                    @elseif ($cekRek == 0 && $kod_tl != 0)
+                                    <span class="text-danger">Status tindak lanjut harus diisi.</span>
                                     @else
                                     <span class="text-success">Input Rekomendasi sudah sesuai ketentuan.</span>
                                     @endif
@@ -91,7 +112,11 @@
                         echo 'disabled="disabled"';
                     }elseif($countTemuan > 0 && $countRekomend <= 0){
                         echo 'disabled="disabled"';
+                    }elseif($countTemuan > 0 && $kod_temuan != 0 && $kod_sebab != 0){
+                        echo 'disabled="disabled"';
                     }elseif($countTemuan > 0 && $cekRek > 0){
+                        echo 'disabled="disabled"';
+                    }elseif($cekRek == 0 && $kod_rekomend != 0 && $kod_tl != 0){
                         echo 'disabled="disabled"';
                     }
                     else{

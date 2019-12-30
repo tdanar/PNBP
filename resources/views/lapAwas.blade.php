@@ -88,11 +88,13 @@ $(document).ready(function() {
                                         { 'data': 'rekomendasi'},
                                         { 'data': 'KodTL'},
                                         { 'render': function (data, type, full, meta) {
+                                                    var myId = {!! json_encode(CRUDBooster::myPrivilegeId()) !!};
                                                     var mainpath = {!! json_encode(CRUDBooster::mainpath()) !!};
                                                     var temuanpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_temuan')) !!};
                                                     var rekpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_rekomend')) !!};
                                                     var delpath = {!! json_encode(CRUDBooster::mainpath()) !!}+'/delete/'+full.id;
                                                     var verpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/validasi/'+full.id;
+                                                    var batalpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/batal/'+full.id;
                                                     var begin = "<div class='btn-toolbar' role='toolbar'><div class='btn-group btn-group-xs' role='group'>";
                                                     var end = "</div></div>";
                                                     var penanda = '<span style="color: #ffffff; opacity: 0.0;">'+full.id+'</span>';
@@ -107,7 +109,7 @@ $(document).ready(function() {
                                                                                                 '</div>'+
                                                                                             '</div>'+
                                                                                         '</div>';
-
+                                                                    var buttonBtl= '<a class="btn btn-warning btn-xs btn-block" href="#" onclick="klikBatal('+'\''+batalpath+'\''+')" role="button" data-toggle="popover" title="Pembatalan Pengiriman Laporan" data-content="Anda dapat membatalkan pengiriman laporan No. '+full.no_lap+' di sini. Pengguna harus mengirim ulang."><i class="fa fa-ban"></i></a>';
 
 
                                                                 case ({!! json_encode(CRUDBooster::isView()) !!}):
@@ -135,16 +137,19 @@ $(document).ready(function() {
                                                                     var button4 = '';
                                                                     var button5 = '';
                                                                     var buttonDtl = '';
+                                                                    var buttonBtl = '';
 
 
                                                             };
-                                                    if (full.id_status_kirim === "1"){
+                                                    if (full.id_status_kirim === "1" && (myId == 2 || myId == 1)){
                                                         // if(!full.id_temuan){
                                                             return button2+button+buttonDtl+button4+button5+penanda;
                                                         /* }else{
                                                             return button2+buttonDtl+button+button4+button5+penanda+modalDtl;
                                                         } */
 
+                                                    }else if(full.id_status_kirim !== "1" && (myId == 3 || myId == 1)){
+                                                        return buttonDtl+buttonBtl+penanda;
                                                     }else{
                                                         return buttonDtl+penanda;
                                                     }
@@ -203,7 +208,7 @@ $(document).ready(function() {
                                         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 style="background-color:green;color:white;" class="popover-title text-uppercase"></h3><div class="popover-content"></div></div>',
                                         html: true
                                     });
-                                    
+
                                     drawCallback(this.api());
                                     $('#table-filter').on('change', function(){
                                                 val = this.value;
@@ -224,7 +229,7 @@ $(document).ready(function() {
                                             //divid = '#'+e.target.id;
                                             //$(e.target).removeData('bs.modal');
                                             table.draw(false);
-                                            
+
         });
 });
 /*         $(".modal").on("hidden.bs.modal", function(){
@@ -254,6 +259,20 @@ $(document).ready(function() {
             confirmButtonColor: "#f39c12",
             confirmButtonText: "Kirim",
             cancelButtonText: "Batal",
+            closeOnConfirm: false },
+            function(){  location.href=link });
+            null;
+    };
+
+    function klikBatal(link){
+        swal({
+            title: "Anda yakin ingin membatalkan pengiriman laporan ini? ",
+            text: "Setelah klik Ya, Pengguna wajib mengirimnya kembali",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Ya",
+            cancelButtonText: "Tidak",
             closeOnConfirm: false },
             function(){  location.href=link });
             null;
@@ -327,7 +346,7 @@ $(document).ready(function() {
 
         }
 
-        
+
 </script>
 @endpush
 @section('content')

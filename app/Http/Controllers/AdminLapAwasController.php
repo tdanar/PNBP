@@ -59,9 +59,11 @@ use Illuminate\Http\Request as Rikues;
             //$this->col[] = ["label"=>"Status TL","name"=>"id","join"=>"t_lap_awas_temuan,id","join"=>"t_lap_awas_rekomend,id","join"=>"t_lap_awas_tlanjut,status"];
 			//$this->col[] = ["label"=>"Inputer","name"=>"id_user","join"=>"cms_users,name"];
 
-			# END COLUMNS DO NOT REMOVE THIS LINE
+            # END COLUMNS DO NOT REMOVE THIS LINE
+            Session::forget('current_row_id');
             $id = CRUDBooster::getCurrentId();
             $row = CRUDBooster::first($this->table,$id);
+            //dd($id);
             # START FORM DO NOT REMOVE THIS LINE
             $periode = view('partials.periode', compact('row'))->render();
 			$this->form = [];
@@ -160,7 +162,9 @@ use Illuminate\Http\Request as Rikues;
 	        |
 	        */
             //$this->index_button = array();
-            $this->index_button[] = ['label'=>'Import dari Excel','url'=>'/ma/importAwas','icon'=>'fa fa-upload','indexonly' => 'true'];
+            if (CRUDBooster::isCreate()){
+             $this->index_button[] = ['label'=>'Import dari Excel','url'=>'/ma/importAwas','icon'=>'fa fa-upload','indexonly' => 'true'];
+            }
             $this->index_button[] = ['label'=>'Export ke Excel','url'=>'#','icon'=>'fa fa-download','indexonly' => 'false'];
 
 
@@ -259,6 +263,7 @@ use Illuminate\Http\Request as Rikues;
         }
 
     public function getEdit($id){
+
         $this->button_addmore = FALSE;
 		$this->button_cancel  = TRUE;
 		$this->button_show    = FALSE;
@@ -446,7 +451,7 @@ use Illuminate\Http\Request as Rikues;
              //Create your own query
              $data = [];
              $data['page_title'] = 'Laporan Pengawasan PNBP';
-             if(!CRUDBooster::isSuperadmin()){
+             if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
                 `t_lap_awas`.`no_lap`,
@@ -487,7 +492,7 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
-                where('id_user',CRUDBooster::myId())->orderby('id','desc')->
+                orderby('id','desc')->
                 get();
              }else{
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
@@ -530,7 +535,7 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
-                orderby('id','desc')->
+                where('id_user',CRUDBooster::myId())->orderby('id','desc')->
                 get();
              }
 
@@ -636,7 +641,7 @@ use Illuminate\Http\Request as Rikues;
 
 	    public function getDataWas() {
 		    if(Session::has('admin_id')){
-			if(!CRUDBooster::isSuperadmin()){
+			if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
                 $data = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
                 `t_lap_awas`.`no_lap`,
@@ -677,7 +682,7 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
-                where('id_user',CRUDBooster::myId())->orderby('id','desc')->
+                orderby('id','desc')->
                 get()->toArray();
                 // $data['recordsTotal'] = $data['data']->count();
                 // $data['recordsFiltered'] = $data['data']->count();
@@ -723,7 +728,7 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
-                orderby('id','desc')->
+                where('id_user',CRUDBooster::myId())->orderby('id','desc')->
                 get()->toArray();
                 // $data['recordsTotal'] = $data['data']->count();
                 // $data['recordsFiltered'] = $data['data']->count();
@@ -794,6 +799,10 @@ use Illuminate\Http\Request as Rikues;
             $data['data'] = DB::table('t_lap_awas')->
                 where('t_lap_awas.id',$id)->
                 first();
+            $data['kod_temuan'] = DB::table('t_lap_awas_temuan')->where('id_lap',$id)->where('id_kod_temuan','')->count();
+            $data['kod_sebab'] = DB::table('t_lap_awas_temuan')->where('id_lap',$id)->where('id_kod_sebab','')->count();
+            $data['kod_rekomend']=DB::table('t_lap_awas_rekomend')->selectRaw('t_lap_awas_rekomend.*')->join('t_lap_awas_temuan','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('id_lap',$id)->where('id_kod_rekomendasi','')->count();
+            $data['kod_tl']=DB::table('t_lap_awas_rekomend')->selectRaw('t_lap_awas_rekomend.*')->join('t_lap_awas_temuan','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('id_lap',$id)->where('id_kod_tl','')->count();
             $data['countTemuan'] = DB::table('t_lap_awas_temuan')->where('id_lap',$id)->count();
             $data['countRekomend'] = DB::table('t_lap_awas_rekomend')->join('t_lap_awas_temuan','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('id_lap',$id)->count();
             $ceks = DB::table('t_lap_awas_temuan')->selectRaw('DISTINCT `t_lap_awas_temuan`.`id` AS `id_temuan`,COUNT(`t_lap_awas_rekomend`.`id`) AS `count_rek`')
@@ -813,7 +822,7 @@ use Illuminate\Http\Request as Rikues;
             }
 
 
-            //dd(array_sum($cek));
+            //dd($data['kod_temuan']);
 
             return view('modal.verifikasi',$data);
 
@@ -831,6 +840,19 @@ use Illuminate\Http\Request as Rikues;
                 return false;
             }
 
+        }
+
+        public function Batal($id){
+            try {
+                DB::table('t_lap_awas')
+                    ->where('id', $id)
+                    ->update(['id_status_kirim' => 1]);
+
+            return redirect('/ma/lap_awas')->with('status','Laporan sudah dapat diedit kembali oleh pengguna!');
+            } catch (Exception $e) {
+                report ($e);
+                return false;
+            }
         }
 
 	    /*

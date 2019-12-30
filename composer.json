@@ -9,7 +9,6 @@
         "anhskohbo/no-captcha": "^3.1",
         "crocodicstudio/crudbooster": "^5.4",
         "doctrine/dbal": "^2.9",
-        "emotality/tawk-laravel": "^1.0",
         "fideloper/proxy": "^4.0",
         "florianv/laravel-swap": "^2.1",
         "laravel/framework": "5.7.*",

@@ -182,7 +182,6 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'E' => 
         array (
             'Exchanger\\' => 10,
-            'Emotality\\TawkTo\\' => 17,
             'Egulias\\EmailValidator\\' => 23,
         ),
         'D' => 
@@ -522,10 +521,6 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'Exchanger\\' => 
         array (
             0 => __DIR__ . '/..' . '/florianv/exchanger/src',
-        ),
-        'Emotality\\TawkTo\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/emotality/tawk-laravel/src',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
@@ -1305,9 +1300,6 @@ class ComposerStaticInit9dfca3a2c93e1ac6cfdd2e52046eefa8
         'Egulias\\EmailValidator\\Warning\\QuotedString' => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator/Warning/QuotedString.php',
         'Egulias\\EmailValidator\\Warning\\TLD' => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator/Warning/TLD.php',
         'Egulias\\EmailValidator\\Warning\\Warning' => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator/Warning/Warning.php',
-        'Emotality\\TawkTo\\Facades\\TawkTo' => __DIR__ . '/..' . '/emotality/tawk-laravel/src/Facade/TawkTo.php',
-        'Emotality\\TawkTo\\TawkTo' => __DIR__ . '/..' . '/emotality/tawk-laravel/src/TawkTo.php',
-        'Emotality\\TawkTo\\TawkToServiceProvider' => __DIR__ . '/..' . '/emotality/tawk-laravel/src/TawkToServiceProvider.php',
         'Exchanger\\Contract\\CurrencyPair' => __DIR__ . '/..' . '/florianv/exchanger/src/Contract/CurrencyPair.php',
         'Exchanger\\Contract\\ExchangeRate' => __DIR__ . '/..' . '/florianv/exchanger/src/Contract/ExchangeRate.php',
         'Exchanger\\Contract\\ExchangeRateProvider' => __DIR__ . '/..' . '/florianv/exchanger/src/Contract/ExchangeRateProvider.php',

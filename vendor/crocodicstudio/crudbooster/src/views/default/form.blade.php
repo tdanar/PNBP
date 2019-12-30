@@ -25,7 +25,10 @@
                     $return_url = ($return_url) ?: g('return_url');
                 }elseif($button_addtemuan==TRUE){
                     $action = (@$row) ? CRUDBooster::mainpath("edit-temuan/$row->id") : CRUDBooster::mainpath("add-temuan");
-
+                    
+                }else{
+                    $action = (@$row) ? CRUDBooster::mainpath("edit-save/$row->id") : CRUDBooster::mainpath("add-save");
+                    $return_url = ($return_url) ?: g('return_url');
                 }
 
                 ?>

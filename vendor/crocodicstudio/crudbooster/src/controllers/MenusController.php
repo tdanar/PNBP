@@ -73,7 +73,7 @@ class MenusController extends CBController
 				}
 
 
-				function format(icon) {          
+				function format(icon) {
 	                  var originalOption = icon.element;
 	                  var label = $(originalOption).text();
 	                  var val = $(originalOption).val();
@@ -128,10 +128,10 @@ class MenusController extends CBController
 						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 
 						$('#form-group-path').show();
-						$('#form-group-module_slug,#form-group-statistic_slug').hide();					
+						$('#form-group-module_slug,#form-group-statistic_slug').hide();
 					}else {
 						$('#module_slug,#statistic_slug').prop('required',false);
-						
+
 						$('#path').prop('required',true);
 						$('#form-group-path label .text-danger').remove();
 						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
@@ -163,7 +163,7 @@ class MenusController extends CBController
             "name" => "name",
             "type" => "text",
             "required" => true,
-            "validation" => "required|min:3|max:255|alpha_num_spaces",
+            "validation" => "required|min:3|max:255",
             "placeholder" => "You can only enter alphanumeric character and spaces only",
         ];
         $this->form[] = [

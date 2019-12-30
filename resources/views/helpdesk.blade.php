@@ -1,7 +1,7 @@
 @extends('layout')
 @section('content')
 <div class="clear"></div>
-<div class="container">{{ TawkTo::widgetCode() }}
+<div class="container">
 <div class="row">
     <div class="col-sm-7"><h5><img src="https://cdn-image.bisnis.com/posts/2018/05/18/796752/gedung-kemenkeu.jpeg"/></h5><br/><h4>&nbsp;</h4></div>
     <div class="col-sm-5">

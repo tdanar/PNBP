@@ -124,7 +124,7 @@
                     "labelText": "[[title]]:",
                     "truncateLabels": 20,
                     "reversedOrder": true,
-                    "maxColumns": 1,
+                    "maxColumns": 2,
                     "valueAlign": "left",
                     "verticalGap": 0
                     }
@@ -177,7 +177,7 @@
                     "labelText": "[[title]]:",
 
                     "reversedOrder": true,
-                    "maxColumns": 1,
+                    "maxColumns": 2,
                     "valueAlign": "left",
                     "verticalGap": 0
                     }
@@ -236,7 +236,7 @@
                     "labelText": "[[title]]:",
                     "truncateLabels": 15,
                     "reversedOrder": true,
-                    "maxColumns": 4,
+                    "maxColumns": 2,
                     "valueAlign": "left",
                     "position": "bottom",
                     "verticalGap": 0
@@ -526,6 +526,28 @@ AmCharts.addInitHandler(function(chart) {
 <div class="col-sm-12"><center><h2>STATISTIK LAPORAN HASIL PENGAWASAN<br/><small>{{$unit}}</small></h2></center></div>
 </div>
 <div class="row">
+    <div class="col-sm-12"><center>
+    <form class="form-inline" action="{{ URL::to('/ma/d_j_awas/') }}">
+        {{ csrf_field() }}
+        <div class="input-group">
+            <div class="input-group-addon">Tahun</div>
+            <select class="form-control" id="tahun" name="tahun">
+                <option value="">All</option>
+                @foreach($tahunSelector->unique('tahun')->sortBy('tahun') as $row)
+                    @if($row->tahun == $input['tahun'])
+                    <option value="{{$row->tahun}}" selected="selected">{{$row->tahun}}</option>
+                    @else
+                    <option value="{{$row->tahun}}">{{$row->tahun}}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+        <button type="submit" class="btn btn-default">Tampilkan</button>
+    </form>
+    </center>
+    </div>
+</div>
+<div class="row">
     <div id="piegraphs1" style="height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
     <div id="piegraphs2" style="height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
 
@@ -542,18 +564,22 @@ AmCharts.addInitHandler(function(chart) {
 @if($matauang)
 <div class="row"><h3>Nilai Temuan Berdasarkan Kodefikasi Temuan</h3>
 @foreach ($matauang as $uang)
+@if($uang)
 <div class="row">
-    <div id="batang1{{$uang->kode}}" style="min-height:400px; background-color: #FFFFFF;" class="col-sm-12"></div>
+    <div id="batang1{{$uang->kode}}" style="min-height:800px; background-color: #FFFFFF;" class="col-sm-12"></div>
 </div>
+@endif
 @endforeach
 </div>
 @endif
 @if($matauang)
 <div class="row"><h3>Nilai Temuan Berdasarkan Status Tindak Lanjut</h3>
 @foreach ($matauang as $uang)
+@if($uang)
 <div class="row">
-    <div id="batang2{{$uang->kode}}" style="min-height:400px; background-color: #FFFFFF;" class="col-sm-12"></div>
+    <div id="batang2{{$uang->kode}}" style="min-height:800px; background-color: #FFFFFF;" class="col-sm-12"></div>
 </div>
+@endif
 @endforeach
 </div>
 @endif

@@ -80,7 +80,6 @@ return array(
     'Fideloper\\Proxy\\' => array($vendorDir . '/fideloper/proxy/src'),
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
     'Exchanger\\' => array($vendorDir . '/florianv/exchanger/src'),
-    'Emotality\\TawkTo\\' => array($vendorDir . '/emotality/tawk-laravel/src'),
     'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/EmailValidator'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
     'Dompdf\\' => array($vendorDir . '/dompdf/dompdf/src'),

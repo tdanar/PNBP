@@ -16,6 +16,13 @@
 <script>
 $(document).ready(function() {
     var unit = {!! json_encode(CRUDBooster::myUnit()) !!};
+    var pesanAtas = {!! json_encode($input['tahun'] == ''?'':'Tahun '.$input['tahun'].', ') !!}+
+                    {!! json_encode($input['unit'] == ''?'':'Kementerian/Lembaga: '.$input['unit'].', ') !!}+
+                    {!! json_encode($input['jenis_was'] == ''?'':'Jenis Pengawasan: '.$input['jenis_was'].', ') !!}+
+                    {!! json_encode($input['DeskTemuan'] == ''?'':'Kodefikasi Temuan: '.$input['DeskTemuan'].', ') !!}+
+                    {!! json_encode($input['DeskSebab'] == ''?'':'Kodefikasi Sebab: '.$input['DeskSebab'].', ') !!}+
+                    {!! json_encode($input['DeskRek'] == ''?'':'Kodefikasi Rekomendasi: '.$input['DeskRek'].', ') !!}+
+                    {!! json_encode($input['KodTL'] == ''?'':'Status TL: '.$input['jenis_was']) !!};
     var table = $('#lapawas').DataTable({
 
             language:
@@ -39,30 +46,7 @@ $(document).ready(function() {
                         sLast:     "Terakhir"
                         }
                     },
-                    order:[[0,'desc'],[1,'desc']],
-                    serverSide: true,
-                    ajax: {
-                                url: '/api/getMonitorWas',
-                                type: 'POST'
-                            },
-                    columns: [
-
-                                        { 'data': null, 'render': function (data, type, full, meta) {
-                                                return full.unit
-                                            }
-                                        },
-                                        { 'data': null, 'render': function (data, type, full, meta) {
-                                                return full.jenis_awas
-                                            }
-                                        },
-                                        { 'data': 'nama_giat_was'},
-                                        { 'data': 'jenis_awas'},
-                                        { 'data': 'judul'},
-                                        { 'data': 'nilai_uang'},
-                                        { 'data': 'id','render': '',
-                                        'orderable': false,
-                                        }
-                                    ],
+                    order:[[0,'asc'],[1,'asc']],
                     processing: true,
                     searching: true,
                     deferRender: true,
@@ -72,12 +56,13 @@ $(document).ready(function() {
                     buttons: [{
                                     extend: 'excel',
                                     header: true,
+                                    messageTop: pesanAtas,
                                     exportOptions: {
-                                        columns: [1,2,3,5,6]
+                                        columns: [0,1,2,3,4]
                                     }
                                 }],
                     columnDefs: [{
-                                targets: [0],
+                                targets: [5],
                                 searchable: false,
                                 orderable: false,
                                 } ],
@@ -91,10 +76,7 @@ $(document).ready(function() {
 
                                 },
                     drawCallback: function ( settings ) {
-                                    $('#table-filter').on('change', function(e){
-                                                table.column(0).search(this.value).draw();
-                                                e.preventDefault();
-                                                });
+
                                     $('#table-filter2').on('change', function(e){
                                                 table.column(4).search(this.value).draw();
                                                 e.preventDefault();
@@ -123,7 +105,7 @@ $(document).ready(function() {
             });
 
 });
-    
+
     function klikDelete(link) {
          swal({
             title: "Apakah anda yakin ?",
@@ -139,28 +121,30 @@ $(document).ready(function() {
         };
 
     function drawCallback(api) {
+        var info = api.page.info();
+
+        if(info.recordsDisplay != 0){
         var rows = api.rows( {page:'current'} ).nodes(),
             settings = {
-                    "COLUMN_THEME" : 0,
+                    "COLUMN_THEME" : 1,
                     "COLUMN_SUBTHEME" : 1,
                     "COLUMN_SUBTHEME2" : 2,
                     "COLUMN_SUBTHEME3" : 3,
                     "COLUMN_SUBTHEME4" : 4,
-                    "COLUMN_SUBTHEME5" : 5,
-                    //"COLUMN_THEME2" : 7
+                    "COLUMN_SUBTHEME5" : 5
 
             };
 
                 $("#lapawas").find('td').show();
                 mergeCells(rows, settings.COLUMN_THEME);
-                mergeCells(rows, settings.COLUMN_SUBTHEME);
-                mergeCells(rows, settings.COLUMN_SUBTHEME2);
-                mergeCells(rows, settings.COLUMN_SUBTHEME3);
-                mergeCells(rows, settings.COLUMN_SUBTHEME4);
-                mergeCells(rows, settings.COLUMN_SUBTHEME5);
-                //mergeCells(rows, settings.COLUMN_THEME2);
 
-            }
+
+
+
+    }else{
+
+    }
+        }
     function mergeCells(rows, rowIndex) {
 
             var last = null,
@@ -193,138 +177,174 @@ $(document).ready(function() {
                 rows[refLine].childNodes[rowIndex].rowSpan = ++k;
 
         }
-
-
 </script>
 @endpush
 @section('content')
-<!-- Your custom  HTML goes here -->
-@if (session('status'))
-    <div class="alert alert-info alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-        <strong>Sukses!</strong> {{ session('status') }}
-      </div>
-@endif
+
 <div class="col-xs-12 col-sm-12">
-<div class="form-horizontal">
+<form class="form-horizontal" action="{{ URL::to('/ma/monitoring/') }}">
+    {{ csrf_field() }}
 <div class="row">
     <div class="col-xs-3 text-right">
-        <label for="table-filter">Tahun Pengawasan : </label>
+        <label>Tahun Pengawasan : </label>
     </div>
     <div class="col-xs-2">
-    <select id="table-filter">
+    <select class="form-control" name="tahun">
         <option value="">All</option>
-        @foreach($result->unique('tahun') as $row)
-        <option>{{$row->tahun}}</option>
+        @foreach($result->unique('tahun')->sortBy('tahun') as $row)
+        @if($row->tahun == $input['tahun'])
+        <option value="{{$row->tahun}}" selected="selected">{{$row->tahun}}</option>
+        @else
+        <option value="{{$row->tahun}}">{{$row->tahun}}</option>
+        @endif
         @endforeach
         </select>
     </div>
 </div>
 <div class="row">
     <div class="col-xs-3 text-right">
-        <label for="table-filter2">Jenis Pengawasan : </label>
+        <label>Kementerian / Lembaga : </label>
     </div>
     <div class="col-xs-2">
-        <select id="table-filter2">
+    <select class="form-control" name="unit">
+        <option value="">All</option>
+        @foreach($result->unique('unit')->sortBy('unit') as $row)
+            @if($row->unit == $input['unit'])
+            <option value="{{$row->unit}}" selected="selected">{{$row->unit}}</option>
+            @else
+            <option value="{{$row->unit}}">{{$row->unit}}</option>
+            @endif
+        @endforeach
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label>Jenis Pengawasan : </label>
+    </div>
+    <div class="col-xs-2">
+        <select class="form-control" name="jenis_was">
             <option value="">All</option>
-            @foreach($result->unique('jenis_awas') as $row)
-            <option>{{$row->jenis_awas}}</option>
+            @foreach($result->unique('jenis_awas')->sortBy('jenis_awas') as $row)
+                @if($row->jenis_awas == $input['jenis_was'])
+                <option value="{{$row->jenis_awas}}" selected="selected">{{$row->jenis_awas}}</option>
+                @else
+                <option value="{{$row->jenis_awas}}">{{$row->jenis_awas}}</option>
+                @endif
             @endforeach
             </select>
     </div>
 </div>
 <div class="row">
     <div class="col-xs-3 text-right">
-        <label for="table-filter3">Status Tindak Lanjut :</label>
+        <label>Klasifikasi Temuan : </label>
     </div>
     <div class="col-xs-2">
-        <select id="table-filter3">
+        <select class="form-control" name="klasTemuan">
             <option value="">All</option>
-            <option>Dalam Proses</option>
-            <option>Tuntas</option>
+            @foreach($result->unique('KlasTemuan')->where('KlasTemuan','!=',null)->sortBy('KlasTemuan') as $row)
+            @if($row->IdKlasTemuan == $input['klasTemuan'])
+                <option value="{{$row->IdKlasTemuan}}" selected="selected">{{$row->KlasTemuan}}</option>
+            @else
+                <option value="{{$row->IdKlasTemuan}}">{{$row->KlasTemuan}}</option>
+            @endif
+            @endforeach
             </select>
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label>Klasifikasi Sebab : </label>
+    </div>
+    <div class="col-xs-2">
+        <select class="form-control" name="klasSebab">
+            <option value="">All</option>
+            @foreach($result->unique('KlasSebab')->where('KlasSebab','!=',null)->sortBy('KlasSebab') as $row)
+                @if($row->IdKlasSebab == $input['klasSebab'])
+                    <option value="{{$row->IdKlasSebab}}" selected="selected">{{$row->KlasSebab}}</option>
+                @else
+                    <option value="{{$row->IdKlasSebab}}">{{$row->KlasSebab}}</option>
+                @endif
+            @endforeach
+            </select>
+    </div>
 </div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label>Klasifikasi Rekomendasi : </label>
+    </div>
+    <div class="col-xs-2">
+        <select class="form-control" name="klasRek">
+            <option value="">All</option>
+            @foreach($result->unique('DeskRekomendasi')->where('DeskRekomendasi','!=',null)->sortBy('DeskRekomendasi') as $row)
+                @if($row->IdKlasRekomendasi == $input['klasRek'])
+                    <option value="{{$row->IdKlasRekomendasi}}" selected="selected">{{$row->DeskRekomendasi}}</option>
+                @else
+                    <option value="{{$row->IdKlasRekomendasi}}">{{$row->DeskRekomendasi}}</option>
+                @endif
+            @endforeach
+            </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label>Status Tindak Lanjut : </label>
+    </div>
+    <div class="col-xs-2">
+        <select class="form-control" name="KodTL">
+            <option value="">All</option>
+            @foreach($result->unique('KodTL')->where('KodTL','!=',null)->sortBy('KodTL') as $row)
+                @if($row->KodTL == $input['KodTL'])
+                <option value="{{$row->KodTL}}" selected="selected">{{$row->KodTL}}</option>
+                @else
+                <option value="{{$row->KodTL}}">{{$row->KodTL}}</option>
+                @endif
+            @endforeach
+            </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label>&nbsp; </label>
+    </div>
+    <div class="col-xs-2">
+        <button type="submit" class="btn btn-default">Tampilkan</button>
+    </div>
+</div>
+</form>
 </div>
 <table id="lapawas" border="1" class="display" style="width:100%">
   <thead>
-      <tr>
-
+      <tr style="background-color:#A9A9A9;">
         <th>Kementerian / Lembaga</th>
         <th>Jenis Pengawasan</th>
         <th>Jumlah Pengawasan</th>
         <th>Jumlah Temuan</th>
         <th>Jumlah Rekomendasi</th>
-        <th>Status Tindak Lanjut</th>
         <th>Aksi</th>
     </tr>
   </thead>
-  {{--<tbody>
-    @foreach($result as $row)
-      <tr>
-         <td width="1%" align="center"></td>
-        <td>{{$row->tahun}}</td>
-        <td data-sort="{{strtotime($row->tanggal)}}">{{date('d M Y', strtotime($row->tanggal))}}</td>
-        <td>{{$row->no_lap}}</td>
-        <td>{{$row->nama_giat_was}}</td>
-        <td>{{$row->judul}}
-            <br/>
-            @if(!empty($row->judul))
-            @php $mydata = '<div class="row">
-                <div class="col-xs-3 text-right"><b>Kondisi:</b></div>
-                <div class="col-xs-9">'.$row->kondisi.'</div>
-            </div>
-            <div class="row">
-                <div class="col-xs-3 text-right"><b>Sebab:</b></div>
-                    <div class="col-xs-9">'.$row->sebab.'</div>
-            </div>
-            <div class="row">
-                <div class="col-xs-3 text-right"><b>Akibat:</b></div>
-                    <div class="col-xs-9">'.$row->akibat.'</div>
-            </div>';
-            @endphp
-            <br/><center>
-            <a class="btn btn-xs btn-success" href="javascript:void(0)" role="button" data-toggle="popover2" title="Detil" data-content=''><i class="fa fa-angle-down"></i>
-            </a>
-            </center>
-            @endif
+  <tbody>
+      @if ($collection)
+          @foreach ($collection as $row)
+        <tr>
+        <td>{{$row->unit}}</td>
+        <td>{{$row->jenis_awas}}</td>
+        <td>{{$row->jml_pengawasan}}</td>
+        <td>{{$row->jml_temuan}}</td>
+        <td>{{$row->jml_rekomendasi}}</td>
+        <td><a class="btn btn-primary" href="/ma/monitoring/dlPDF/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"><i class="fa fa-file-pdf"></i> Download PDF</a>
+        <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content"><div class="text-center">Memproses...</div>
+                        </div>
+                    </div>
+                </div>
         </td>
-        <td>{{$row->KodeMatauang.' '.number_format($row->nilai_uang,2,",",".")}}</td>
-        <td>{{$row->rekomendasi}}</td>
-        <td>{{$row->status_tl}}</td>
-        <td width="20%">
-          <!-- To make sure we have read access, wee need to validate the privilege -->
-          <div class="btn-toolbar" role="toolbar">
-          <div class="btn-group btn-group-xs" role="group">
-          @if(CRUDBooster::isUpdate() && $button_edit)
-          <a class='btn btn-success' href='{{CRUDBooster::mainpath("edit/$row->id")}}' role="button" data-toggle="popover" title="Ubah Laporan" data-content="Silahkan mengubah identitas laporan No. {{$row->no_lap}} di sini."><i class="fa fa-pencil"></i></a>
-          @endif
-          @if(CRUDBooster::isView() && $button_edit)
-          <a class="btn btn-primary" href="{{CRUDBooster::adminPath($slug='lap_awas_temuan').'?return_url='.urlencode(Request::fullUrl()).'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='.$row->id.'&foreign_key=id_lap&label=Temuan'}}" role="button" data-toggle="popover" title="Tambah/Hapus Temuan" data-content="Silahkan mengubah temuan-temuan laporan No. {{$row->no_lap}} di sini."><i class="fa fa-bars"></i></a>
-
-          @endif
-          @if(CRUDBooster::isView() && $button_edit)
-          <a class="btn btn-warning" href="{{CRUDBooster::adminPath($slug='lap_awas_rekomend').'?return_url='.urlencode(Request::fullUrl()).'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='.$row->id_temuan.'&foreign_key=id_temuan&label=Rekomendasi'}}" role="button" data-toggle="popover" title="Tambah/Hapus Rekomendasi" data-content="Silahkan mengubah rekomendasi-rekomendasi laporan No. {{$row->no_lap}} di sini."><i class="fa fa-bars"></i></a>
-          @endif
-
-          @if(CRUDBooster::isDelete() && $button_edit && $row->id_status_kirim === 1)
-          <a class='btn btn-danger' href='#' onclick='{{CRUDBooster::deleteConfirm(CRUDBooster::mainpath("delete/$row->id"))}}' role="button" data-toggle="popover" title="Hapus Laporan" data-content="Anda dapat menghapus laporan No. {{$row->no_lap}} di sini. Penghapusan ini tidak dapat dikembalikan."><i class="fa fa-trash"></i></a>
-          @endif
-
-          @if(CRUDBooster::isView() && $button_edit)
-          <a class="btn btn-success" href="#" role="button" data-toggle="popover" title="Unduh Excel Laporan" data-content="Silahkan mengunduh laporan No. {{$row->no_lap}} di sini."><i class="fa fa-file-excel-o"></i></a>
-          @endif
-
-        </div>
-        </div>
-        <span style="opacity: 0.0;">{{$row->id_temuan}}</span>
-        </td>
-       </tr>
-    @endforeach
-  </tbody>--}}
+        </tr>
+        @endforeach
+      @endif
+  </tbody>
 </table>
 
 <!-- ADD A PAGINATION -->
