@@ -1276,7 +1276,7 @@ class CBController extends Controller
         $page_title = trans("crudbooster.edit_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name, 'name' => $row->{$this->title_field}]);
         $command = 'edit';
         Session::put('current_row_id', $id);
-        
+
         return view('crudbooster::default.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
 
     }
@@ -1726,7 +1726,8 @@ class CBController extends Controller
 
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        $file = str_replace('uploads/', '', $row->{$column});
+        //$file = str_replace('uploads/', '', $row->{$column});
+        $file = '/'.$row->{$column};
         if (Storage::exists($file)) {
             Storage::delete($file);
         }

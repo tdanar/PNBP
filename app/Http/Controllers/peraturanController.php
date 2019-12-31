@@ -13,6 +13,7 @@ class peraturanController extends Controller {
         $data['id'] = CRUDBooster::myId();
         $data['nama'] = CRUDBooster::myName();
         $data['foto'] = CRUDbooster::myPhoto();
+        $data['peraturan'] = DB::table('t_peraturan')->get();
         //dd($data);
         return View::make('peraturan')->with($data);
     }

@@ -10,17 +10,27 @@
                     <thead>
                         <tr>
                             <th style="width: 43px; background-color: #003366; color: #fff;"><p align="center"><span style="color: #fff;">NO</span></p></th>
-                            <th style="width: 562px; background-color: #003366; color: #ffffff;"><p align="center"><span style="color: #fff;">URAIAN</span></p></th>
-                            <th style="width: 430px; background-color: #003366; color: #ffffff;"><p align="center"><span style="color: #fff;">LINK</span></p></th>
+                            <th style="width: 762px; background-color: #003366; color: #ffffff;"><p align="center"><span style="color: #fff;">URAIAN</span></p></th>
+                            <th style="width: 230px; background-color: #003366; color: #ffffff;"><p align="center"><span style="color: #fff;">LINK</span></p></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr valign="top">
-                            <td class="rtecenter" style="; text-align: center; width: 43px; background-color: #ededed;"><p>1.</p></td>
-                            <td style="width: 562px; background-color: #ededed;">Undang-Undang Nomor 9 Tahun 2018 tentang Penerimaan Negara Bukan Pajak</td>
-                            <td style="width: 430px; background-color: #ededed;"><a href="http://repo.portalitjen.depkeu.go.id/filerepo/Inspektorat%20V/Portal%20Pengawasan%20PNBP/Peraturan%20PNBP/9TAHUN2018UU.pdf"><p align="center">Klik di Sini</p></a></td>
-                        </tr>
-                        <tr valign="top">
+                        @foreach ($peraturan as $index => $value)
+                            @php
+                                if(($index+1) % 2 == 0){
+                                    $back = "background-color: #bababa;";
+                                }else{
+                                    $back = "background-color: #ededed;";
+                                }
+                            @endphp
+                            <tr valign="top">
+                            <td class="rtecenter" style="; text-align: center; width: 43px; {{$back}}"><p>{{$index+1}}.</p></td>
+                            <td style="width: 762px; {{$back}}">{{$value->judul}}<br/>{{$value->uraian}}</td>
+                            <td style="width: 230px; {{$back}}"><a href="{{$value->link}}"><p align="center">Klik di Sini</p></a></td>
+                            </tr>
+                        @endforeach
+
+                        {{-- <tr valign="top">
                             <td class="rtecenter" style="; text-align: center; width: 43px; background-color: #bababa;"><p>2.</p></td>
                             <td style="width: 562px; background-color: #bababa;">Instruksi Presiden Nomor 4 Tahun 2018 tentang Peningkatan Pengawasan Penerimaan Pajak atas Belanja Pemerintah dan Penerimaan Negara Bukan Pajak</td>
                             <td style="width: 430px; background-color: #bababa;"><a href="http://repo.portalitjen.depkeu.go.id/filerepo/Inspektorat%20V/Portal%20Pengawasan%20PNBP/Peraturan%20PNBP/4TAHUN2018INPRES.pdf"><p align="center">Klik di Sini</p></a></td>
@@ -119,7 +129,7 @@
                             <td class="rtecenter" style="; text-align: center; width: 43px; background-color: #ededed;"><p></p>21.</p></td>
                             <td style="width: 562px; background-color: #ededed;">Peraturan Menteri Keuangan Nomor 204/PMK.02/2018 tentang Perubahan atas PMK Nomor 221/PMK.02/2017 tentang Petunjuk Teknis Akuntansi PNBP dari Kegiatan Usaha Panas Bumi</td>
                             <td style="width: 430px; background-color: #ededed;"><a href="http://repo.portalitjen.depkeu.go.id/filerepo/Inspektorat%20V/Portal%20Pengawasan%20PNBP/Peraturan%20PNBP/PMK/204~PMK.02~2018Per.pdf"><p align="center">Klik di Sini</p></a></td>
-                        </tr>
+                        </tr> --}}
                     </tbody>
                     </table>
             </div>

@@ -12,6 +12,7 @@
     use Schema;
     use File;
     use crocodicstudio\crudbooster\controllers\LogsController;
+    use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request as Rikues;
 
@@ -76,7 +77,7 @@ use Illuminate\Http\Request as Rikues;
             $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'custom','html'=>$periode,'validation'=>'required|integer|min:0'];
 			// $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun awal periode yang diawasi","title"=>"Silahkan pilih tahun awal periode pengawasan"];
 			// $this->form[] = ['label'=>'-','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
-            $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:10000'];
+            $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:10000','upload_encrypt'=>true];
             $this->form[] = ['label'=>'Id User','name'=>'id_user','type'=>'hidden','value' => CRUDBooster::myId()];
             $this->form[] = ['label'=>'Status Kirim','name'=>'id_status_kirim','type'=>'hidden','value' => 1];
 
@@ -855,6 +856,40 @@ use Illuminate\Http\Request as Rikues;
             }
         }
 
+        public function delImage($id,$column){
+
+
+            $this->cbLoader();
+            $id = $id;
+            $column = $column;
+
+            $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+            if (! CRUDBooster::isDelete() && $this->global_privilege == false) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete_image", [
+                    'name' => $row->{$this->title_field},
+                    'module' => CRUDBooster::getCurrentModule()->name,
+                ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
+
+            $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+            $file = '/'.$row->{$column};
+
+            if (Storage::exists($file)) {
+                Storage::delete($file);
+            }
+
+
+            CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
+                'name' => $row->{$this->title_field},
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+
+
+    }
+
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected
@@ -1195,7 +1230,7 @@ use Illuminate\Http\Request as Rikues;
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
-
+            $this->delImage($id,'filename');
 	    }
 
 	    /*

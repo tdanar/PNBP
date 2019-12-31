@@ -40,7 +40,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         }
 		$this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"select2","datatable"=>"t_ref_unit,unit",'required'=>true);
 		// $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Please leave empty if not change");
-		$this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Biarkan kosong apabila tidak ada perubahan");
+		$this->form[] = array("label"=>"Password","name"=>"password","type"=>"password",'validation'=>'confirmed|min:8',"help"=>"Biarkan kosong apabila tidak ada perubahan");
 		$this->form[] = array("label"=>"Konfirmasi Password","name"=>"password_confirmation","type"=>"password","help"=>"Biarkan kosong apabila tidak ada perubahan");
 		# END FORM DO NOT REMOVE THIS LINE
 

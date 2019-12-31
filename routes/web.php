@@ -36,6 +36,8 @@ Route::get('/ma/lap_awas/edit-temuan/{id}', 'AdminLapAwasController@postEditTemu
 Route::get('/ma/lap_awas_temuan/add-temuan', 'AdminLapAwasTemuanController@postAddTemuan');
 Route::get('/ma/lap_awas_temuan/edit-temuan/{id}', 'AdminLapAwasTemuanController@postEditTemuan');
 Route::get('/ma/monitoring/dlPDF/{id}','AdminMonitoringController@getDlPDF');
+Route::get('/artikel/{id}','AdminArticleController@showArticle')->name('article');
+
 
 
 

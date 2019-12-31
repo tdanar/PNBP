@@ -3,17 +3,6 @@
 <div class="clear"></div>
     	<div id="my-content">
 			<div class="slider">
-					<div class="bg_search"></div>
-					<div class="search">
-						<div class="text-search"></div>
-
-						<form class='search-box' id='searchforms' action="/hasil-pencarian/" method="GET">
-							<p id="searchbart">
-								<input class="input-search" id="txt_search" type="text" name="query" placeholder="Masukan Kata Pencarian.">
-								<input type="submit" class="submit-search" value="Cari");>
-							</p>
-						</form>
-					</div>
 					<div class="fadeOut owl-carousel owl-theme">
 
 
@@ -22,11 +11,6 @@
 							<img src='/images/beranda_1.jpeg' />
 							<div class="search" style="bottom:25%">
 							<div class="text-search">
-								{{-- <a href="" class="linkheader">
-
-							<h2>PORTAL PENGAWASAN PNBP</h2>
-							<span>Media Komunikasi dan Informasi APIP Kementerian/Lembaga dalam Pelaksanaan Pengawasan Pengelolaan PNBP</span>
-							</a> --}}
 						</div>
 						</div>
 						</div>
@@ -80,53 +64,35 @@
 				<div class="bgs122-data">
 
 					<marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-					<a href="#" target="_blank" style="margin-right:20px;">Batas akhir penyampaian laporan hasil pengawasan PNBP APIP K/L Tahun Anggaran 2019 yaitu 30 April 2020</a>
+                    @foreach ($pengumuman as $index => $item)
+                    @if($index == 0)
+                    <a href="{{$item->link}}" target="_blank">{{$item->pengumuman}}</a>
+                    @else
+                    <span>---&nbsp;</span><a href="{{$item->link}}" target="_blank">{{$item->pengumuman}}</a>
+                    @endif
+                    @endforeach
                    </marquee>
 
 				</div>
 
 		</div>
 		<div class="container">
-			<form class='search-mobile' action="/hasil-pencarian/" method="GET">
-				<p>
-					<input type="text" id="txt_search" name="query" placeholder="Masukan Kata Pencarian Anda.">
-					<span></span>
-				</p>
-			</form>
 		</div>
 
 		<section id="content">
 			<div class="news-data owl-carousel owl-theme">
-                <div class="item">
-                        <div class="news" style="background:url('/images/artikel/1548732860.jpg')center center no-repeat;background-size:100%;">
-                            <div class="mask">
-                                <a href="http://www.menlhk.go.id/site/single_post/1830">Menyongsong Kebangkitan Industri Perkayuan Nasional untuk Kesejahteraan Masyarakat</a>
+                @foreach ($artikel as $item)
+                    <div class="item">
+                    <div class="news" style="background:url('{{$item->cover}}')center center no-repeat;background-size:100%;">
+                                                <div class="mask">
+                                                <a href="/artikel/{{$item->id}}">{{$item->judul}}</a>
 
-                                <!--<p>Jakarta, 15/08/2019 Kemenkeu - Bank Indonesia (BI) merilis angka utang Luar Negeri (ULN) Indonesia pada akhir triwulan II 2019 yang terkendali dengan struktur yang sehat. ULN Indonesia tercatat sebesar 391,8 miliar dolar AS yang terdiri dar&hellip;</p>-->
-                                <a href="#" class="btn-merah-news">Indeks</a>
-                            </div>
-                        </div>
-                </div>
-				<div class="item">
-                        <div class="news" style="background:url('/images/artikel/perikanan.jpg')center center no-repeat;background-size:100%;">
-                            <div class="mask">
-                                <a href="https://kkp.go.id/bkipm/artikel/7082-pnbp-sektor-perikanan-terus-alami-peningkatan">PNBP Sektor Perikanan Terus Alami Peningkatan</a>
-
-                                <!--<p>Jakarta, 15/08/2019 Kemenkeu - Menteri Keuangan (Menkeu) Sri Mulyani Indrawati sebagai wakil Pemerintah Indonesia mengapresiasi hubungan bilateral antara Indonesia dan Singapura yang kuat. Sejak terbentuknya hubungan diplomatik antara kedua&hellip;</p>-->
-                                <a href="#" class="btn-merah-news">Indeks</a>
-                            </div>
-                        </div>
-                </div>
-				<div class="item">
-                        <div class="news" style="background:url('/images/artikel/tambang.jpg')center center no-repeat;background-size:100%;">
-                            <div class="mask">
-                                <a href="https://migas.esdm.go.id/post/read/harga-minyak-dunia-jadi-tantangan-pencapaian-pnbp-migas-2019">Harga Minyak Dunia Jadi Tantangan Pencapaian PNBP Migas 2019</a>
-
-                                <!--<p>Jakarta, 14/08/2019 Kemenkeu - Saat ini, anggaran pembebasan lahan Proyek Strategis Nasional (PSN) semakin fleksibel untuk mempermudah proses pendanaan tanah dalam mempercepat pembangunan infrastruktur PSN.</p>-->
-                                <a href="#" class="btn-merah-news">Indeks</a>
-                            </div>
-                        </div>
-                </div>
+                                                <p>{{$item->sub_judul}}</p>
+                                                    <a href="/artikel/{{$item->id}}" class="btn-merah-news">Selengkapnya</a>
+                                                </div>
+                                            </div>
+                    </div>
+                @endforeach
 			</div>
 		<div class="container" style="background:white;">
 				<div class="data-apbn">
@@ -728,50 +694,16 @@
 							</div>
                         </div>
                         <div class="infografis owl-carousel owl-theme">
+                            @foreach ($infografis as $igrafis)
                             <div class="item">
-                                    <div class="news" style="background:url('/media/infografis/preview/Infografis Realisasi PNBP TA 2018.jpg')center center no-repeat;background-size:100%;">
+                            <div class="news" style="background:url('{{$igrafis->cover}}')center center no-repeat;background-size:100%;">
                                         <div class="mask">
-                                            <a href=""></a>
-                                            <a href="/media/infografis/Infografis Realisasi PNBP TA 2018.pdf" class="btn-merah-news" target="_blank">Unduh</a>
+                                            <a href="{{$igrafis->cover}}?download=1"></a>
+                                            <a href="{{$igrafis->file}}?download=1" class="btn-merah-news" target="_blank">Unduh</a>
                                         </div>
                                     </div>
                             </div>
-                            <div class="item">
-                                    <div class="news" style="background:url('/media/infografis/preview/Infografis Ruang Lingkup Pengawasan PNBP.jpg')center center no-repeat;background-size:100%;">
-                                        <div class="mask">
-                                            <a href=""></a>
-
-                                            <a href="/media/infografis/Infografis Ruang Lingkup Pengawasan PNBP.pdf" target="_blank" class="btn-merah-news">Unduh</a>
-                                        </div>
-                                    </div>
-                            </div>
-                            <div class="item">
-                                <div class="news" style="background:url('/media/infografis/preview/Infografis Realisasi Semester I 2019.jpg')center center no-repeat;background-size:100%;">
-                                    <div class="mask">
-                                        <a href=""></a>
-
-                                    <a href="/media/infografis/Infografis Realisasi Semester I 2019.pdf" target="_blank" class="btn-merah-news">Unduh</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="news" style="background:url('/media/infografis/preview/Infografis Pengelolaan BMN.jpg')center center no-repeat;background-size:100%;">
-                                    <div class="mask">
-                                        <a href=""></a>
-
-                                    <a href="/media/infografis/Infografis Pengelolaan BMN.jpg" target="_blank" class="btn-merah-news">Unduh</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="news" style="background:url('/media/infografis/preview/Infografis PNBP Kominfo.jpg')center center no-repeat;background-size:100%;">
-                                    <div class="mask">
-                                        <a href=""></a>
-
-                                    <a href="/media/infografis/Infografis PNBP Kominfo.jpg" target="_blank" class="btn-merah-news">Unduh</a>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
 
                 <div class="cls-peraturan">
@@ -797,7 +729,6 @@
 
                                     <div class="item">
                                         <span><dd class="ico-1"></dd></span>
-                                        {{-- <font>Peraturan Terkait PNBP dari Berbagai Kementerian/Lembaga</font> --}}
                                         <a href="\peraturan">Masuk</a>
                                     </div>
                                 </div>

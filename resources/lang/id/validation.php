@@ -60,9 +60,9 @@ return [
     'mimetypes'            => 'Harus file dengan tipe: :values.',
     'min'                  => [
         'numeric' => ':attribute paling tidak harus :min.',
-        'file'    => 'The :attribute paling tidak harus :min kilobyte.',
-        'string'  => 'The :attribute paling tidak harus :min karakter.',
-        'array'   => 'The :attribute paling tidak harus :min item.',
+        'file'    => ':attribute paling tidak harus :min kilobyte.',
+        'string'  => ':attribute paling tidak harus :min karakter.',
+        'array'   => ':attribute paling tidak harus :min item.',
     ],
     'not_in'               => ':attribute yang dipilih tidak valid.',
     'numeric'              => ':attribute harus angka.',
