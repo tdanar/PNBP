@@ -23,7 +23,7 @@
 			$this->button_delete = true;
 			$this->button_detail = true;
 			$this->button_show = false;
-			$this->button_filter = true;
+			$this->button_filter = false;
 			$this->button_import = false;
             $this->button_export = false;
             $this->label_add_button = "Tambah Artikel";
@@ -310,7 +310,9 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-
+            $postdata['judul'] = strip_tags($_POST['judul']);
+            $postdata['sub_judul'] = strip_tags($_POST['sub_judul']);
+            $postdata['isi'] = strip_tags($_POST['isi']);
 	    }
 
 	    /*
@@ -335,7 +337,9 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
+            $postdata['judul'] = strip_tags($_POST['judul']);
+            $postdata['sub_judul'] = strip_tags($_POST['sub_judul']);
+            $postdata['isi'] = strip_tags($_POST['isi']);
 	    }
 
 	    /*

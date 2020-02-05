@@ -93,7 +93,7 @@
 
                 <form method='get' style="display:inline-block;width: 260px;" action='{{Request::url()}}'>
                     <div class="input-group">
-                        <input type="text" name="q" value="{{ Request::get('q') }}" class="form-control input-sm pull-{{ trans('crudbooster.right') }}"
+                        <input type="text" name="q" value="{{ strip_tags(Request::get('q')) }}" class="form-control input-sm pull-{{ trans('crudbooster.right') }}"
                                placeholder="{{trans('crudbooster.filter_search')}}"/>
                         {!! CRUDBooster::getUrlParameters(['q']) !!}
                         <div class="input-group-btn">
@@ -101,9 +101,10 @@
                                 <?php
                                 $parameters = Request::all();
                                 unset($parameters['q']);
-                                $build_query = urldecode(http_build_query($parameters));
+                                $build_query = strip_tags(urldecode(http_build_query($parameters)));
                                 $build_query = ($build_query) ? "?".$build_query : "";
                                 $build_query = (Request::all()) ? $build_query : "";
+
                                 ?>
                                 <button type='button' onclick='location.href="{{ CRUDBooster::mainpath().$build_query}}"'
                                         title="{{trans('crudbooster.button_reset')}}" class='btn btn-sm btn-warning'><i class='fa fa-ban'></i></button>

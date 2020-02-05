@@ -268,6 +268,8 @@
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
             //unset($postdata['Id_up']);
+            $postdata['rekomendasi'] = strip_tags($_POST['rekomendasi']);
+            $postdata['tl'] = strip_tags($_POST['tl']);
 	    }
 
 	    /*
@@ -293,6 +295,8 @@
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
             //unset($postdata['Id_up']);
+            $postdata['rekomendasi'] = strip_tags($_POST['rekomendasi']);
+            $postdata['tl'] = strip_tags($_POST['tl']);
 	    }
 
 	    /*

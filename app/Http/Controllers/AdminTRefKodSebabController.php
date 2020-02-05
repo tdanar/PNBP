@@ -257,7 +257,8 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-
+            $postdata['Kode'] = strip_tags($_POST['Kode']);
+            $postdata['Deskripsi'] = strip_tags($_POST['Deskripsi']);
 	    }
 
 	    /*
@@ -282,7 +283,8 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
+            $postdata['Kode'] = strip_tags($_POST['Kode']);
+            $postdata['Deskripsi'] = strip_tags($_POST['Deskripsi']);
 	    }
 
 	    /*

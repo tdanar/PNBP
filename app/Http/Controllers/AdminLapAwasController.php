@@ -942,6 +942,8 @@ use Illuminate\Http\Request as Rikues;
 			$tanggal = strtotime($postdata['tanggal']);
             $postdata['tanggal'] = date('Y-m-d',$tanggal); */
             $postdata['thn_usai'] = $_POST['thn_usai'];
+            $postdata['no_lap'] = strip_tags($_POST['no_lap']);
+            $postdata['nama_giat_was'] = strip_tags($_POST['nama_giat_was']);
 
 	    }
 
@@ -1207,6 +1209,8 @@ use Illuminate\Http\Request as Rikues;
 			$tanggal = strtotime($postdata['tanggal']);
             $postdata['tanggal'] = date('Y-m-d',$tanggal); */
             $postdata['thn_usai'] = $_POST['thn_usai'];
+            $postdata['no_lap'] = strip_tags($_POST['no_lap']);
+            $postdata['nama_giat_was'] = strip_tags($_POST['nama_giat_was']);
 	    }
 
 	    /*

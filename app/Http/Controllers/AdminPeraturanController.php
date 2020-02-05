@@ -264,7 +264,9 @@
 	    |
 	    */
 	    public function hook_before_add(&$postdata) {
-	        //Your code here
+            //Your code here
+            $postdata['judul'] = strip_tags($_POST['judul']);
+            $postdata['uraian'] = strip_tags($_POST['uraian']);
 
 	    }
 
@@ -290,7 +292,8 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
+            $postdata['judul'] = strip_tags($_POST['judul']);
+            $postdata['uraian'] = strip_tags($_POST['uraian']);
 	    }
 
 	    /*

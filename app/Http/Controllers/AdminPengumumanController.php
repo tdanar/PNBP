@@ -269,7 +269,8 @@
 	    |
 	    */
 	    public function hook_before_add(&$postdata) {
-	        //Your code here
+            //Your code here
+            $postdata['pengumuman'] = strip_tags($_POST['pengumuman']);
 
 	    }
 
@@ -295,6 +296,7 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
+            $postdata['pengumuman'] = strip_tags($_POST['pengumuman']);
 
 	    }
 

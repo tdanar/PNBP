@@ -544,6 +544,12 @@
             unset($postdata['id_up']);
             unset($postdata['id_up2']);
             unset($postdata['Id_up_sebab']);
+            $postdata['judul'] = strip_tags($_POST['judul']);
+            $postdata['kondisi'] = strip_tags($_POST['kondisi']);
+            $postdata['lokasi'] = strip_tags($_POST['lokasi']);
+            $postdata['sebab'] = strip_tags($_POST['sebab']);
+            $postdata['akibat'] = strip_tags($_POST['akibat']);
+
 	    }
 
 	    /*
@@ -571,6 +577,11 @@
             unset($postdata['id_up']);
             unset($postdata['id_up2']);
             unset($postdata['Id_up_sebab']);
+            $postdata['judul'] = strip_tags($_POST['judul']);
+            $postdata['kondisi'] = strip_tags($_POST['kondisi']);
+            $postdata['lokasi'] = strip_tags($_POST['lokasi']);
+            $postdata['sebab'] = strip_tags($_POST['sebab']);
+            $postdata['akibat'] = strip_tags($_POST['akibat']);
 	    }
 
 	    /*
