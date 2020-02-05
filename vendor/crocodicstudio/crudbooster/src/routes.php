@@ -3,7 +3,7 @@
 /* ROUTER FOR API GENERATOR */
 $namespace = '\crocodicstudio\crudbooster\controllers';
 
-Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\CBAuthAPI'], 'namespace' => 'App\Http\Controllers'], function () {
+Route::group(['middleware' => ['api','XSS', '\crocodicstudio\crudbooster\middlewares\CBAuthAPI'], 'namespace' => 'App\Http\Controllers'], function () {
     //Router for custom api defeault
 
     $dir = scandir(base_path("app/Http/Controllers"));
@@ -20,14 +20,14 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
 });
 
 /* ROUTER FOR UPLOADS */
-Route::group(['middleware' => ['web'], 'namespace' => $namespace], function () {
+Route::group(['middleware' => ['web','XSS'], 'namespace' => $namespace], function () {
     Route::get('api-documentation', ['uses' => 'ApiCustomController@apiDocumentation', 'as' => 'apiDocumentation']);
     Route::get('download-documentation-postman', ['uses' => 'ApiCustomController@getDownloadPostman', 'as' => 'downloadDocumentationPostman']);
     Route::get('uploads/{one?}/{two?}/{three?}/{four?}/{five?}', ['uses' => 'FileController@getPreview', 'as' => 'fileControllerPreview']);
 });
 
 /* ROUTER FOR WEB */
-Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PATH'), 'namespace' => $namespace], function () {
+Route::group(['middleware' => ['web','XSS'], 'prefix' => config('crudbooster.ADMIN_PATH'), 'namespace' => $namespace], function () {
 
     Route::post('unlock-screen', ['uses' => 'AdminController@postUnlockScreen', 'as' => 'postUnlockScreen']);
     Route::get('lock-screen', ['uses' => 'AdminController@getLockscreen', 'as' => 'getLockScreen']);
@@ -42,7 +42,7 @@ Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PAT
 
 // ROUTER FOR OWN CONTROLLER FROM CB
 Route::group([
-    'middleware' => ['web', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
+    'middleware' => ['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
     'prefix' => config('crudbooster.ADMIN_PATH'),
     'namespace' => 'App\Http\Controllers',
 ], function () use ($namespace) {
@@ -80,7 +80,7 @@ Route::group([
 
 /* ROUTER FOR BACKEND CRUDBOOSTER */
 Route::group([
-    'middleware' => ['web', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
+    'middleware' => ['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
     'prefix' => config('crudbooster.ADMIN_PATH'),
     'namespace' => $namespace,
 ], function () {
