@@ -303,9 +303,7 @@ use Illuminate\Http\Request as Rikues;
 
 				$notnull = array_filter($datas, function($v) { return !empty($v['no']) || !empty($v['judul_temuan']) || !empty($v['rekomendasi']); });
 
-				/* if($notnull[0]['nomor_laporan'] === NULL){
-					$notnull[0] = "defaultValue";
-				  } */
+
                   //dd($notnull);
                   if (count($notnull)===1 || count($notnull)===0) {
                     $notnullsip = $notnull;
@@ -331,9 +329,9 @@ use Illuminate\Http\Request as Rikues;
                     $data['id_user'] = CRUDBooster::myId();
                     $data['id_status_kirim'] = 1;
                     $data['tahun'] = $row['tahun_selesai'];
-                    $data['no_lap'] = $row['nomor_laporan'];
+                    $data['no_lap'] = strip_tags($row['nomor_laporan']);
                     $data['tanggal'] = $row['tanggal'];
-                    $data['nama_giat_was'] = $row['nama_kegiatan_pengawasan'];
+                    $data['nama_giat_was'] = strip_tags($row['nama_kegiatan_pengawasan']);
                     $data['thn_mulai'] = $row['tahun_mulai'];
                     $data['thn_usai'] = $row['tahun_selesai'];
                     switch(true) {
@@ -361,23 +359,23 @@ use Illuminate\Http\Request as Rikues;
                         //DB::table('t_lap_awas')->where('no_lap',$data['no_lap'])->update($data);
 
                         $backlink = CRUDBooster::adminPath($slug='importAwas');
-                        CRUDBooster::redirect($backlink, 'Nomor laporan yang dimaksud telah ada, mohon memasukkan laporan yang belum diinput.', 'warning');
+                        CRUDBooster::redirect($backlink, 'Nomor laporan: "'.$data['no_lap'].'" telah ada, mohon memasukkan laporan yang belum diinput.', 'warning');
 
                     }
 				}
 				foreach($notnullsip as $key => $row2){
-						$no_lap = $row2['nomor_laporan'];
+						$no_lap = strip_tags($row2['nomor_laporan']);
 						$id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
 						$data2['id_lap'] = $id_lap->id;
-                        $data2['judul'] = $row2['judul_temuan'];
-						$data2['lokasi'] = $row2['lokasi_pengawasan'];
+                        $data2['judul'] = strip_tags($row2['judul_temuan']);
+						$data2['lokasi'] = strip_tags($row2['lokasi_pengawasan']);
 						$data2['id_kod_temuan'] = $row2['klasifikasi_temuan'];
-						$data2['kondisi'] = $row2['kondisi'];
+						$data2['kondisi'] = strip_tags($row2['kondisi']);
 						$data2['id_mata_uang'] = $row2['mata_uang'];
 						$data2['nilai_uang'] = $row2['nilai'];
-						$data2['sebab'] = $row2['sebab'];
+						$data2['sebab'] = strip_tags($row2['sebab']);
 						$data2['id_kod_sebab'] = $row2['klasifikasi_sebab'];
-						$data2['akibat'] = $row2['akibat'];
+						$data2['akibat'] = strip_tags($row2['akibat']);
 						$data2['created_at'] = now();
 
 						$temuanexist = DB::table('t_lap_awas_temuan')->select('id')->where('judul',$data2['judul'])->count();
@@ -386,19 +384,21 @@ use Illuminate\Http\Request as Rikues;
                             DB::table('t_lap_awas_temuan')->insert($data2);
                         }
                         if(!empty($data2) && !empty($data2['id_kod_temuan']) && $temuanexist > 0){
-                            DB::table('t_lap_awas_temuan')->where('judul',$data2['judul'])->delete();
+                            DB::table('t_lap_awas_temuan')->where('id_lap',$data2['id_lap'])->where('judul',$data2['judul'])->delete();
                             DB::table('t_lap_awas_temuan')->insert($data2);
+
                         }
 
 
                 }
                 foreach($notnullsip as $key => $row3){
-                    $no_lap = $row3['nomor_laporan'];
-                    $id_temuan = DB::table('t_lap_awas_temuan')->select('id')->where('judul',$row3['judul_temuan'])->first();
+                    $no_lap = strip_tags($row3['nomor_laporan']);
+                    $id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
+                    $id_temuan = DB::table('t_lap_awas_temuan')->select('id')->where('id_lap',$id_lap->id)->where('judul',strip_tags($row3['judul_temuan']))->first();
                     $data3['id_temuan'] = $id_temuan->id;
-                    $data3['rekomendasi'] = $row3['rekomendasi'];
+                    $data3['rekomendasi'] = strip_tags($row3['rekomendasi']);
                     $data3['id_kod_rekomendasi'] = (int) substr($row3['klasifikasi_rekomendasi'],0,2);
-                    $data3['tl'] = $row3['progres_tl'];
+                    $data3['tl'] = strip_tags($row3['progres_tl']);
                     // $data3['status_tl'] = $row3['status_tl'];
                     $data3['id_kod_tl'] = (int) substr($row3['klasifikasi_tl'],0,2);
                     if(!empty($row3['tgl_tl'])){
@@ -414,23 +414,20 @@ use Illuminate\Http\Request as Rikues;
                         DB::table('t_lap_awas_rekomend')->insert($data3);
                     }
                     if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist > 0){
-                        DB::table('t_lap_awas_rekomend')->where('tl',$data3['tl'])->delete();
+                        DB::table('t_lap_awas_rekomend')->where('id_temuan',$data3['id_temuan'])->where('tl',$data3['tl'])->delete();
                         DB::table('t_lap_awas_rekomend')->insert($data3);
+
                     }
 
 
-            }
-
+                }
 
             });
-
             CRUDBooster::redirect(CRUDBooster::mainpath(), 'File Excel Anda sudah berhasil diunggah ke database!', 'success');
-
         }else if ($ext === 'csv'){
             $request->validate([
                 'import_file' => 'required|max:10000'
             ]);
-
             CRUDBooster::redirect(CRUDBooster::mainpath(), 'File CSV Anda sudah berhasil diunggah ke database!', 'success');
         }else{
             $backlink = CRUDBooster::adminPath($slug='importAwas');
