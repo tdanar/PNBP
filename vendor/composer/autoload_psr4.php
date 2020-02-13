@@ -55,6 +55,7 @@ return array(
     'NunoMaduro\\Collision\\' => array($vendorDir . '/nunomaduro/collision/src'),
     'Nexmo\\' => array($vendorDir . '/nexmo/client/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'Mews\\Purifier\\' => array($vendorDir . '/mews/purifier/src'),
     'Mews\\Captcha\\' => array($vendorDir . '/mews/captcha/src'),
     'League\\Fractal\\' => array($vendorDir . '/league/fractal/src'),
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),

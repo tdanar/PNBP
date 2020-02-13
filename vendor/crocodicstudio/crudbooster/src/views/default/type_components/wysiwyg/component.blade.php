@@ -37,7 +37,7 @@
 
     <div class="{{$col_width?:'col-sm-10'}}">
         <textarea id='textarea_{{$name}}' id="{{$name}}" {{$required}} {{$readonly}} {{$disabled}} name="{{$form['name']}}" class='form-control'
-                  rows='5'>{{ $value }}</textarea>
+                  rows='5'>{{ clean($value) }}</textarea>
         <div class="text-danger">{{ $errors->first($name) }}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
