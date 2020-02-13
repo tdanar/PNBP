@@ -45,8 +45,8 @@
 			$this->form = [];
 			$this->form[] = ['label'=>'Judul','name'=>'judul','type'=>'text','validation'=>'required|min:3|max:300','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'User','name'=>'id_user','type'=>'hidden','validation'=>'required','width'=>'col-sm-9','value' => CRUDBooster::myId()];
-			$this->form[] = ['label'=>'Preview','name'=>'cover','type'=>'upload','validation'=>'required|image|max:1000','width'=>'col-sm-10','help'=>'Masukkan gambar dengan ukuran maksimal 1000 kilobytes.','upload_encrypt'=>true];
-			$this->form[] = ['label'=>'File','name'=>'file','type'=>'upload','validation'=>'required|mimes:pdf,jpg,jpeg,png|max:2000','width'=>'col-sm-10','help'=>'Masukkan gambar atau pdf dengan ukuran maksimal 2000 kilobytes.','upload_encrypt'=>true];
+			$this->form[] = ['label'=>'Preview','name'=>'cover','type'=>'upload','validation'=>'required|image|max:1000','width'=>'col-sm-10','help'=>'Masukkan gambar dengan ukuran maksimal 1000 kilobytes.','user_id'=>'infografis_thumbnail','upload_encrypt'=>true];
+			$this->form[] = ['label'=>'File','name'=>'file','type'=>'upload','validation'=>'required|mimes:pdf,jpg,jpeg,png|max:2000','width'=>'col-sm-10','help'=>'Masukkan gambar atau pdf dengan ukuran maksimal 2000 kilobytes.', 'user_id'=>'infografis'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM

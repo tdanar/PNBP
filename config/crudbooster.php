@@ -27,7 +27,7 @@ return [
 
     'URL_FIELDS_CANDIDATE' => 'url,link',
 
-    'UPLOAD_TYPES' => 'jpg,png,jpeg,gif,bmp,pdf,xls,xlsx,doc,docx,txt,zip,rar,7z',
+    'UPLOAD_TYPES' => 'jpg,png,jpeg,gif,bmp,pdf,xls,xlsx,doc,docx,txt',
 
     'DEFAULT_THUMBNAIL_WIDTH' => 0,
 

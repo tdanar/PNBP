@@ -32,7 +32,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         $this->form[] = array("label"=>"Nama","name"=>"name",'required'=>true,'validation'=>'required|alpha_spaces|min:3');
 		$this->form[] = array("label"=>"Username","name"=>"username",'required'=>true,'validation'=>'required|alpha_dash|min:3|unique:cms_users,username,'.CRUDBooster::getCurrentId());
 		$this->form[] = array("label"=>"Email","name"=>"email",'required'=>true,'type'=>'email','validation'=>'required|email|unique:cms_users,email,'.CRUDBooster::getCurrentId());
-        $this->form[] = array("label"=>"Foto","name"=>"photo","type"=>"upload","help"=>"Rekomendasi resolusinya 200x200px",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90);
+        $this->form[] = array("label"=>"Foto","name"=>"photo","type"=>"upload","help"=>"Rekomendasi resolusinya 200x200px",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90,'user_id'=>'profpic','upload_encrypt'=>true);
         if(!CRUDBooster::isSuperadmin()) {
         $this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_superadmin<>1",'required'=>true);
         }else{

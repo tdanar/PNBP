@@ -52,7 +52,7 @@
 			$this->form[] = ['label'=>'Penulis','name'=>'id_penulis','type'=>'hidden','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value' => CRUDBooster::myId()];
 			$this->form[] = ['label'=>'Judul','name'=>'judul','type'=>'text','validation'=>'required|min:3|max:125','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Sub Judul','name'=>'sub_judul','type'=>'text','validation'=>'min:3|max:255','width'=>'col-sm-10'];
-            $this->form[] = ['label'=>'Gambar Sampul','name'=>'cover','type'=>'upload','validation'=>'required|image|max:1000','upload_encrypt'=>true];
+            $this->form[] = ['label'=>'Gambar Sampul','name'=>'cover','type'=>'upload','validation'=>'required|image|max:1000','upload_encrypt'=>true, 'user_id'=>'article_cover'];
             $this->form[] = ['label'=>'Sumber','name'=>'link','type'=>'text','validation'=>'url|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Isi','name'=>'isi','type'=>'wysiwyg','validation'=>'required|min:5','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
@@ -312,7 +312,7 @@
 	        //Your code here
             $postdata['judul'] = strip_tags($_POST['judul']);
             $postdata['sub_judul'] = strip_tags($_POST['sub_judul']);
-            $postdata['isi'] = strip_tags($_POST['isi']);
+            //$postdata['isi'] = strip_tags($_POST['isi']);
 	    }
 
 	    /*
@@ -339,7 +339,7 @@
 	        //Your code here
             $postdata['judul'] = strip_tags($_POST['judul']);
             $postdata['sub_judul'] = strip_tags($_POST['sub_judul']);
-            $postdata['isi'] = strip_tags($_POST['isi']);
+            //$postdata['isi'] = strip_tags($_POST['isi']);
 	    }
 
 	    /*

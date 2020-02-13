@@ -124,7 +124,15 @@ class FileController extends Controller
                     } else {
                         return Response::file(storage_path('app/'.$fullFilePath), $headers);
                     }
-            }else{
+            }elseif($owner[1] == 'infografis'){
+                if (Request::get('download')) {
+                    return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
+
+                        } else {
+                            return Response::file(storage_path('app/'.$fullFilePath), $headers);
+                        }
+            }
+            else{
                 abort(404);
             }
         }
