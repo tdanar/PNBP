@@ -312,6 +312,8 @@ use Illuminate\Http\Request as Rikues;
                     for($i=1; $i < count($rearray); $i++){
                         if($rearray[$i]['nomor_laporan'] === NULL){
                         $rearray[$i]['nomor_laporan'] = $rearray[$i-1]['nomor_laporan'];
+                        $rearray[$i]['lokasi_pengawasan'] = $rearray[$i-1]['lokasi_pengawasan'];
+
 
                             if($rearray[$i]['judul_temuan'] === NULL){
                                 $rearray[$i]['judul_temuan'] = $rearray[$i-1]['judul_temuan'];
@@ -334,6 +336,7 @@ use Illuminate\Http\Request as Rikues;
                     $data['nama_giat_was'] = strip_tags($row['nama_kegiatan_pengawasan']);
                     $data['thn_mulai'] = $row['tahun_mulai'];
                     $data['thn_usai'] = $row['tahun_selesai'];
+
                     switch(true) {
                         case $row['jenis_pengawasan'] = "Audit":
                             $data['id_jenis_was'] = 1;
@@ -352,35 +355,29 @@ use Illuminate\Http\Request as Rikues;
                     //dd($data);
 					$nolapexist = DB::table('t_lap_awas')->select('no_lap')->where('no_lap',$data['no_lap'])->first();
 
-                    if(!empty($row['no']) && !empty($data['tahun']) && empty($nolapexist)) {
-						DB::table('t_lap_awas')->insert($data);
-					}
-					if(!empty($row['no']) && !empty($data['tahun']) && !empty($nolapexist)) {
-                        //DB::table('t_lap_awas')->where('no_lap',$data['no_lap'])->update($data);
+					if(!empty($row['no']) && !empty($nolapexist)) {
 
-                        $backlink = CRUDBooster::adminPath($slug='importAwas');
-                        CRUDBooster::redirect($backlink, 'Nomor laporan: "'.$data['no_lap'].'" telah ada, mohon memasukkan laporan yang belum diinput.', 'warning');
-
+                        CRUDBooster::redirect(CRUDBooster::adminPath($slug='lap_awas'), 'Nomor laporan: "'.strip_tags($row['nomor_laporan']).'" telah ada, mohon memasukkan laporan yang belum diinput.', 'warning');
+                        die;
                     }
-				}
-				foreach($notnullsip as $key => $row2){
-						$no_lap = strip_tags($row2['nomor_laporan']);
+                    if(!empty($row['no']) && empty($nolapexist)) {
+                        DB::table('t_lap_awas')->insert($data);
+                        $no_lap = strip_tags($row['nomor_laporan']);
 						$id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
 						$data2['id_lap'] = $id_lap->id;
-                        $data2['judul'] = strip_tags($row2['judul_temuan']);
-						$data2['lokasi'] = strip_tags($row2['lokasi_pengawasan']);
-						$data2['id_kod_temuan'] = $row2['klasifikasi_temuan'];
-						$data2['kondisi'] = strip_tags($row2['kondisi']);
-						$data2['id_mata_uang'] = $row2['mata_uang'];
-						$data2['nilai_uang'] = $row2['nilai'];
-						$data2['sebab'] = strip_tags($row2['sebab']);
-						$data2['id_kod_sebab'] = $row2['klasifikasi_sebab'];
-						$data2['akibat'] = strip_tags($row2['akibat']);
-						$data2['created_at'] = now();
+                        $data2['judul'] = strip_tags($row['judul_temuan']);
+						$data2['lokasi'] = strip_tags($row['lokasi_pengawasan']);
+						$data2['id_kod_temuan'] = $row['klasifikasi_temuan'];
+						$data2['kondisi'] = strip_tags($row['kondisi']);
+						$data2['id_mata_uang'] = $row['mata_uang'];
+						$data2['nilai_uang'] = $row['nilai'];
+						$data2['sebab'] = strip_tags($row['sebab']);
+						$data2['id_kod_sebab'] = $row['klasifikasi_sebab'];
+						$data2['akibat'] = strip_tags($row['akibat']);
+                        $data2['created_at'] = now();
 
-						$temuanexist = DB::table('t_lap_awas_temuan')->select('id')->where('judul',$data2['judul'])->count();
-                        //dd($data2);
-						 if(!empty($data2) && !empty($data2['id_kod_temuan']) && $temuanexist === 0){
+                        $temuanexist = DB::table('t_lap_awas_temuan')->select('id')->where('judul',$data2['judul'])->count();
+						 if(!empty($data2) && !empty($data2['id_kod_temuan']) && $temuanexist == 0){
                             DB::table('t_lap_awas_temuan')->insert($data2);
                         }
                         if(!empty($data2) && !empty($data2['id_kod_temuan']) && $temuanexist > 0){
@@ -389,41 +386,113 @@ use Illuminate\Http\Request as Rikues;
 
                         }
 
+                        $id_temuan = DB::table('t_lap_awas_temuan')->select('id')->where('id_lap',$id_lap->id)->where('judul',strip_tags($row['judul_temuan']))->first();
+                        $data3['id_temuan'] = $id_temuan->id;
+                        $data3['rekomendasi'] = strip_tags($row['rekomendasi']);
+                        $data3['id_kod_rekomendasi'] = (int) substr($row['klasifikasi_rekomendasi'],0,2);
+                        $data3['tl'] = strip_tags($row['progres_tl']);
+                        $data3['id_kod_tl'] = (int) substr($row['klasifikasi_tl'],0,2);
+                        if(!empty($row['tgl_tl'])){
+                            $data3['tgl_tl'] = $row['tgl_tl'];
+                        }else{
+                            $data3['tgl_tl'] = now();
+                        }
+                        $data3['created_at'] = now();
 
-                }
-                foreach($notnullsip as $key => $row3){
-                    $no_lap = strip_tags($row3['nomor_laporan']);
-                    $id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
-                    $id_temuan = DB::table('t_lap_awas_temuan')->select('id')->where('id_lap',$id_lap->id)->where('judul',strip_tags($row3['judul_temuan']))->first();
-                    $data3['id_temuan'] = $id_temuan->id;
-                    $data3['rekomendasi'] = strip_tags($row3['rekomendasi']);
-                    $data3['id_kod_rekomendasi'] = (int) substr($row3['klasifikasi_rekomendasi'],0,2);
-                    $data3['tl'] = strip_tags($row3['progres_tl']);
-                    // $data3['status_tl'] = $row3['status_tl'];
-                    $data3['id_kod_tl'] = (int) substr($row3['klasifikasi_tl'],0,2);
-                    if(!empty($row3['tgl_tl'])){
-                        $data3['tgl_tl'] = $row3['tgl_tl'];
-                    }else{
-                        $data3['tgl_tl'] = now();
+                        $rekexist = DB::table('t_lap_awas_rekomend')->select('id')->where('tl',$data3['tl'])->count();
+                        if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist == 0){
+                            DB::table('t_lap_awas_rekomend')->insert($data3);
+                        }
+                        if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist > 0){
+                            DB::table('t_lap_awas_rekomend')->where('id_temuan',$data3['id_temuan'])->where('tl',$data3['tl'])->delete();
+                            DB::table('t_lap_awas_rekomend')->insert($data3);
+
+                        }
                     }
-                    $data3['created_at'] = now();
+                    if(empty($row['no'])){
+                        $no_lap = strip_tags($row['nomor_laporan']);
+						$id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
+                        if($id_lap){
+                            if(!empty($row['klasifikasi_temuan'])){
+                                $no_lap = strip_tags($row['nomor_laporan']);
+                                $id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
+                                $data2['id_lap'] = $id_lap->id;
+                                $data2['judul'] = strip_tags($row['judul_temuan']);
+                                $data2['lokasi'] = strip_tags($row['lokasi_pengawasan']);
+                                $data2['id_kod_temuan'] = $row['klasifikasi_temuan'];
+                                $data2['kondisi'] = strip_tags($row['kondisi']);
+                                $data2['id_mata_uang'] = $row['mata_uang'];
+                                $data2['nilai_uang'] = $row['nilai'];
+                                $data2['sebab'] = strip_tags($row['sebab']);
+                                $data2['id_kod_sebab'] = $row['klasifikasi_sebab'];
+                                $data2['akibat'] = strip_tags($row['akibat']);
+                                $data2['created_at'] = now();
 
-                    $rekexist = DB::table('t_lap_awas_rekomend')->select('id')->where('tl',$data3['tl'])->count();
-                    //dd($data3);
-                     if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist === 0){
-                        DB::table('t_lap_awas_rekomend')->insert($data3);
+                                $temuanexist = DB::table('t_lap_awas_temuan')->select('id')->where('judul',$data2['judul'])->count();
+                                if(!empty($data2) && !empty($data2['id_kod_temuan']) && $temuanexist == 0){
+                                    DB::table('t_lap_awas_temuan')->insert($data2);
+                                }
+                                if(!empty($data2) && !empty($data2['id_kod_temuan']) && $temuanexist > 0){
+                                    DB::table('t_lap_awas_temuan')->where('id_lap',$data2['id_lap'])->where('judul',$data2['judul'])->delete();
+                                    DB::table('t_lap_awas_temuan')->insert($data2);
+
+                                }
+
+                                $id_temuan = DB::table('t_lap_awas_temuan')->select('id')->where('id_lap',$id_lap->id)->where('judul',strip_tags($row['judul_temuan']))->first();
+                                $data3['id_temuan'] = $id_temuan->id;
+                                $data3['rekomendasi'] = strip_tags($row['rekomendasi']);
+                                $data3['id_kod_rekomendasi'] = (int) substr($row['klasifikasi_rekomendasi'],0,2);
+                                $data3['tl'] = strip_tags($row['progres_tl']);
+                                $data3['id_kod_tl'] = (int) substr($row['klasifikasi_tl'],0,2);
+                                if(!empty($row['tgl_tl'])){
+                                    $data3['tgl_tl'] = $row['tgl_tl'];
+                                }else{
+                                    $data3['tgl_tl'] = now();
+                                }
+                                $data3['created_at'] = now();
+
+                                $rekexist = DB::table('t_lap_awas_rekomend')->select('id')->where('tl',$data3['tl'])->count();
+                                if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist == 0){
+                                    DB::table('t_lap_awas_rekomend')->insert($data3);
+                                }
+                                if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist > 0){
+                                    DB::table('t_lap_awas_rekomend')->where('id_temuan',$data3['id_temuan'])->where('tl',$data3['tl'])->delete();
+                                    DB::table('t_lap_awas_rekomend')->insert($data3);
+
+                                }
+                            }else{
+                                $no_lap = strip_tags($row['nomor_laporan']);
+                                $id_lap = DB::table('t_lap_awas')->select('id')->where('no_lap',$no_lap)->first();
+                                $id_temuan = DB::table('t_lap_awas_temuan')->select('id')->where('id_lap',$id_lap->id)->where('judul',strip_tags($row['judul_temuan']))->first();
+                                $data3['id_temuan'] = $id_temuan->id;
+                                $data3['rekomendasi'] = strip_tags($row['rekomendasi']);
+                                $data3['id_kod_rekomendasi'] = (int) substr($row['klasifikasi_rekomendasi'],0,2);
+                                $data3['tl'] = strip_tags($row['progres_tl']);
+                                $data3['id_kod_tl'] = (int) substr($row['klasifikasi_tl'],0,2);
+                                if(!empty($row['tgl_tl'])){
+                                    $data3['tgl_tl'] = $row['tgl_tl'];
+                                }else{
+                                    $data3['tgl_tl'] = now();
+                                }
+                                $data3['created_at'] = now();
+
+                                $rekexist = DB::table('t_lap_awas_rekomend')->select('id')->where('tl',$data3['tl'])->count();
+                                if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist == 0){
+                                    DB::table('t_lap_awas_rekomend')->insert($data3);
+                                }
+                                if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist > 0){
+                                    DB::table('t_lap_awas_rekomend')->where('id_temuan',$data3['id_temuan'])->where('tl',$data3['tl'])->delete();
+                                    DB::table('t_lap_awas_rekomend')->insert($data3);
+
+                                }
+                            }
+                        }
                     }
-                    if(!empty($data3) && !empty($data3['id_kod_rekomendasi']) && $rekexist > 0){
-                        DB::table('t_lap_awas_rekomend')->where('id_temuan',$data3['id_temuan'])->where('tl',$data3['tl'])->delete();
-                        DB::table('t_lap_awas_rekomend')->insert($data3);
-
-                    }
-
-
                 }
 
             });
-            CRUDBooster::redirect(CRUDBooster::mainpath(), 'File Excel Anda sudah berhasil diunggah ke database!', 'success');
+            CRUDBooster::redirect(CRUDBooster::adminPath($slug='lap_awas'), 'File Excel Anda sudah berhasil diunggah ke database!', 'success');
+            die;
         }else if ($ext === 'csv'){
             $request->validate([
                 'import_file' => 'required|max:10000'
