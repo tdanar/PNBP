@@ -221,7 +221,24 @@
 
 	    }
 
+        public function getEdit($id){
+            $this->button_addmore = FALSE;
+            $this->button_cancel  = TRUE;
+            $this->button_show    = FALSE;
+            $this->button_add     = FALSE;
+            $this->button_delete  = FALSE;
+            $this->hide_form 	  = ['id_temuan'];
 
+
+            $data['page_title'] = 'Edit Rekomendasi';
+            $data['row']        = CRUDBooster::first('t_lap_awas_rekomend',$id);
+            $data['command']        = 'edit';
+
+            //dd($data['row']);
+
+
+            $this->cbView('crudbooster::default.form',$data);
+        }
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected

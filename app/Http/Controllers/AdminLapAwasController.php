@@ -18,6 +18,8 @@ use Illuminate\Http\Request as Rikues;
 
 	class AdminLapAwasController extends \crocodicstudio\crudbooster\controllers\CBController {
 
+
+
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
@@ -264,6 +266,8 @@ use Illuminate\Http\Request as Rikues;
         }
 
     public function getEdit($id){
+        $myedit = DB::table('t_lap_awas')->where('id',$id)->where('id_user',CRUDBooster::myId())->first();
+        $status = DB::table('t_lap_awas')->select('id_status_kirim')->where('id',$id)->first();
 
         $this->button_addmore = FALSE;
 		$this->button_cancel  = TRUE;
@@ -274,9 +278,18 @@ use Illuminate\Http\Request as Rikues;
 
 
 
-		$data['page_title'] = 'Edit Laporan Pengawasan PNBP';
+
+
+        $data['page_title'] = 'Edit Laporan Pengawasan PNBP';
         $data['row']        = CRUDBooster::first('t_lap_awas',$id);
-		$data['command']        = 'edit';
+
+
+
+        if($status->id_status_kirim == 2){
+            $data['command']        = 'detail';
+        }else{
+            $data['command']        = 'edit';
+        }
 
 		$this->cbView('crudbooster::default.form',$data);
     }
@@ -703,7 +716,8 @@ use Illuminate\Http\Request as Rikues;
         //dd($detail);
 
          //Create a view. Please use `cbView` method instead of view method from laravel.
-         $this->cbView('lapDetailAwas',$detail);
+            $this->cbView('lapDetailAwas',$detail);
+
 }
 
 	    public function getDataWas() {

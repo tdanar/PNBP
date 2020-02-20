@@ -43,7 +43,7 @@ class perantaraController extends \crocodicstudio\crudbooster\controllers\CBCont
 
 	public function getIndex() {
         //First, Add an auth
-        if(!CRUDBooster::myId()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+        if(!CRUDBooster::myId()) CRUDBooster::redirect(CRUDBooster::mainpath(),trans('crudbooster.denied_access'));
 
         $data = [];
         $data['id'] = CRUDBooster::myId();
