@@ -102,7 +102,8 @@ class FileController extends Controller
             'Content-Type' => $header_content_type,
             'Content-Length' => $header_content_length,
         ]);
-        $owner = array_slice(explode('\\',$fullFilePath),0,2);
+        $pathku = request()->getPathInfo();
+        $owner = array_slice(explode('/',$pathku),0,3);
 
         if (in_array($extension, $images_ext)) {
             if ($h1 || $h2) {
@@ -117,14 +118,14 @@ class FileController extends Controller
                     } else {
                         return Response::file(storage_path('app/'.$fullFilePath), $headers);
                     }
-            }elseif(CRUDBooster::myId() == $owner[1]){
+            }elseif(CRUDBooster::myId() == intval($owner[2])){
                 if (Request::get('download')) {
                 return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
 
                     } else {
                         return Response::file(storage_path('app/'.$fullFilePath), $headers);
                     }
-            }elseif($owner[1] == 'infografis'){
+            }elseif($owner[2] == 'infografis'){
                 if (Request::get('download')) {
                     return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
 

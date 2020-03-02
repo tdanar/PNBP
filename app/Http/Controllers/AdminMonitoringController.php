@@ -504,12 +504,24 @@ use Illuminate\Http\Request as Rikues;
         public function getDlPDF($id){
             $id_unit = substr($id,0,-1);
             $id_jenis_was = substr($id,-1);
-            $data['data'] = DB::table('t_lap_awas')
-            ->selectRaw('t_lap_awas.*, t_ref_unit.unit')
-            ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
-            ->where('t_lap_awas.id_jenis_was',$id_jenis_was)
-            ->where('t_ref_unit.id',$id_unit)
-            ->get();
+            if(CRUDBooster::myPrivilegeId() == 4){
+                $data['data'] = DB::table('t_lap_awas')
+                ->selectRaw('t_lap_awas.*, t_ref_unit.unit')
+                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
+                ->where('t_lap_awas.id_jenis_was',$id_jenis_was)
+                ->where('t_ref_unit.id',$id_unit)
+                ->where('id_status_kirim',2)
+                ->get();
+
+            }else{
+                $data['data'] = DB::table('t_lap_awas')
+                ->selectRaw('t_lap_awas.*, t_ref_unit.unit')
+                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
+                ->where('t_lap_awas.id_jenis_was',$id_jenis_was)
+                ->where('t_ref_unit.id',$id_unit)
+                ->get();
+            }
+
             //dd($id_unit,$id_jenis_was);
             return view('modal.downPDF',$data);
         }

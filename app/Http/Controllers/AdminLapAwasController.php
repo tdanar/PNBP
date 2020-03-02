@@ -266,8 +266,6 @@ use Illuminate\Http\Request as Rikues;
         }
 
     public function getEdit($id){
-        $myedit = DB::table('t_lap_awas')->where('id',$id)->where('id_user',CRUDBooster::myId())->first();
-        $status = DB::table('t_lap_awas')->select('id_status_kirim')->where('id',$id)->first();
 
         $this->button_addmore = FALSE;
 		$this->button_cancel  = TRUE;
@@ -283,14 +281,9 @@ use Illuminate\Http\Request as Rikues;
         $data['page_title'] = 'Edit Laporan Pengawasan PNBP';
         $data['row']        = CRUDBooster::first('t_lap_awas',$id);
 
+        $data['command']    = 'edit';
 
-
-        if($status->id_status_kirim == 2){
-            $data['command']        = 'detail';
-        }else{
-            $data['command']        = 'edit';
-        }
-
+        
 		$this->cbView('crudbooster::default.form',$data);
     }
 
@@ -1289,7 +1282,6 @@ use Illuminate\Http\Request as Rikues;
 			$tanggal = strtotime($postdata['tanggal']);
             $postdata['tanggal'] = date('Y-m-d',$tanggal); */
             $postdata['thn_usai'] = $_POST['thn_usai'];
-            $postdata['no_lap'] = strip_tags($_POST['no_lap']);
             $postdata['nama_giat_was'] = strip_tags($_POST['nama_giat_was']);
 	    }
 

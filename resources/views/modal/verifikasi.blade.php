@@ -18,11 +18,14 @@
                             <tr>
                                 <td>Kelengkapan Ikhtisar</td>
                                 <td>
-                                    @if ($data->tahun && $data->tanggal && $data->nama_giat_was && $data->thn_mulai && $data->thn_usai && $data->id_jenis_was)
+                                    @if ($data->tahun && $data->no_lap && $data->tanggal && $data->nama_giat_was && $data->thn_mulai && $data->thn_usai && $data->id_jenis_was)
                                     <span class="text-success">Semua data telah diisi.</span>
                                     @endif
                                     @if (!$data->tahun)
                                     <span class="text-danger">Tahun pengawasan belum diisi.</span><br/>
+                                    @endif
+                                    @if (!$data->no_lap)
+                                    <span class="text-danger">Nomor laporan belum diisi.</span><br/>
                                     @endif
                                     @if (!$data->tanggal)
                                     <span class="text-danger">Tanggal laporan belum diisi.</span><br/>

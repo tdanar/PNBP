@@ -33,11 +33,16 @@ class CBBackend
         $module = CRUDBooster::getCurrentModule()->path;
         $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));
         $extModule = Request::segment(1 + $adminPathSegments);
+        $extModCol = ['excel','validasi','kirim'];
+        $extModCol3 = ['batal'];
+        $extModCol4 = [];
+
 
         $colModule = collect([
             ['module' => 'lap_awas', 'key' => 'id'],
             ['module' => 'lap_awas_temuan', 'key' => 'id_temuan'],
-            ['module' => 'lap_awas_rekomend', 'key' => 'id_rekomend']
+            ['module' => 'lap_awas_rekomend', 'key' => 'id_rekomend'],
+            ['module' => 'monitoring', 'key' => 'id'],
         ]);
         //dd($colModule->where('module',$module)->flatten(1)[0]);
 
@@ -51,7 +56,7 @@ class CBBackend
                 if($m == 'lap_awas_temuan'){
                     $id = intval($_GET['parent_id']);
                     if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
-                        if($data->whereInStrict('id',$id)->isEmpty()){
+                        if($data->whereIn('id',$id)->isEmpty()){
                             abort(404);
                         }
                     }
@@ -59,7 +64,7 @@ class CBBackend
                 if($m == 'lap_awas_rekomend'){
                     $id = intval($_GET['parent_id']);
                     if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
-                        if($data->whereInStrict('id_temuan',$id)->isEmpty()){
+                        if($data->whereIn('id_temuan',$id)->isEmpty()){
                             abort(404);
                         }
                     }
@@ -71,7 +76,7 @@ class CBBackend
                 if($m == 'lap_awas_temuan'){
                     $id = intval($_GET['parent_id']);
                     if(!CRUDBooster::isSuperadmin()){
-                        if($data->whereInStrict('id',$id)->isEmpty()){
+                        if($data->whereIn('id',$id)->isEmpty()){
                             abort(404);
                         }
                     }
@@ -79,7 +84,7 @@ class CBBackend
                 if($m == 'lap_awas_rekomend'){
                     $id = intval($_GET['parent_id']);
                     if(!CRUDBooster::isSuperadmin()){
-                        if($data->whereInStrict('id_temuan',$id)->isEmpty()){
+                        if($data->whereIn('id_temuan',$id)->isEmpty()){
                             abort(404);
                         }
                     }
@@ -87,30 +92,45 @@ class CBBackend
 
             }
 
-            if(CRUDBooster::getCurrentMethod() == 'getEdit'){
+
+
+           if(CRUDBooster::getCurrentMethod() == 'getEdit'){
 
                 $id = CRUDBooster::getCurrentId();
                 if(!CRUDBooster::isSuperadmin()){
-                    if($data->whereInStrict($k,$id)->isEmpty()){
+                    if($data->whereIn($k,$id)->isEmpty()){
                         abort(404);
                     }
                 }
 
             }
+
+
             if(CRUDBooster::getCurrentMethod() == 'getDetail'){
 
                 $id = CRUDBooster::getCurrentId();
                 if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
-                    if($data->whereInStrict($k,$id)->isEmpty()){
+                    if($data->whereIn($k,$id)->isEmpty()){
                         abort(404);
                     }
                 }
 
             }
+
+            if(CRUDBooster::getCurrentMethod() == 'getDlPDF'){
+
+                if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
+
+                        abort(404);
+                    
+                }
+
+            }
+
             if(CRUDBooster::getCurrentMethod() == 'getDelete'){
                 $id = CRUDBooster::getCurrentId();
                 if(!CRUDBooster::isSuperadmin()){
-                    if($data->whereInStrict($k,$id)->isEmpty()){
+                    if($data->whereIn($k,$id)->isEmpty()){
                         abort(404);
                     }
                 }
@@ -118,15 +138,31 @@ class CBBackend
             }
         }
 
-        if($extModule == 'validasi'){
+//dd($extModule, $extModCol3, in_array($extModule,$extModCol3));
+        if(in_array($extModule,$extModCol)){
             $id = intval(Request::segment(3));
 
                 if(!CRUDBooster::isSuperadmin()){
-                    if($data->whereInStrict('id',$id)->isEmpty()){
+                    if($data->whereIn('id',$id)->isEmpty()){
                         abort(404);
                     }
                 }
         }
+
+        if(in_array($extModule,$extModCol3)){
+
+                if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3){
+                        abort(404);
+                }
+        }
+
+        if(in_array($extModule,$extModCol4)){
+
+                if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 4){
+                        abort(404);
+                }
+        }
+
 
 
         if (CRUDBooster::myId() == '') {
