@@ -47,6 +47,9 @@ $(document).ready(function() {
                             },
                     columns: [
                                         { 'data': 'tahun'},
+
+                                        { 'data': 'unit'},
+
                                         { 'data': 'tanggal', 'render':  function (data, type, full, meta){
                                             if (data != null && (type === 'display' || type === 'filter')) {
                                                             return new Date(data).toLocaleString("id-ID",{"dateStyle":"long"});
@@ -55,7 +58,9 @@ $(document).ready(function() {
                                         }},
                                         { 'data': 'no_lap'},
                                         { 'data': 'nama_giat_was'},
+
                                         { 'data': 'jenis_awas'},
+
                                         { 'data': 'judul',
                                             'render': function (data, type, full, meta) {
                                                 if (data != null && (type === 'display' || type === 'filter') ){
@@ -77,6 +82,10 @@ $(document).ready(function() {
                                                 return data;
                                             }
                                         },
+
+                                        {'data': 'DeskTemuan'},
+                                        {'data': 'kondisi'},
+
                                         { 'data': 'nilai_uang',
                                             'render': function (data, type, full, meta) {
                                                 if(full.nilai_uang != null && (type === 'display' || type === 'filter')){
@@ -85,7 +94,17 @@ $(document).ready(function() {
                                                 return data;
                                             }
                                         },
+
+                                        {'data': 'sebab'},
+                                        {'data': 'DeskSebab'},
+                                        {'data': 'akibat'},
+
                                         { 'data': 'rekomendasi'},
+
+                                        {'data': 'DeskRekomendasi'},
+                                        {'data': 'tl'},
+
+
                                         { 'data': 'KodTL'},
                                         { 'render': function (data, type, full, meta) {
                                                     var myId = {!! json_encode(CRUDBooster::myPrivilegeId()) !!};
@@ -169,17 +188,17 @@ $(document).ready(function() {
                                     header: true,
                                     messageTop: unit,
                                     exportOptions: {
-                                        columns: [0,1,2,3,5,6,7,8],
+                                        columns: [' :not(:last-child)'],
                                         orthogonal: {
                                             'type': null
                                         }
                                     }
                                 }],
                     columnDefs: [ {
-                                targets: [2,7],
+                                targets: [3,13],
                                 render: $.fn.dataTable.render.ellipsis(40)
                                 },{
-                                targets: [4],
+                                targets: [1,5,7,8,10,11,12,14,15],
                                 searchable: true,
                                 visible: false,
                                 } ],
@@ -216,14 +235,31 @@ $(document).ready(function() {
                                                 });
                                     $('#table-filter2').on('change', function(){
                                                 val = this.value;
-                                                table.column(4).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                table.column(5).search(val ? '^'+val+'$' : '', true, false).draw();
                                                 });
                                     $('#table-filter3').on('change', function(){
                                                 val = this.value;
-                                                table.column(8).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                table.column(16).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
+                                    $('#table-filter-unit').on('change', function(){
+                                                val = this.value;
+                                                table.column(1).search(val).draw();
+                                                });
+                                    $('#table-filter-temuan').on('change', function(){
+                                                val = this.value;
+                                                table.column(7).search(val).draw();
+                                                });
+                                    $('#table-filter-sebab').on('change', function(){
+                                                val = this.value;
+                                                table.column(11).search(val).draw();
+                                                });
+                                    $('#table-filter-rekomend').on('change', function(){
+                                                val = this.value;
+                                                table.column(14).search(val).draw();
                                                 });
                             }
             });
+
 
             $(document.body).on('hide.bs.modal', function (e) {
                                             //divid = '#'+e.target.id;
@@ -235,6 +271,8 @@ $(document).ready(function() {
 /*         $(".modal").on("hidden.bs.modal", function(){
             $(".modal-body").html("");
         }); */
+
+
 
     function klikDelete(link) {
          swal({
@@ -283,7 +321,8 @@ $(document).ready(function() {
 
     function drawCallback(api) {
         var info = api.page.info();
-
+        var last = (api.columns(':visible')[0].length)-1;
+        //console.log(api.columns());
         if(info.recordsDisplay != 0){
             var rows = api.rows( {page:'current'} ).nodes(),
             settings = {
@@ -293,7 +332,7 @@ $(document).ready(function() {
                     "COLUMN_SUBTHEME3" : 3,
                     "COLUMN_SUBTHEME4" : 4,
                     "COLUMN_SUBTHEME5" : 5,
-                    "COLUMN_THEME2" : 8
+                    "COLUMN_THEME2" : last
 
             };
 
@@ -379,6 +418,60 @@ $(document).ready(function() {
             </select>
     </div>
 </div>
+@if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3)
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label for="table-filter-unit">Kementerian / Lembaga : </label>
+    </div>
+    <div class="col-xs-2">
+        <select id="table-filter-unit">
+            <option value="">All</option>
+            @foreach($result->unique('unit') as $row)
+            <option>{{$row->unit}}</option>
+            @endforeach
+            </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label for="table-filter-temuan">Klasifikasi Temuan : </label>
+    </div>
+    <div class="col-xs-2">
+        <select id="table-filter-temuan">
+            <option value="">All</option>
+            @foreach($result->unique('DeskTemuan')->where('DeskTemuan','!=',null) as $row)
+            <option>{{$row->DeskTemuan}}</option>
+            @endforeach
+            </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label for="table-filter-sebab">Klasifikasi Sebab : </label>
+    </div>
+    <div class="col-xs-2">
+        <select id="table-filter-sebab">
+            <option value="">All</option>
+            @foreach($result->unique('DeskSebab')->where('DeskSebab','!=',null) as $row)
+            <option>{{$row->DeskSebab}}</option>
+            @endforeach
+            </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label for="table-filter-rekomend">Klasifikasi Rekomendasi : </label>
+    </div>
+    <div class="col-xs-2">
+        <select id="table-filter-rekomend">
+            <option value="">All</option>
+            @foreach($result->unique('DeskRekomendasi')->where('DeskRekomendasi','!=',null) as $row)
+            <option>{{$row->DeskRekomendasi}}</option>
+            @endforeach
+            </select>
+    </div>
+</div>
+@endif
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter3">Status Tindak Lanjut :</label>
@@ -398,13 +491,21 @@ $(document).ready(function() {
   <thead>
       <tr style="background-color:#A9A9A9;">
         <th title="Tahun Pengawasan">Thn. Pgwsn</th>
+        <th title="Unit">Unit</th>
         <th title="Tanggal Laporan">Tgl. Lap.</th>
         <th title="Nomor Laporan">No. Lap.</th>
         <th title="Nama Kegiatan Pengawasan">Nama Keg. Pgwsn</th>
         <th title="Jenis Pengawasan">Jenis Pgwsn</th>
         <th title="Judul Temuan">Temuan</th>
+        <th title="Klasifikasi Temuan">Klasifikasi Temuan</th>
+        <th title="Kondisi">Kondisi</th>
         <th title="Nilai Temuan">Nilai</th>
+        <th title="Sebab">Sebab</th>
+        <th title="Klasifikasi Sebab">Klasifikasi Sebab</th>
+        <th title="Akibat">Akibat</th>
         <th title="Rekomendasi">Rekomendasi</th>
+        <th title="Klasifikasi Rekomendasi">Klasifikasi Rekomendasi</th>
+        <th title="Progres Rekomendasi">Progres Rekomendasi</th>
         <th title="Klasifikasi Tindak Lanjut">Status TL</th>
         <th style="width:50px">Aksi</th>
     </tr>

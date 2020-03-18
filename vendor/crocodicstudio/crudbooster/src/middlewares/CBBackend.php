@@ -33,8 +33,8 @@ class CBBackend
         $module = CRUDBooster::getCurrentModule()->path;
         $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));
         $extModule = Request::segment(1 + $adminPathSegments);
-        $extModCol = ['excel','validasi','kirim'];
-        $extModCol3 = ['batal'];
+        $extModCol = ['validasi','kirim'];
+        $extModCol3 = ['excel','batal'];
         $extModCol4 = [];
 
 
@@ -122,7 +122,7 @@ class CBBackend
                 if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
 
                         abort(404);
-                    
+
                 }
 
             }
@@ -150,16 +150,22 @@ class CBBackend
         }
 
         if(in_array($extModule,$extModCol3)){
+            $id = intval(Request::segment(3));
 
                 if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3){
+                    if($data->whereIn('id',$id)->isEmpty()){
                         abort(404);
+                    }
                 }
         }
 
         if(in_array($extModule,$extModCol4)){
+            $id = intval(Request::segment(3));
 
-                if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 4){
+                if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
+                    if($data->whereIn('id',$id)->isEmpty()){
                         abort(404);
+                    }
                 }
         }
 

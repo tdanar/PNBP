@@ -283,7 +283,7 @@ use Illuminate\Http\Request as Rikues;
 
         $data['command']    = 'edit';
 
-        
+
 		$this->cbView('crudbooster::default.form',$data);
     }
 
@@ -527,6 +527,7 @@ use Illuminate\Http\Request as Rikues;
              if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
+                `t_ref_unit`.`unit`,
                 `t_lap_awas`.`no_lap`,
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
@@ -565,11 +566,14 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
+                leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 orderby('id','desc')->
                 get();
              }else{
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
+                `t_ref_unit`.`unit`,
                 `t_lap_awas`.`no_lap`,
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
@@ -608,6 +612,8 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
+                leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 where('id_user',CRUDBooster::myId())->orderby('id','desc')->
                 get();
              }
@@ -713,11 +719,12 @@ use Illuminate\Http\Request as Rikues;
 
 }
 
-	    public function getDataWas() {
-		    if(Session::has('admin_id')){
-			if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
+        public function getDataWas() {
+            if(Session::has('admin_id')){
+            if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
                 $data = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
+                `t_ref_unit`.`unit`,
                 `t_lap_awas`.`no_lap`,
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
@@ -746,6 +753,7 @@ use Illuminate\Http\Request as Rikues;
                 `t_ref_tl`.`deskripsi` AS `KodTL`,
                 `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
                 `t_lap_awas_rekomend`.`status_tl`,
+                `t_lap_awas_rekomend`.`tl`,
                 `t_lap_awas_rekomend`.`rekomendasi`')->
                 leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
@@ -756,14 +764,17 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
+                leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 orderby('id','desc')->
                 get()->toArray();
                 // $data['recordsTotal'] = $data['data']->count();
                 // $data['recordsFiltered'] = $data['data']->count();
                 // $data['draw'] = 1;
-             }else{
+            }else{
                 $data = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
+                `t_ref_unit`.`unit`,
                 `t_lap_awas`.`no_lap`,
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
@@ -792,6 +803,7 @@ use Illuminate\Http\Request as Rikues;
                 `t_ref_tl`.`deskripsi` AS `KodTL`,
                 `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
                 `t_lap_awas_rekomend`.`status_tl`,
+                `t_lap_awas_rekomend`.`tl`,
                 `t_lap_awas_rekomend`.`rekomendasi`')->
                 leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
@@ -802,16 +814,18 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
                 leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
+                leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 where('id_user',CRUDBooster::myId())->orderby('id','desc')->
                 get()->toArray();
                 // $data['recordsTotal'] = $data['data']->count();
                 // $data['recordsFiltered'] = $data['data']->count();
                 // $data['draw'] = 1;
-			 	}
-				return Datatables::of($data)->make(true);
-			}else{
-				CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
-			};
+                }
+                return Datatables::of($data)->make(true);
+            }else{
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            };
 
         }
 

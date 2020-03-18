@@ -79,7 +79,7 @@ class CBController extends Controller
 
     public $button_add = true;
 
-    public $label_add_button;
+    public $label_add_button = '';
 
     public $button_delete = true;
 
