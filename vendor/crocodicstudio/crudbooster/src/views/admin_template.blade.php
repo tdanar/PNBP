@@ -2,7 +2,7 @@
 <html lang="id" xml:lang="id" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>{{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Portal Pengawasan PNBP" }}</title>
+    <title>{{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Manajemen Pengawasan PNBP" }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     {{-- <meta name='generator' content='CRUDBooster 5.4.6'/> --}}
     <meta name='robots' content='noindex,nofollow'/>

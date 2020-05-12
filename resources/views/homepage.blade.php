@@ -31,24 +31,6 @@
 						</div>
 						</div>
                         </div>
-                        <div class="item">
-
-                                <img src='/images/beranda_4.jpeg' />
-                                <div class="search" style="bottom:25%">
-                                <div class="text-search">
-
-                            </div>
-                            </div>
-                            </div>
-                            <div class="item">
-
-                                    <img src='/images/beranda_5.jpeg' />
-                                    <div class="search" style="bottom:25%">
-                                    <div class="text-search">
-
-                                </div>
-                                </div>
-                                </div>
 
 					</div>
 					<div class="bg_slider"></div>

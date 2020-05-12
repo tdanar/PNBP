@@ -11,7 +11,7 @@ class AdminController extends CBController
     function getIndex()
     {
         $data = [];
-        $data['page_title'] = '<strong>Dashboard</strong>';
+        $data['page_title'] = '<strong>Selamat Datang</strong>';
 
         return view('crudbooster::home', $data);
     }
@@ -73,8 +73,12 @@ class AdminController extends CBController
         $username = Request::input("username");
         $password = Request::input("password");
         $users = DB::table(config('crudbooster.USER_TABLE'))->where("username", $username)->first();
+        $tohashid = $users->id.Request::server('REMOTE_ADDR').$users->name;
+        $session_id = \Hash::make($tohashid);
+        $ip_address_login = Request::server('REMOTE_ADDR');
+        $last_session_id = $users->session_id;
 
-        if (\Hash::check($password, $users->password)) {
+        if (\Hash::check($password, $users->password) && (\Hash::check($tohashid, $last_session_id) || $last_session_id == '')) {
             $priv = DB::table("cms_privileges")->where("id", $users->id_cms_privileges)->first();
 
             $unit = DB::table('t_ref_unit')->where('id',$users->id_kode_unit)->first();
@@ -97,10 +101,16 @@ class AdminController extends CBController
 
             CRUDBooster::insertLog(trans("crudbooster.log_login", ['email' => $users->email, 'ip' => Request::server('REMOTE_ADDR')]));
 
+            DB::table(config('crudbooster.USER_TABLE'))->where('id',$users->id)->update(['session_id'=>$session_id,'ip_address_login'=>$ip_address_login]);
+           
+            //dd($session_id,$ip_address_login,$users);
+
             $cb_hook_session = new \App\Http\Controllers\CBHook;
             $cb_hook_session->afterLogin();
 
             return redirect(/* CRUDBooster::adminPath() */)->route('home');
+        } else if(\Hash::check($password, $users->password) && !\Hash::check($tohashid, $last_session_id)){
+            return redirect()->route('getLogin')->with('message', 'Anda sedang login di IP:'.$users->ip_address_login.', silahkan logout terlebih dahulu atau hubungi Administrator Itjen Kemenkeu.');
         } else {
             return redirect()->route('getLogin')->with('message', 'Terjadi kesalahan, silahkan diulang lagi.');
         }
@@ -146,6 +156,9 @@ class AdminController extends CBController
     {
 
         $me = CRUDBooster::me();
+        DB::table(config('crudbooster.USER_TABLE'))->where('id',$me->id)->update(['session_id'=>null,'ip_address_login'=>null]);
+
+        //dd($me);
         CRUDBooster::insertLog(trans("crudbooster.log_logout", ['email' => $me->email]));
 
         Session::flush();

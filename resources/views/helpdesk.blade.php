@@ -6,7 +6,7 @@
     <div class="col-sm-7"><h5><img src="https://cdn-image.bisnis.com/posts/2018/05/18/796752/gedung-kemenkeu.jpeg"/></h5><br/><h4>&nbsp;</h4></div>
     <div class="col-sm-5">
 
-            <h5><span style="font-size: 1.25em;">TIM PORTAL PENGAWASAN PNBP</span><br/>
+            <h5><span style="font-size: 1.25em;">TIM MANAJEMEN PENGAWASAN PNBP</span><br/>
             Inspektorat V<br/>Inspektorat Jenderal Kementerian Keuangan</h5>
 
         <div class="row">

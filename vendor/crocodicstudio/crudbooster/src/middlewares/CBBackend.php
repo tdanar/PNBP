@@ -7,6 +7,7 @@ use CRUDBooster;
 use DB;
 use Route;
 use Request;
+use Session;
 
 class CBBackend
 {
@@ -176,6 +177,17 @@ class CBBackend
 
             return redirect($url)->with('message', trans('crudbooster.not_logged_in'));
         }
+
+        $users = DB::table(config('crudbooster.USER_TABLE'))->where("id", CRUDBooster::myId())->first();
+        $tohashid = $users->id.Request::server('REMOTE_ADDR').$users->name;
+        $last_session_id = $users->session_id;
+
+        if (CRUDBooster::myId() != '' && !\Hash::check($tohashid, $last_session_id)) {
+            $url = url($admin_path.'/login');
+            Session::flush();
+            return redirect($url)->with('message', trans('crudbooster.not_logged_in'));
+        }
+
         if (CRUDBooster::isLocked()) {
             $url = url($admin_path.'/lock-screen');
 

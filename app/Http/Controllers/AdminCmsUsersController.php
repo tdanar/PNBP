@@ -24,7 +24,9 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->col[] = array("label"=>"Username","name"=>"username");
 		$this->col[] = array("label"=>"Email","name"=>"email");
 		$this->col[] = array("label"=>"Privilege","name"=>"id_cms_privileges","join"=>"cms_privileges,name");
-		$this->col[] = array("label"=>"Photo","name"=>"photo","image"=>1);
+        $this->col[] = array("label"=>"Photo","name"=>"photo","image"=>1);
+		$this->col[] = array("label"=>"Login di","name"=>"ip_address_login");
+
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 		# START FORM DO NOT REMOVE THIS LINE
@@ -42,7 +44,10 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		// $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Please leave empty if not change");
 		$this->form[] = array("label"=>"Password","name"=>"password","type"=>"password",'validation'=>'confirmed|min:8',"help"=>"Biarkan kosong apabila tidak ada perubahan");
 		$this->form[] = array("label"=>"Konfirmasi Password","name"=>"password_confirmation","type"=>"password","help"=>"Biarkan kosong apabila tidak ada perubahan");
-		# END FORM DO NOT REMOVE THIS LINE
+        # END FORM DO NOT REMOVE THIS LINE
+
+        $this->addaction[] = ['label'=>'Log Out','url'=>CRUDBooster::mainpath('set-status/logout/[id]'),'icon'=>'fa fa-lock','color'=>'danger','showIf'=>"[ip_address_login] != ''"];
+
 
 	}
 
@@ -65,6 +70,13 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 	public function hook_before_add(&$postdata) {
 	    unset($postdata['password_confirmation']);
     }
+
+    public function getSetStatus($logout,$id) {
+        DB::table('cms_users')->where('id',$id)->update(['ip_address_login'=>null,'session_id'=>null]);
+
+        //This will redirect back and gives a message
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"User sudah logout!","info");
+     }
 
     public function hook_query_index(&$query) {
 

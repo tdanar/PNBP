@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{trans("crudbooster.page_title_login")}} : Portal PNBP</title>
+    <title>{{trans("crudbooster.page_title_login")}} : {{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Manajemen Pengawasan PNBP" }}</title>
     <meta name='generator' content='CRUDBooster'/>
     <meta name='robots' content='noindex,nofollow'/>
     <link rel="shortcut icon"
@@ -15,7 +15,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <!-- Theme style -->
     <link href="{{asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet" type="text/css"/>
-    
+
 
 
     <!-- support rtl-->
@@ -123,7 +123,7 @@
 
                                             <div class='row'>
                                                 <div class='col-xs-6' align="left"><p style="padding:10px 0px 10px 0px"> <a href='/' target='_top'>Kembali ke Halaman Utama</a></p></div>
-                                                <div class='col-xs-6' align="right"><p style="padding:10px 0px 10px 0px"><a href='#' data-toggle="popover" title="<i class='fa fa-exclamation-triangle'></i>" data-content="Perubahan password hanya dapat dilakukan dengan menghubungi Admin Portal Pengawasan PNBP melalui email:<br/><a href='mailto:timwas.pnbp@kemenkeu.go.id'>timwas.pnbp@kemenkeu.go.id</a>">{{trans("crudbooster.text_forgot_password")}}</a></p></div>
+                                                <div class='col-xs-6' align="right"><p style="padding:10px 0px 10px 0px"><a href='#' data-toggle="popover" title="<i class='fa fa-exclamation-triangle'></i>" data-content="Perubahan password hanya dapat dilakukan dengan menghubungi Admin Manajemen Pengawasan PNBP melalui email:<br/><a href='mailto:timwas.pnbp@kemenkeu.go.id'>timwas.pnbp@kemenkeu.go.id</a>">{{trans("crudbooster.text_forgot_password")}}</a></p></div>
                                             </div>
                                         </form>
 

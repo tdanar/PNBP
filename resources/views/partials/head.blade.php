@@ -2,7 +2,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
         <meta charset="utf-8" />
-        <title>Portal Pengawasan PNBP</title>
+        <title>{{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Manajemen Pengawasan PNBP" }}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <!--<link rel="stylesheet" type="text/css" href="/css/fanoe.css">-->
         <!-- Bootstrap 3.3.2 -->
