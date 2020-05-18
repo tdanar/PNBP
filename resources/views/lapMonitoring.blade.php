@@ -85,6 +85,10 @@ $(document).ready(function() {
                                                 table.column(8).search(this.value).draw();
                                                 e.preventDefault();
                                                 });
+                                    $('#table-filter-paging').on('change', function(){
+                                                val = this.value;
+                                                table.page.len(val).draw();
+                                                });
 
                                     $('[data-toggle="popover"]').popover({
                                         trigger: "hover",
@@ -303,6 +307,7 @@ $(document).ready(function() {
             </select>
     </div>
 </div>
+
 <div class="row">
     <div class="col-xs-3 text-right">
         <label>&nbsp; </label>
@@ -312,6 +317,19 @@ $(document).ready(function() {
     </div>
 </div>
 </form>
+</div>
+<div class="row">
+    <div class="col-xs-10 text-right">
+        <label for="table-filter-paging">Pilih Paging : </label>
+    </div>
+    <div class="col-xs-2">
+        <select id="table-filter-paging">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="-1">All</option>
+            </select>
+    </div>
 </div>
 <table id="lapawas" border="1" class="display" style="width:100%">
   <thead>
