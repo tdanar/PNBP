@@ -79,7 +79,7 @@ use Illuminate\Http\Request as Rikues;
             $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'custom','html'=>$periode,'validation'=>'required|integer|min:0'];
 			// $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun awal periode yang diawasi","title"=>"Silahkan pilih tahun awal periode pengawasan"];
 			// $this->form[] = ['label'=>'-','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
-            $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:10000','upload_encrypt'=>true, 'accept'=>'.pdf'];
+            $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:20000','upload_encrypt'=>false, 'accept'=>'.pdf',"help"=>"Maksimum ukuran file 20MB"];
             $this->form[] = ['label'=>'Id User','name'=>'id_user','type'=>'hidden','value' => CRUDBooster::myId()];
             $this->form[] = ['label'=>'Status Kirim','name'=>'id_status_kirim','type'=>'hidden','value' => 1];
 
