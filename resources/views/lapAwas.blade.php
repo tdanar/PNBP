@@ -89,7 +89,7 @@ $(document).ready(function() {
                                         { 'data': 'nilai_uang',
                                             'render': function (data, type, full, meta) {
                                                 if(full.nilai_uang != null && (type === 'display' || type === 'filter')){
-                                                    return full.KodeMatauang+' '+new Number(full.nilai_uang).toLocaleString("id-ID",{"formatMatcher":"basic"});
+                                                    return full.KodeMatauang+' '+full.nilai_uang.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                                                 }
                                                 return data;
                                             }
