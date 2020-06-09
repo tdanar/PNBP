@@ -29,6 +29,7 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     Route::get('/api/getMonitorWas', 'AdminMonitoringController@getMonitorWas');
     Route::post('/ma/importAwasExcel', 'AdminLapAwasController@importExcel');
     Route::get('/ma/excel/{id}', 'AdminLapAwasController@exporExcel');
+    Route::get('/ma/word/{id}', 'AdminLapAwasController@exporWord');
     Route::get('/ma/validasi/{id}', 'AdminLapAwasController@Validasi');
     Route::get('/ma/kirim/{id}', 'AdminLapAwasController@Kirim');
     Route::get('/ma/batal/{id}', 'AdminLapAwasController@Batal');

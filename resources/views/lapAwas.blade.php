@@ -52,7 +52,8 @@ $(document).ready(function() {
 
                                         { 'data': 'tanggal', 'render':  function (data, type, full, meta){
                                             if (data != null && (type === 'display' || type === 'filter')) {
-                                                            return new Date(data).toLocaleString("id-ID",{"dateStyle":"long"});
+                                                let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                                                            return new Date(data).toLocaleString("id-ID",options);
                                                 }
                                             return data;
                                         }},
@@ -422,7 +423,7 @@ $(document).ready(function() {
             </select>
     </div>
 </div>
-@if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3)
+@if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4)
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter-unit">Kementerian / Lembaga : </label>

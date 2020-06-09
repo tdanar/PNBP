@@ -13,6 +13,8 @@
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.0/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.20/dataRender/datetime.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.20/dataRender/ellipsis.js"></script>
+<script type="text/javascript" src="/scripts/dataTables.rowsGroup.js"></script>
+
 <script>
 $(document).ready(function() {
     var unit = {!! json_encode(CRUDBooster::myUnit()) !!};
@@ -46,10 +48,9 @@ $(document).ready(function() {
                         sLast:     "Terakhir"
                         }
                     },
-                    order:[[0,'asc'],[1,'asc']],
+                    rowsGroup: [0,1],
                     processing: true,
                     searching: true,
-                    deferRender: true,
                     paging: true,
                     scrollX: true,
                     dom:'B<"col-xs-3 col-xs-offset-9"f>tr<"col-xs-6 col-sm-6"i><"col-xs-6 col-sm-6"p>',
@@ -58,11 +59,11 @@ $(document).ready(function() {
                                     header: true,
                                     messageTop: pesanAtas,
                                     exportOptions: {
-                                        columns: [0,1,2,3,4]
+                                        columns: [1,2,3,4,5]
                                     }
                                 }],
                     columnDefs: [{
-                                targets: [5],
+                                targets: [6],
                                 searchable: false,
                                 orderable: false,
                                 } ],
@@ -78,11 +79,11 @@ $(document).ready(function() {
                     drawCallback: function ( settings ) {
 
                                     $('#table-filter2').on('change', function(e){
-                                                table.column(4).search(this.value).draw();
+                                                table.column(5).search(this.value).draw();
                                                 e.preventDefault();
                                                 });
                                     $('#table-filter3').on('change', function(e){
-                                                table.column(8).search(this.value).draw();
+                                                table.column(9).search(this.value).draw();
                                                 e.preventDefault();
                                                 });
                                     $('#table-filter-paging').on('change', function(){
@@ -104,7 +105,7 @@ $(document).ready(function() {
                                         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 style="background-color:green;color:white;" class="popover-title text-uppercase"></h3><div class="popover-content"></div></div>',
                                         html: true
                                     });
-                                    drawCallback(this.api());
+                                    //drawCallback(this.api());
                             }
             });
 
@@ -123,64 +124,6 @@ $(document).ready(function() {
             function(){  location.href=link });
             null;
         };
-
-    function drawCallback(api) {
-        var info = api.page.info();
-
-        if(info.recordsDisplay != 0){
-        var rows = api.rows( {page:'current'} ).nodes(),
-            settings = {
-                    "COLUMN_THEME" : 1,
-                    "COLUMN_SUBTHEME" : 1,
-                    "COLUMN_SUBTHEME2" : 2,
-                    "COLUMN_SUBTHEME3" : 3,
-                    "COLUMN_SUBTHEME4" : 4,
-                    "COLUMN_SUBTHEME5" : 5
-
-            };
-
-                $("#lapawas").find('td').show();
-                mergeCells(rows, settings.COLUMN_THEME);
-
-
-
-
-    }else{
-
-    }
-        }
-    function mergeCells(rows, rowIndex) {
-
-            var last = null,
-                currentRow = null,
-                k = null,
-                gNum = 0,
-                refLine = null;
-
-            rows.each( function (line, i) {
-                currentRow = line.childNodes[rowIndex];
-
-                if ( last === currentRow.innerText ) {
-                    currentRow.setAttribute('style', 'display: none');
-                    ++k;
-
-                    return; //leave early
-                }
-
-                last = currentRow.innerText;
-
-                if ( i > 0 ) {
-                    rows[refLine].childNodes[rowIndex].rowSpan = ++k;
-                    ++gNum;
-                }
-
-                k = 0; refLine = i;
-            });
-
-            // for the last group
-                rows[refLine].childNodes[rowIndex].rowSpan = ++k;
-
-        }
 </script>
 @endpush
 @section('content')
@@ -334,6 +277,7 @@ $(document).ready(function() {
 <table id="lapawas" border="1" class="display" style="width:100%">
   <thead>
       <tr style="background-color:#A9A9A9;">
+        <th>No.</th>
         <th>Kementerian / Lembaga</th>
         <th>Jenis Pengawasan</th>
         <th>Jumlah Pengawasan</th>
@@ -344,8 +288,10 @@ $(document).ready(function() {
   </thead>
   <tbody>
       @if ($collection)
+
           @foreach ($collection as $row)
         <tr>
+        <td><center>{{$row->urutan}}</center></td>
         <td>{{$row->unit}}</td>
         <td>{{$row->jenis_awas}}</td>
         <td>{{$row->jml_pengawasan}}</td>
@@ -360,7 +306,9 @@ $(document).ready(function() {
                 </div>
         </td>
         </tr>
+
         @endforeach
+
       @endif
   </tbody>
 </table>

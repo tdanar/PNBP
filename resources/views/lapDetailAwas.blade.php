@@ -123,7 +123,7 @@
                                                             <div class="row">
                                                                 <div class="col-sm-12 text-justify"><strong class="text-primary">{{$index+1}}. {{$value->rekomendasi}}</strong></div>
                                                             </div>
-                                                            
+
                                                             <div class="row">
                                                                 <div class="col-sm-4">
                                                                     &ensp;&ensp;&ensp;<strong>Tanggal Tindak Lanjut</strong>
@@ -159,8 +159,14 @@
     <div class="box-footer" style="background: #F5F5F5">
         <div class="form-group">
             <label class="control-label col-md-2">&ensp;</label>
-            <div class="col-md-10">
+            <div class="col-md-4">
             <a href='{{CRUDBooster::adminPath($slug='excel').'/'.$first->id}}' class='btn btn-success'><i class="fa fa-file-excel"></i> Ekspor ke Excel</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">&ensp;</label>
+            <div class="col-md-4">
+            <a href='{{CRUDBooster::adminPath($slug='word').'/'.$first->id}}' class='btn btn-primary'><i class="fa fa-file-word"></i> Ekspor ke Word</a>
             </div>
         </div>
     </div>

@@ -264,6 +264,8 @@ use Illuminate\Http\Request as Rikues;
             $input['DeskRek'] = $_GET['klasRek'] == ''?'': $this->getRek($_GET['klasRek']);
             $input['KodTL'] = $_GET['KodTL'];
 
+
+
             $filters = [
                 't_lap_awas.tahun' => 'tahun',
                 't_ref_unit.unit' => 'unit',
@@ -277,112 +279,8 @@ use Illuminate\Http\Request as Rikues;
             $data['page_title'] = 'Monitoring Pengawasan PNBP';
             $data['input'] = collect($input);
             if(CRUDBooster::myPrivilegeId() == 4){
-                $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
-                `t_lap_awas`.`tahun`,
-                `t_lap_awas`.`no_lap`,
-                `t_lap_awas`.`tanggal`,
-                `t_lap_awas`.`nama_giat_was`,
-                `t_lap_awas`.`id`,
-                `t_lap_awas`.`id_status_kirim`,
-                `t_lap_awas`.`thn_mulai`,
-                `t_lap_awas`.`thn_usai`,
-                `t_ref_jenis_awas`.`jenis_awas`,
-                `t_lap_awas`.`created_at`,
-                `t_lap_awas`.`updated_at`,
-                `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
-                `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
-                `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
-                `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
-                `t_lap_awas_temuan`.`id` AS `id_temuan`,
-                `t_lap_awas_temuan`.`judul`,
-                `t_lap_awas_temuan`.`kondisi`,
-                `t_lap_awas_temuan`.`sebab`,
-                `t_lap_awas_temuan`.`akibat`,
-                `t_ref_matauang`.`kode` AS `KodeMatauang`,
-                `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
-                `t_ref_statkirim`.`status` AS `StatKirim`,
-                `t_lap_awas_temuan`.`nilai_uang`,
-                `t_ref_kod_rekomendasi`.`Kode` AS `KodeRekomendasi`,
-                `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
-                `t_ref_tl`.`deskripsi` AS `KodTL`,
-                `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
-                `t_lap_awas_rekomend`.`status_tl`,
-                `t_lap_awas_rekomend`.`rekomendasi`,
-                `cms_users`.`email`,
-                `cms_users`.`id_kode_unit`,
-                `t_ref_unit`.`unit`')->
-                leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
-                leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
-                leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
-                leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
-                leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
-                leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
-                leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
-                leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
-                leftjoin('cms_users','t_lap_awas.id_user','=','cms_users.id')->
-                leftjoin('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')->
-                where('id_status_kirim',2)->orderby('id','desc')->
-                get();
-                $data['klasTemuan'] = DB::table('t_ref_kod_temuan')
-                                        ->where('Id_up','!=',null)
-                                        ->where('id_up2',0)
-                                        ->orderBy('Deskripsi','asc')
-                                        ->get();
-                $data['klasSebab'] = DB::table('t_ref_kod_sebab')
-                                        ->where('Id_up_sebab',null)
-                                        ->orderBy('Deskripsi','asc')
-                                        ->get();
-                 $data['klasRek'] = DB::table('t_ref_kod_rekomendasi')
-                                        ->orderBy('Deskripsi','asc')
-                                        ->get();
-                $data['indexWas'] = DB::table('t_lap_awas')->selectRaw(
-                    'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
-                        `t_ref_unit`.`unit` AS `unit`,
-                        `t_ref_jenis_awas`.`jenis_awas` AS `jenis_awas`,
-                        count(`t_lap_awas`.`id`) AS `jml_pengawasan`'
-                )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
-                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
-                ->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
-                ->where('t_lap_awas.id_status_kirim',2)
-                ->groupBy('ID','t_ref_unit.unit','t_ref_jenis_awas.jenis_awas')
-                ->get();
-                $data['indexTemuan'] = DB::table('t_lap_awas')->selectRaw(
-                    'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
-                    count(`t_lap_awas_temuan`.`id`) AS `jml_temuan`'
-                )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
-                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
-                ->join('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
-                ->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
-                ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
-                ->join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
-                ->where('t_lap_awas.id_status_kirim',2)
-                ->groupBy('ID')
-                ->get();
-                $data['indexRekomend'] = DB::table('t_lap_awas')->selectRaw(
-                    'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
-                    count(`t_lap_awas_temuan`.`id`) AS `jml_rekomendasi`'
-                )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
-                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
-                ->join('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
-                ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
-                ->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
-                ->join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
-                ->where('t_lap_awas.id_status_kirim',2)
-                ->groupBy('ID')
-                ->get();
-
-
-                foreach($data['indexWas'] as $was){
-                    $was->jml_temuan = $data['indexTemuan']->where('ID',$was->ID)->first()->jml_temuan;
-                    $was->jml_rekomendasi = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_rekomendasi;
-                    $collect[] = $was;
-                }
-
-                //dd($data['klasTemuan']);
-                $data['collection'] = $collect;
-             }else{
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_ref_unit`.`unit`,
+                `t_ref_unit`.`id` AS `id_unit`,
                 `t_lap_awas`.`tahun`,
                 `t_lap_awas`.`id`,
                 `t_lap_awas`.`id_status_kirim`,
@@ -409,10 +307,139 @@ use Illuminate\Http\Request as Rikues;
                 leftjoin('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')->
                 leftjoin('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')->
                 leftjoin('t_ref_kod_sebab AS t_ref_kod_sebab1','t_ref_kod_sebab.Id_up_sebab','=','t_ref_kod_sebab1.id')->
-                orderby('id','desc')->
+                where('id_status_kirim',2)->orderby('unit','asc')->
                 get();
                 $data['indexWas'] = DB::table('t_lap_awas')->selectRaw(
                     'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
+                        `t_ref_unit`.`id` AS `id_unit`,
+                        `t_ref_unit`.`unit` AS `unit`,
+                        `t_ref_jenis_awas`.`jenis_awas` AS `jenis_awas`,
+                        count(DISTINCT `t_lap_awas`.`id`) AS `jml_pengawasan`'
+                )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
+                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
+                ->leftjoin('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
+                ->leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                ->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
+                ->leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
+                ->leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
+                ->leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
+                ->leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                ->where('t_lap_awas.id_status_kirim',2)
+                ->where(
+                    function ($query) use ($input, $filters) {
+                        foreach ($filters as $column => $key) {
+                            $query->when(array_get($input, $key), function ($query, $value) use ($column) {
+                                $query->where($column, $value);
+                            });
+                        }
+                    }
+                )
+                ->orderby('unit','asc')
+                ->groupBy('ID','t_ref_unit.id','t_ref_unit.unit','t_ref_jenis_awas.jenis_awas')
+                ->get();
+                $data['indexTemuan'] = DB::table('t_lap_awas')->selectRaw(
+                    'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
+                    count(DISTINCT `t_lap_awas_temuan`.`id`) AS `jml_temuan`'
+                )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
+                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
+                ->leftjoin('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
+                ->leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                ->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
+                ->leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
+                ->leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
+                ->leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
+                ->leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                ->where('t_lap_awas.id_status_kirim',2)
+                ->where(
+                    function ($query) use ($input, $filters) {
+                        foreach ($filters as $column => $key) {
+                            $query->when(array_get($input, $key), function ($query, $value) use ($column) {
+                                $query->where($column, $value);
+                            });
+                        }
+                    }
+                )
+                ->groupBy('ID')
+                ->get();
+                $data['indexRekomend'] = DB::table('t_lap_awas')->selectRaw(
+                    'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
+                    count(`t_lap_awas_rekomend`.`id`) AS `jml_rekomendasi`'
+                )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
+                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
+                ->leftjoin('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
+                ->leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
+                ->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
+                ->leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
+                ->leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
+                ->leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
+                ->leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
+                ->where('t_lap_awas.id_status_kirim',2)
+                ->where(
+                    function ($query) use ($input, $filters) {
+                        foreach ($filters as $column => $key) {
+                            $query->when(array_get($input, $key), function ($query, $value) use ($column) {
+                                $query->where($column, $value);
+                            });
+                        }
+                    }
+                )
+                ->groupBy('ID')
+                ->get();
+
+
+                foreach($data['indexWas'] as $was){
+                    $was->jml_temuan = $data['indexTemuan']->where('ID',$was->ID)->first()->jml_temuan;
+                    $was->jml_rekomendasi = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_rekomendasi;
+                    $collect[] = $was;
+                }
+
+                //dd($data['klasTemuan']);
+
+                for($i=0; $i < count($collect); $i++){
+                    $collect[0]->urutan = 1;
+                    if($collect[$i]->id_unit === $collect[$i-1]->id_unit){
+                        $collect[$i]->urutan = $collect[$i-1]->urutan;
+                    }else{
+                        $collect[$i]->urutan = $collect[$i-1]->urutan + 1;
+                    }
+
+                }
+                $data['collection'] = $collect;
+                //dd($collect);
+             }else{
+                $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_ref_unit`.`unit`,
+                `t_ref_unit`.`id` AS `id_unit`,
+                `t_lap_awas`.`tahun`,
+                `t_lap_awas`.`id`,
+                `t_lap_awas`.`id_status_kirim`,
+                `t_ref_jenis_awas`.`jenis_awas`,
+                `t_lap_awas_temuan`.`id` AS `id_temuan`,
+                `t_ref_kod_temuan1`.`id` AS `IdKlasTemuan`,
+                `t_ref_kod_temuan1`.`Deskripsi` AS `KlasTemuan`,
+                `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
+                `t_ref_kod_sebab1`.`id` AS `IdKlasSebab`,
+                `t_ref_kod_sebab1`.`Deskripsi` AS `KlasSebab`,
+                `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
+                `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
+                `t_ref_kod_rekomendasi`.`id` AS `IdKlasRekomendasi`,
+                `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
+                `t_ref_tl`.`deskripsi` AS `KodTL`')->
+                leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+                leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+                leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+                leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+                leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+                leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+                leftjoin('cms_users','t_lap_awas.id_user','=','cms_users.id')->
+                leftjoin('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')->
+                leftjoin('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')->
+                leftjoin('t_ref_kod_sebab AS t_ref_kod_sebab1','t_ref_kod_sebab.Id_up_sebab','=','t_ref_kod_sebab1.id')->
+                orderby('unit','asc')->
+                get();
+                $data['indexWas'] = DB::table('t_lap_awas')->selectRaw(
+                    'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
+                        `t_ref_unit`.`id` AS `id_unit`,
                         `t_ref_unit`.`unit` AS `unit`,
                         `t_ref_jenis_awas`.`jenis_awas` AS `jenis_awas`,
                         count(DISTINCT `t_lap_awas`.`id`) AS `jml_pengawasan`'
@@ -434,7 +461,8 @@ use Illuminate\Http\Request as Rikues;
                         }
                     }
                 )
-                ->groupBy('ID','t_ref_unit.unit','t_ref_jenis_awas.jenis_awas')
+                ->orderby('unit','asc')
+                ->groupBy('ID','t_ref_unit.id','t_ref_unit.unit','t_ref_jenis_awas.jenis_awas')
                 ->get();
                 $data['indexTemuan'] = DB::table('t_lap_awas')->selectRaw(
                     'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
@@ -490,11 +518,20 @@ use Illuminate\Http\Request as Rikues;
                     $collect[] = $was;
                 }
 
-                //dd($data['klasTemuan']);
+                //dd($data['klasRek']);
+                for($i=0; $i < count($collect); $i++){
+                    $collect[0]->urutan = 1;
+                    if($collect[$i]->id_unit === $collect[$i-1]->id_unit){
+                        $collect[$i]->urutan = $collect[$i-1]->urutan;
+                    }else{
+                        $collect[$i]->urutan = $collect[$i-1]->urutan + 1;
+                    }
+
+                }
                 $data['collection'] = $collect;
              }
 
-             //dd($data['input']);
+             //dd($data['collection']);
 
             $this->cbView('lapMonitoring',$data);
 
