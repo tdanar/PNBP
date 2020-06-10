@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="id" xml:lang="id" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>{{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Admin Area" }}</title>
+    <title>{{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Manajemen Pengawasan PNBP" }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
-    <meta name='generator' content='CRUDBooster 5.4.6'/>
+    {{-- <meta name='generator' content='CRUDBooster 5.4.6'/> --}}
     <meta name='robots' content='noindex,nofollow'/>
     <link rel="shortcut icon"
-          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):'media/favicon.ico' }}">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     <!-- Bootstrap 3.3.2 -->
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css") }}" rel="stylesheet" type="text/css"/>
     <!-- Font Awesome Icons -->
-    <link href="{{asset("vendor/crudbooster/assets/adminlte/font-awesome/css")}}/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    {{-- <link href="{{asset("vendor/crudbooster/assets/adminlte/font-awesome/css")}}/font-awesome.min.css" rel="stylesheet" type="text/css"/> --}}
     <!-- Ionicons -->
     <link href="{{asset("vendor/crudbooster/ionic/css/ionicons.min.css")}}" rel="stylesheet" type="text/css"/>
     <!-- Theme style -->
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css")}}" rel="stylesheet" type="text/css"/>
-
+    {{-- <script src="https://kit.fontawesome.com/8e694ba070.js" crossorigin="anonymous"></script> --}}
+    <link href="/css/font/fontawesome/css/all.css" rel="stylesheet" type="text/css"/>
     <!-- support rtl-->
     @if (in_array(App::getLocale(), ['ar', 'fa']))
         <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
@@ -26,6 +27,22 @@
     @endif
 
     <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css").'?r='.time()}}'/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css">
+    <link rel="stylesheet" href="/css/home.css" type="text/css">
+    <link rel="stylesheet" href="/css/responsive.css" type="text/css">
+    <link rel="shortcut icon" href="/media/favicon.ico" type="image/x-icon" />
+
+    <link href="/css/menu.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/css/mega_menu.min.css" type="text/css"/>
+
+    <link href="/css/mmenu_button.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/jquery.mmenu.all.css" type="text/css">
+
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" type="text/css"/> --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.0/css/buttons.dataTables.min.css" type="text/css"/>
+
+
 
     <!-- load css -->
     <style type="text/css">
@@ -78,20 +95,40 @@
         .form-group > label:first-child {
             display: block
         }
+
+        .holds-the-iframe {
+                background:url(/vendor/crudbooster/assets/lightbox/dist/images/loading.gif) center center no-repeat;
+                }
+
+        .sweet-alert p {
+            color: #ff0000 !important;
+            font-family: sans-serif !important;
+            }
+
+
     </style>
-
     @stack('head')
-</head>
-<body class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{($sidebar_mode)?:''}}">
-<div id='app' class="wrapper">
 
-    <!-- Header -->
+</head>
+<body>
+<!-- Header -->
+<div id="scroll"></div>
+	<div id="preload" class="preload">
+			<div class="loader"></div>
+		</div>
+    <div class="mm-page"></div>
+<div id="my-wrapper">
+
 @include('crudbooster::header')
+
+
+
 
 <!-- Sidebar -->
 @include('crudbooster::sidebar')
 
 <!-- Content Wrapper. Contains page content -->
+<div class="container">
     <div class="content-wrapper">
 
         <section class="content-header">
@@ -114,8 +151,8 @@
 
                         @if($button_add && CRUDBooster::isCreate())
                             <a href="{{ CRUDBooster::mainpath('add').'?return_url='.urlencode(Request::fullUrl()).'&parent_id='.g('parent_id').'&parent_field='.$parent_field }}"
-                               id='btn_add_new_data' class="btn btn-sm btn-success" title="{{trans('crudbooster.action_add_data')}}">
-                                <i class="fa fa-plus-circle"></i> {{trans('crudbooster.action_add_data')}}
+                               id='btn_add_new_data' class="btn btn-sm btn-success" title="{{ $label_add_button ? $label_add_button : trans('crudbooster.action_add_data')}}">
+                                <i class="fa fa-plus-circle"></i> {{ $label_add_button ? $label_add_button : trans('crudbooster.action_add_data')}}
                             </a>
                         @endif
                     @endif
@@ -145,6 +182,7 @@
                                @if($ib['onMouseOut']) onMouseOut='return {{$ib["onMouseOut"]}}' @endif
                                @if($ib['onKeyDown']) onKeyDown='return {{$ib["onKeyDown"]}}' @endif
                                @if($ib['onLoad']) onLoad='return {{$ib["onLoad"]}}' @endif
+                               @if($ib['indexonly'] == true && (CRUDBooster::getCurrentMethod() == 'getIndex') != true) style='display: none' @endif
                             >
                                 <i class='{{$ib["icon"]}}'></i> {{$ib["label"]}}
                             </a>
@@ -154,13 +192,12 @@
                 </h1>
 
 
-                <ol class="breadcrumb">
+                <!--<ol class="breadcrumb">
                     <li><a href="{{CRUDBooster::adminPath()}}"><i class="fa fa-dashboard"></i> {{ trans('crudbooster.home') }}</a></li>
                     <li class="active">{{$module->name}}</li>
-                </ol>
+                </ol>-->
             @else
-                <h1>{{Session::get('appname')}}
-                    <small>Information</small>
+                <h1>{{--Session::get('appname')--}}
                 </h1>
             @endif
         </section>
@@ -191,15 +228,13 @@
         <!-- Your Page Content Here -->
             @yield('content')
         </section><!-- /.content -->
-    </div><!-- /.content-wrapper -->
+    </div>
+</div>
+    <!-- /.content-wrapper -->
 
     <!-- Footer -->
     @include('crudbooster::footer')
-
-</div><!-- ./wrapper -->
-
-
-@include('crudbooster::admin_template_plugins')
+    @include('crudbooster::admin_template_plugins')
 
 <!-- load js -->
 @if($load_js)
@@ -216,8 +251,9 @@
 
 @stack('bottom')
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-      Both of these plugins are recommended to enhance the
-      user experience -->
+</div>
+<!-- ./wrapper -->
+
+
 </body>
 </html>

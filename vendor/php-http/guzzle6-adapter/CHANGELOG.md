@@ -1,20 +1,6 @@
 # Change Log
 
 
-## 1.1.1 - 2016-05-10
-
-### Fixed
-
-- Adapter can again be instantiated without a guzzle client.
-
-## 1.1.0 - 2016-05-09
-
-### Added
-
-- Factory method Client::createWithConfig to create an adapter with custom
-  configuration for the underlying guzzle client.
-
-
 ## 1.0.0 - 2016-01-26
 
 

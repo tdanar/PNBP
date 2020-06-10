@@ -5,6 +5,7 @@ use Image;
 use Request;
 use Response;
 use Storage;
+use CRUDBooster;
 
 class FileController extends Controller
 {
@@ -101,6 +102,8 @@ class FileController extends Controller
             'Content-Type' => $header_content_type,
             'Content-Length' => $header_content_length,
         ]);
+        $pathku = request()->getPathInfo();
+        $owner = array_slice(explode('/',$pathku),0,3);
 
         if (in_array($extension, $images_ext)) {
             if ($h1 || $h2) {
@@ -109,10 +112,29 @@ class FileController extends Controller
                 return Response::make($imgRaw, 200, $headers);
             }
         } else {
-            if (Request::get('download')) {
+             if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4){
+                if (Request::get('download')) {
                 return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
-            } else {
-                return Response::file(storage_path('app/'.$fullFilePath), $headers);
+                    } else {
+                        return Response::file(storage_path('app/'.$fullFilePath), $headers);
+                    }
+            }elseif(CRUDBooster::myId() == intval($owner[2])){
+                if (Request::get('download')) {
+                return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
+
+                    } else {
+                        return Response::file(storage_path('app/'.$fullFilePath), $headers);
+                    }
+            }elseif($owner[2] == 'infografis'){
+                if (Request::get('download')) {
+                    return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
+
+                        } else {
+                            return Response::file(storage_path('app/'.$fullFilePath), $headers);
+                        }
+            }
+            else{
+                abort(404);
             }
         }
     }

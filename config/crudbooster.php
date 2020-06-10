@@ -2,7 +2,8 @@
 
 return [
 
-    'ADMIN_PATH' => 'admin',
+    'ADMIN_PATH' => 'ma',
+    'FRONT' => '',
 
     /*
         To Allowed Specific User Agent Only
@@ -26,11 +27,11 @@ return [
 
     'URL_FIELDS_CANDIDATE' => 'url,link',
 
-    'UPLOAD_TYPES' => 'jpg,png,jpeg,gif,bmp,pdf,xls,xlsx,doc,docx,txt,zip,rar,7z',
+    'UPLOAD_TYPES' => 'jpg,png,jpeg,gif,bmp,pdf,xls,xlsx,doc,docx,txt',
 
     'DEFAULT_THUMBNAIL_WIDTH' => 0,
 
-    'DEFEAULT_UPLOAD_MAX_SIZE' => 1000, //in KB
+    'DEFAULT_UPLOAD_MAX_SIZE' => 10000, //in KB
 
     'IMAGE_EXTENSIONS' => 'jpg,png,jpeg,gif,bmp',
 
@@ -66,7 +67,7 @@ return [
     * Note: you cannot use both layout-boxed and fixed at the same time. Anything else can be mixed together.
     */
 
-    'ADMIN_LAYOUT' => '',
+    'ADMIN_LAYOUT' => 'sidebar-mini',
 
     /*
     * NOTE :

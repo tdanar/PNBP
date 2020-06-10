@@ -30,7 +30,7 @@
             @endif
         @endif
         @if(!$value)
-            <input type='file' id="{{$name}}" title="{{$form['label']}}" {{$required}} {{$readonly}} {{$disabled}} class='form-control' name="{{$name}}"/>
+                <input type='file' id="{{$name}}" title="{{$form['label']}}" {{$required}} {{$readonly}} {{$disabled}} class='form-control' name="{{$name}}" accept="{{$form['accept']}}"/>
             <p class='help-block'>{{ @$form['help'] }}</p>
         @else
             <p class='text-muted'><em>{{trans("crudbooster.notice_delete_file_upload")}}</em></p>

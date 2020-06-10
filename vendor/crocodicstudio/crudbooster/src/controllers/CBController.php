@@ -67,11 +67,19 @@ class CBController extends Controller
 
     public $button_addmore = true;
 
+    public $button_addtemuan = false;
+    public $button_edittemuan = false;
+    public $button_addtemuan_label;
+
+    public $button_edittemuan_label;
+
     public $button_table_action = true;
 
     public $button_bulk_action = true;
 
     public $button_add = true;
+
+    public $label_add_button = '';
 
     public $button_delete = true;
 
@@ -146,10 +154,15 @@ class CBController extends Controller
         $this->data['button_edit'] = $this->button_edit;
         $this->data['button_show'] = $this->button_show;
         $this->data['button_add'] = $this->button_add;
+        $this->data['label_add_button'] = $this->label_add_button;
         $this->data['button_delete'] = $this->button_delete;
         $this->data['button_filter'] = $this->button_filter;
         $this->data['button_export'] = $this->button_export;
         $this->data['button_addmore'] = $this->button_addmore;
+        $this->data['button_addtemuan'] = $this->button_addtemuan;
+        $this->data['button_edittemuan'] = $this->button_edittemuan;
+        $this->data['button_addtemuan_label'] = $this->button_addtemuan_label;
+        $this->data['button_edittemuan_label'] = $this->button_edittemuan_label;
         $this->data['button_cancel'] = $this->button_cancel;
         $this->data['button_save'] = $this->button_save;
         $this->data['button_table_action'] = $this->button_table_action;
@@ -356,7 +369,7 @@ class CBController extends Controller
                 }
             } else {
 
-                if(isset($field_array[1])) {                    
+                if(isset($field_array[1])) {
                     $result->addselect($table.'.'.$field.' as '.$table.'_'.$field);
                     $columns_table[$index]['type_data'] = CRUDBooster::getFieldType($table, $field);
                     $columns_table[$index]['field'] = $table.'_'.$field;
@@ -367,7 +380,7 @@ class CBController extends Controller
                     $columns_table[$index]['field'] = $field;
                     $columns_table[$index]['field_raw'] = $field;
                 }
-                
+
                 $columns_table[$index]['field_with'] = $table.'.'.$field;
             }
         }
@@ -1098,7 +1111,7 @@ class CBController extends Controller
 
             if (@$ro['type'] == 'upload') {
 
-                $this->arr[$name] = CRUDBooster::uploadFile($name, $ro['encrypt'] || $ro['upload_encrypt'], $ro['resize_width'], $ro['resize_height'], CB::myId());
+                $this->arr[$name] = CRUDBooster::uploadFile($name, $ro['encrypt'] || $ro['upload_encrypt'], $ro['resize_width'], $ro['resize_height'], $ro['user_id'] ? :CB::myId());
 
                 if (! $this->arr[$name]) {
                     $this->arr[$name] = Request::get('_'.$name);
@@ -1265,6 +1278,7 @@ class CBController extends Controller
         Session::put('current_row_id', $id);
 
         return view('crudbooster::default.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+
     }
 
     public function postEditSave($id)
@@ -1460,9 +1474,9 @@ class CBController extends Controller
             $file = storage_path('app/'.$file);
             $rows = Excel::load($file, function ($reader) {
             })->get();
-            
+
             $countRows = ($rows)?count($rows):0;
-            
+
             Session::put('total_data_import', $countRows);
 
             $data_import_column = [];
@@ -1712,7 +1726,8 @@ class CBController extends Controller
 
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        $file = str_replace('uploads/', '', $row->{$column});
+        //$file = str_replace('uploads/', '', $row->{$column});
+        $file = '/'.$row->{$column};
         if (Storage::exists($file)) {
             Storage::delete($file);
         }
