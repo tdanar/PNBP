@@ -873,6 +873,7 @@ class CBController extends Controller
         foreach ($this->data_inputan as $di) {
             $ai = [];
             $name = $di['name'];
+            $label = $di['label'];
 
             if (! isset($request_all[$name])) {
                 continue;
@@ -971,16 +972,20 @@ class CBController extends Controller
                 $validation = implode('|', $exp);
 
                 $array_input[$name] = $validation;
+                $customAttributes[$name] = $di['label'];
             } else {
                 $array_input[$name] = implode('|', $ai);
+                $customAttributes[$name] = $di['label'];
             }
         }
 
-        $validator = Validator::make($request_all, $array_input);
+        $validator = Validator::make($request_all, $array_input,[],$customAttributes);
+
 
         if ($validator->fails()) {
             $message = $validator->messages();
             $message_all = $message->all();
+           
 
             if (Request::ajax()) {
                 $res = response()->json([

@@ -90,6 +90,15 @@
                         @endpush
                     </div>
 
+                    <div class='form-group'>
+                        <label>{{trans('crudbooster.set_as_active')}}</label>
+                        <select name='is_active' class='form-control' required>
+                            <option value='1' {{ (@$row->is_active==1)?'selected':'' }}>{{trans('crudbooster.confirmation_yes')}}</option>
+                            <option value='0' {{ (@$row->is_active==0)?'selected':'' }}>{{trans('crudbooster.confirmation_no')}}</option>
+                        </select>
+                        <div class="text-danger">{{ $errors->first('is_active') }}</div>
+                    </div>
+
                     <div id='privileges_configuration' class='form-group'>
                         <label>{{trans('crudbooster.privileges_configuration')}}</label>
                         @push('bottom')

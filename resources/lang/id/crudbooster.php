@@ -193,7 +193,7 @@ return [
     'email_setting' => 'Pengaturan Email',
     'application_setting' => 'Pengaturan Aplikasi',
 
-    // table filter & sort 
+    // table filter & sort
     'filter_select_operator_type' => 'Operator',
     'filter_ascending' => 'Kecil -> Besar',
     'filter_descending' => 'Besar <- Kecil',
@@ -240,6 +240,7 @@ return [
     'privileges_standart_user' => 'Pengguna Standar',
     'privileges_ID' => 'ID',
     'set_as_superadmin' => 'Angkat sebagai Superadmin',
+    'set_as_active' => 'Aktifkan',
     'chose_theme_color_select' => '** Pilih warna tema backend',
     'chose_theme_color' => ' Warna Tema',
     'privileges_configuration' => 'Konfigurasi Hak Akses',
@@ -251,14 +252,14 @@ return [
     'privileges_module_list_update' => 'Update',
     'privileges_module_list_delete' => 'Delete',
 
-    //datamodal 
+    //datamodal
     'datamodal_select' => 'Pilih',
     'datamodal_search_and_enter' => 'Cari dan masuk...',
     'datamodal_enter_to_search' => 'Masuk untuk mencari',
     'datamodal_browse_data' => 'Mencari Data',
     'datamodal_browse_file' => 'Mencari File',
 
-    //child 
+    //child
     'table_detail' => 'Detil Tabel',
     'your_file_size_is_too_big' => 'File Anda terlalu besar',
     'save_changes' => 'Simpan Perubahan',

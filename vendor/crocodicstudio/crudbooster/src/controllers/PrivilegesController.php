@@ -30,11 +30,18 @@ class PrivilegesController extends CBController
             "name" => "is_superadmin",
             'callback_php' => '($row->is_superadmin)?"<span class=\"label label-success\">Superadmin</span>":"<span class=\"label label-default\">Standard</span>"',
         ];
+        $this->col[] = [
+            "label" => "Active",
+            "name" => "is_active",
+            'callback_php' => '($row->is_active)?"<span class=\"label label-success\">Active</span>":"<span class=\"label label-danger\">Not Active</span>"',
+        ];
 
         $this->form = [];
         $this->form[] = ["label" => "Name", "name" => "name", 'required' => true];
         $this->form[] = ["label" => "Is Superadmin", "name" => "is_superadmin", 'required' => true];
         $this->form[] = ["label" => "Theme Color", "name" => "theme_color", 'required' => true];
+        $this->form[] = ["label" => "Is Active", "name" => "is_active", 'required' => true];
+
 
         $this->alert[] = [
             'message' => "You can use the helper <code>CRUDBooster::getMyPrivilegeId()</code> to get current user login privilege id, or <code>CRUDBooster::getMyPrivilegeName()</code> to get current user login privilege name",

@@ -193,7 +193,7 @@ return [
     'email_setting' => 'Email Setting',
     'application_setting' => 'Application Setting',
 
-    // table filter & sort 
+    // table filter & sort
     'filter_select_operator_type' => 'Select Operator Type',
     'filter_ascending' => 'ASCENDING',
     'filter_descending' => 'DESCENDING',
@@ -240,6 +240,7 @@ return [
     'privileges_standart_user' => 'Standart user',
     'privileges_ID' => 'ID',
     'set_as_superadmin' => 'Set as Superadmin',
+    'set_as_active' => 'Set as Active',
     'chose_theme_color_select' => '** Choose Backend Theme Color',
     'chose_theme_color' => ' Theme Color',
     'privileges_configuration' => 'Privileges Configuration',
@@ -251,14 +252,14 @@ return [
     'privileges_module_list_update' => 'Update',
     'privileges_module_list_delete' => 'Delete',
 
-    //datamodal 
+    //datamodal
     'datamodal_select' => 'Select',
     'datamodal_search_and_enter' => 'Search and enter...',
     'datamodal_enter_to_search' => 'Enter to search',
     'datamodal_browse_data' => 'Browse Data',
     'datamodal_browse_file' => 'Browse File',
 
-    //child 
+    //child
     'table_detail' => 'Table Detail',
     'your_file_size_is_too_big' => 'Your file size is too big',
     'save_changes' => 'Save Changes',
