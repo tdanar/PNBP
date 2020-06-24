@@ -23,7 +23,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         $this->col[] = array("label"=>"Name","name"=>"name");
 		$this->col[] = array("label"=>"Username","name"=>"username");
         $this->col[] = array("label"=>"Email","name"=>"email");
-		$this->col[] = array("label"=>"Privilege","name"=>"id_cms_privileges","join"=>"cms_privileges,name");
+		$this->col[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","join"=>"cms_privileges,name");
         $this->col[] = array("label"=>"Photo","name"=>"photo","image"=>1);
         $this->col[] = array("label"=>"Kementerian / Lembaga", "name"=>"id_kode_unit","join"=>"t_ref_unit,unit");
 		$this->col[] = array("label"=>"Login di","name"=>"ip_address_login");
@@ -38,9 +38,9 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         $this->form[] = array("label"=>"No.HP/Whatsapp","name"=>"hp","type"=>"text",'required'=>true,'validation'=>'required|numeric|unique:cms_users,hp,'.CRUDBooster::getCurrentId());
         $this->form[] = array("label"=>"Foto","name"=>"photo","type"=>"upload","help"=>"Rekomendasi resolusinya 200x200px",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90,'user_id'=>'profpic','upload_encrypt'=>true);
         if(!CRUDBooster::isSuperadmin()) {
-        $this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_superadmin<>1 AND is_active<>0",'required'=>true);
+        $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_superadmin<>1 AND is_active<>0",'required'=>true);
         }else{
-        $this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_active<>0",'required'=>true);
+        $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_active<>0",'required'=>true);
         }
         $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"select2","datatable"=>"t_ref_unit,unit",'required'=>true);
         $this->form[] = array("label"=>"Nama Unit","name"=>"eselon","type"=>"text","required"=>true,"validation"=>"required");
@@ -52,12 +52,12 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
             $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password",'validation'=>'confirmed|min:8',"help"=>"Password minimal 8 karakter, biarkan kosong apabila tidak ada perubahan");
 		    $this->form[] = array("label"=>"Konfirmasi Password","name"=>"password_confirmation","type"=>"password","help"=>"Ulangi Password di atas, biarkan kosong apabila tidak ada perubahan");
         }
-		
+
         # END FORM DO NOT REMOVE THIS LINE
 
         $this->addaction[] = ['label'=>'Log Out','url'=>CRUDBooster::mainpath('set-status/logout/[id]'),'icon'=>'fa fa-lock','color'=>'danger','showIf'=>"[ip_address_login] != ''"];
 
-        
+
 	}
 
 	public function getProfile() {
@@ -75,49 +75,49 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 	}
 	public function hook_before_edit(&$postdata,$id) {
         unset($postdata['password_confirmation']);
-        if(in_array($postdata['id_cms_privileges'], array(5, 6, 7))){
+        if(in_array($postdata['id_cms_privileges'], array(5))){
             $unit = $postdata['id_kode_unit'];
-            $aidi = DB::table('cms_users')->select('id')->whereIn('id_cms_privileges',[5,6,7])->where('id_kode_unit',$unit)->first();
-            $count = DB::table('cms_users')->whereIn('id_cms_privileges',[5,6,7])->where('id_kode_unit',$unit)->count();
+            $aidi = DB::table('cms_users')->select('id')->whereIn('id_cms_privileges',[5])->where('id_kode_unit',$unit)->first();
+            $count = DB::table('cms_users')->whereIn('id_cms_privileges',[5])->where('id_kode_unit',$unit)->count();
             //dd((int)$id,$aidi->id,$count);
             if($count > 0){
                 if($count != 1 || $aidi->id != (int)$id){
                     if (Request::ajax()) {
                         $res = response()->json([
-                            'message' => 'Terjadi kesalahan! Sudah ada Admin di K/L yang dimaksud (Maksimal 1 Admin per K/L).',
+                            'message' => 'Terjadi kesalahan! Sudah ada Approver di K/L yang dimaksud (Maksimal 1 Approver per K/L).',
                             'message_type' => 'warning',
                         ])->send();
                         exit;
                     } else {
                         $res = redirect()->back()->with("errors", $message)->with([
-                            'message' => 'Terjadi kesalahan! Sudah ada Admin di K/L yang dimaksud (Maksimal 1 Admin per K/L).',
+                            'message' => 'Terjadi kesalahan! Sudah ada Approver di K/L yang dimaksud (Maksimal 1 Approver per K/L).',
                             'message_type' => 'warning',
                         ])->withInput();
                         \Session::driver()->save();
                         $res->send();
                         exit;
                     }
-                }               
-                
+                }
+
             }
         }
 	}
 	public function hook_before_add(&$postdata) {
         unset($postdata['password_confirmation']);
-        if(in_array($postdata['id_cms_privileges'], array(5, 6, 7))){
+        if(in_array($postdata['id_cms_privileges'], array(5))){
             $unit = $postdata['id_kode_unit'];
-            $count = DB::table('cms_users')->whereIn('id_cms_privileges',[5,6,7])->where('id_kode_unit',$unit)->count();
+            $count = DB::table('cms_users')->whereIn('id_cms_privileges',[5])->where('id_kode_unit',$unit)->count();
             if($count > 0){
-            
+
                 if (Request::ajax()) {
                     $res = response()->json([
-                        'message' => 'Terjadi kesalahan! Sudah ada Admin di K/L yang dimaksud (Maksimal 1 Admin per K/L).',
+                        'message' => 'Terjadi kesalahan! Sudah ada Approver di K/L yang dimaksud (Maksimal 1 Approver per K/L).',
                         'message_type' => 'warning',
                     ])->send();
                     exit;
                 } else {
                     $res = redirect()->back()->with("errors", $message)->with([
-                        'message' => 'Terjadi kesalahan! Sudah ada Admin di K/L yang dimaksud (Maksimal 1 Admin per K/L).',
+                        'message' => 'Terjadi kesalahan! Sudah ada Approver di K/L yang dimaksud (Maksimal 1 Approver per K/L).',
                         'message_type' => 'warning',
                     ])->withInput();
                     \Session::driver()->save();
