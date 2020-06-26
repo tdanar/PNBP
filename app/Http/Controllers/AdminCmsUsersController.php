@@ -9,13 +9,33 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 
 
 	public function cbInit() {
+        $unit_id = (int)(DB::table('cms_users')->select('id_kode_unit')->where('id',CRUDBooster::myId())->first())->id_kode_unit;
+
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
 		$this->table               = 'cms_users';
 		$this->primary_key         = 'id';
 		$this->title_field         = "name";
-		$this->button_action_style = 'button_icon';
+        $this->button_action_style = 'button_icon';
+        $this->label_add_button    = 'Tambah Pengguna';
+        if(CRUDBooster::getCurrentMethod()=="getIndex" && in_array(CRUDBooster::myPrivilegeId(),array(5))){
+
+            $this->subtitle_module= DB::table('t_ref_unit')->select('unit')->where('id',$unit_id)->first()->unit;
+        }
+        if(CRUDBooster::getCurrentMethod()=="getAdd" && in_array(CRUDBooster::myPrivilegeId(),array(5))){
+            $this->page_title = "Tambah Pengguna";
+            $this->subtitle_module= DB::table('t_ref_unit')->select('unit')->where('id',$unit_id)->first()->unit;
+        }
+
+        if(CRUDBooster::getCurrentMethod()=="getEdit" && in_array(CRUDBooster::myPrivilegeId(),array(5))){
+            $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));
+            $id = (int)(Request::segment(3+$adminPathSegments));
+
+            $this->page_title = "Ubah Pengguna";
+            $this->subtitle_module= DB::table('cms_users')->select('name')->where('id',$id)->first()->name;
+        }
 		$this->button_import 	   = FALSE;
-		$this->button_export 	   = FALSE;
+        $this->button_export 	   = FALSE;
+        $this->button_show         = TRUE;
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
@@ -25,37 +45,45 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         $this->col[] = array("label"=>"Email","name"=>"email");
 		$this->col[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","join"=>"cms_privileges,name");
         $this->col[] = array("label"=>"Photo","name"=>"photo","image"=>1);
-        $this->col[] = array("label"=>"Kementerian / Lembaga", "name"=>"id_kode_unit","join"=>"t_ref_unit,unit");
-		$this->col[] = array("label"=>"Login di","name"=>"ip_address_login");
+        if(in_array(CRUDBooster::myPrivilegeId(),array(1,3))){
+            $this->col[] = array("label"=>"Kementerian / Lembaga", "name"=>"id_kode_unit","join"=>"t_ref_unit,unit");
+        }
+        $this->col[] = array("label"=>"Login di","name"=>"ip_address_login");
+
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
-		# START FORM DO NOT REMOVE THIS LINE
+        # START FORM DO NOT REMOVE THIS LINE
+
 		$this->form = array();
-        $this->form[] = array("label"=>"Nama","name"=>"name",'required'=>true,'validation'=>'required|alpha_spaces|min:3');
-		$this->form[] = array("label"=>"Username","name"=>"username",'required'=>true,'validation'=>'required|alpha_dash|min:3|unique:cms_users,username,'.CRUDBooster::getCurrentId());
-        $this->form[] = array("label"=>"Email","name"=>"email",'required'=>true,'type'=>'email','validation'=>'required|email|unique:cms_users,email,'.CRUDBooster::getCurrentId());
-        $this->form[] = array("label"=>"No.HP/Whatsapp","name"=>"hp","type"=>"text",'required'=>true,'validation'=>'required|numeric|unique:cms_users,hp,'.CRUDBooster::getCurrentId());
-        $this->form[] = array("label"=>"Foto","name"=>"photo","type"=>"upload","help"=>"Rekomendasi resolusinya 200x200px",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90,'user_id'=>'profpic','upload_encrypt'=>true);
-        if(!CRUDBooster::isSuperadmin()) {
-        $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_superadmin<>1 AND is_active<>0",'required'=>true);
-        }else{
+        $this->form[] = array("label"=>"Nama","name"=>"name",'required'=>true,'validation'=>'required|alpha_spaces|min:3',"placeholder"=>"Isi dengan nama lengkap");
+		$this->form[] = array("label"=>"Username","name"=>"username",'required'=>true,'validation'=>'required|alpha_dash|min:3|unique:cms_users,username,'.CRUDBooster::getCurrentId(),"placeholder"=>"Isi dengan username untuk login (tidak boleh ada spasi)");
+        $this->form[] = array("label"=>"Email","name"=>"email",'required'=>true,'type'=>'email','validation'=>'required|email|unique:cms_users,email,'.CRUDBooster::getCurrentId(),"placeholder"=>"Isi dengan alamat email yang valid dan belum pernah didaftarkan di situs ini");
+        $this->form[] = array("label"=>"No.HP/Whatsapp","name"=>"hp","type"=>"text",'required'=>true,'validation'=>'required|numeric',"placeholder"=>"Isi dengan no.HP atau no. Whatsapp yang aktif");
+        $this->form[] = array("label"=>"Foto","name"=>"photo","type"=>"upload","help"=>"Rekomendasi resolusi gambar adalah 200x200px (pixel) dan tidak lebih dari 1 Mb.",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90,'user_id'=>'profpic','upload_encrypt'=>true);
+        if(CRUDBooster::isSuperadmin()) {
         $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_active<>0",'required'=>true);
-        }
         $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"select2","datatable"=>"t_ref_unit,unit",'required'=>true);
-        $this->form[] = array("label"=>"Nama Unit","name"=>"eselon","type"=>"text","required"=>true,"validation"=>"required");
-        $this->form[] = array("label"=>"Jabatan","name"=>"jabatan","type"=>"text","required"=>true,"validation"=>"required");
-        if(CRUDBooster::getCurrentMethod()=="getAdd"){
-            $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password",'required'=>true,'validation'=>'confirmed|min:8|required',"help"=>"Password minimal 8 karakter");
-		    $this->form[] = array("label"=>"Konfirmasi Password",'required'=>true,"name"=>"password_confirmation","type"=>"password","help"=>"Ulangi Password di atas");
+        }else if(CRUDBooster::myPrivilegeId() == 3){
+        $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_superadmin<>1 AND is_active<>0",'required'=>true);
+        $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"select2","datatable"=>"t_ref_unit,unit",'required'=>true);
         }else{
-            $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password",'validation'=>'confirmed|min:8',"help"=>"Password minimal 8 karakter, biarkan kosong apabila tidak ada perubahan");
-		    $this->form[] = array("label"=>"Konfirmasi Password","name"=>"password_confirmation","type"=>"password","help"=>"Ulangi Password di atas, biarkan kosong apabila tidak ada perubahan");
+            $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"hidden","value"=>6);
+            $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"hidden","value"=>$unit_id);
+        }
+        $this->form[] = array("label"=>"Nama Unit","name"=>"eselon","type"=>"text","required"=>true,"validation"=>"required","placeholder"=>"Isi dengan nama unit Eselon II atau III");
+        $this->form[] = array("label"=>"Jabatan","name"=>"jabatan","type"=>"text","required"=>true,"validation"=>"required","placeholder"=>"Isi dengan jabatan saat ini");
+        if(CRUDBooster::getCurrentMethod()=="getAdd"){
+            $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password",'required'=>true,'validation'=>'confirmed|min:8|required',"placeholder"=>"Password minimal 8 karakter");
+		    $this->form[] = array("label"=>"Konfirmasi Password",'required'=>true,"name"=>"password_confirmation","type"=>"password","placeholder"=>"Ulangi Password di atas");
+        }else{
+            $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password",'validation'=>'confirmed|min:8',"placeholder"=>"Password minimal 8 karakter, biarkan kosong apabila tidak ada perubahan");
+		    $this->form[] = array("label"=>"Konfirmasi Password","name"=>"password_confirmation","type"=>"password","placeholder"=>"Ulangi Password di atas, biarkan kosong apabila tidak ada perubahan");
         }
 
         # END FORM DO NOT REMOVE THIS LINE
 
-        $this->addaction[] = ['label'=>'Log Out','url'=>CRUDBooster::mainpath('set-status/logout/[id]'),'icon'=>'fa fa-lock','color'=>'danger','showIf'=>"[ip_address_login] != ''"];
+        $this->addaction[] = ['label'=>'','title'=>'Paksa Log Out','url'=>CRUDBooster::mainpath('set-status/logout/[id]'),'icon'=>'fa fa-lock','color'=>'danger','showIf'=>"[ip_address_login] != ''"];
 
 
 	}
@@ -66,11 +94,12 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->button_cancel  = FALSE;
 		$this->button_show    = FALSE;
 		$this->button_add     = FALSE;
-		$this->button_delete  = FALSE;
-		$this->hide_form 	  = ['id_cms_privileges','id_kode_unit'];
+        $this->button_delete  = FALSE;
 
-		$data['page_title'] = trans("crudbooster.label_button_profile");
+		$this->hide_form 	  = ['id_cms_privileges','id_kode_unit'];
+        $data['page_title'] = trans("crudbooster.label_button_profile");
 		$data['row']        = CRUDBooster::first('cms_users',CRUDBooster::myId());
+        $this->subtitle_module = $data['row']->name;
 		$this->cbView('crudbooster::default.form',$data);
 	}
 	public function hook_before_edit(&$postdata,$id) {
@@ -101,6 +130,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 
             }
         }
+
 	}
 	public function hook_before_add(&$postdata) {
         unset($postdata['password_confirmation']);
@@ -143,10 +173,14 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 
        }
        if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3) { // This allows the SuperAdmin to still see himself in the list
+        $unit_id = (int)(DB::table('cms_users')->select('id_kode_unit')->where('id',CRUDBooster::myId())->first())->id_kode_unit;
 
-        $query->where('cms_users.id_cms_privileges', '<>', '3'); // Adds the restriction
+        $query->whereNotIn('cms_users.id_cms_privileges', [2,3,4])->where('cms_users.id_kode_unit',$unit_id)->where('cms_users.id','<>',CRUDBooster::myId()); // Adds the restriction
 
     }
 
+
+
    }
+
 }

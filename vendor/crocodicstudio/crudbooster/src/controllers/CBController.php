@@ -79,7 +79,7 @@ class CBController extends Controller
 
     public $button_add = true;
 
-    public $label_add_button = '';
+    public $label_add_button;
 
     public $button_delete = true;
 
@@ -130,6 +130,8 @@ class CBController extends Controller
     public $index_return = false; //for export
 
     public $sidebar_mode = 'normal';
+    public $subtitle_module;
+    public $page_title;
 
     public function cbLoader()
     {
@@ -180,6 +182,8 @@ class CBController extends Controller
         $this->data['script_js'] = $this->script_js;
         $this->data['style_css'] = $this->style_css;
         $this->data['sub_module'] = $this->sub_module;
+        $this->data['subtitle_module'] = $this->subtitle_module;
+        $this->data['page_title'] = $this->page_title;
         $this->data['parent_field'] = (g('parent_field')) ?: $this->parent_field;
         $this->data['parent_id'] = (g('parent_id')) ?: $this->parent_id;
 
@@ -524,6 +528,7 @@ class CBController extends Controller
                 $table_parent = CRUDBooster::parseSqlTable($this->table)['table'];
                 $addaction[] = [
                     'label' => $s['label'],
+
                     'icon' => $s['button_icon'],
                     'url' => CRUDBooster::adminPath($s['path']).'?return_url='.urlencode(Request::fullUrl()).'&parent_table='.$table_parent.'&parent_columns='.$s['parent_columns'].'&parent_columns_alias='.$s['parent_columns_alias'].'&parent_id=['.(! isset($s['custom_parent_id']) ? "id" : $s['custom_parent_id']).']&foreign_key='.$s['foreign_key'].'&label='.urlencode($s['label']),
                     'color' => $s['button_color'],
@@ -985,7 +990,7 @@ class CBController extends Controller
         if ($validator->fails()) {
             $message = $validator->messages();
             $message_all = $message->all();
-           
+
 
             if (Request::ajax()) {
                 $res = response()->json([
@@ -1139,7 +1144,7 @@ class CBController extends Controller
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
 
-        $page_title = trans("crudbooster.add_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name]);
+        $page_title = $this->page_title?:trans("crudbooster.add_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name]);
         $page_menu = Route::getCurrentRoute()->getActionName();
         $command = 'add';
 
@@ -1278,7 +1283,7 @@ class CBController extends Controller
         }
 
         $page_menu = Route::getCurrentRoute()->getActionName();
-        $page_title = trans("crudbooster.edit_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name, 'name' => $row->{$this->title_field}]);
+        $page_title = $this->page_title?:trans("crudbooster.edit_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name, 'name' => $row->{$this->title_field}]);
         $command = 'edit';
         Session::put('current_row_id', $id);
 

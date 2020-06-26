@@ -137,10 +137,22 @@
             ?>
             @if($module)
                 <h1>
-                    <i class='{{$module->icon}}'></i> {{($page_title)?:$module->name}} &nbsp;&nbsp;
-
+                    <i class='{{$module->icon}}'></i>
+                    @if($subtitle_module && $page_title)
+                        <span>{{$page_title}} &colon; {{$subtitle_module}}</span>
+                    @elseif($subtitle_module)
+                        <span>{{$module->name}} &colon; {{$subtitle_module}}</span>
+                    @else
+                        <span>{{($page_title)?$page_title:$module->name}}</span>
+                    @endif
+                </h1>
                     <!--START BUTTON -->
-
+                <div class="row">
+                    &nbsp;
+                </div>
+                <div class="row">
+                <div class="col-md-12">
+                <div class="pull-right">
                     @if(CRUDBooster::getCurrentMethod() == 'getIndex')
                         @if($button_show)
                             <a href="{{ CRUDBooster::mainpath().'?'.http_build_query(Request::all()) }}" id='btn_show_data' class="btn btn-sm btn-primary"
@@ -188,8 +200,11 @@
                             </a>
                     @endforeach
                 @endif
+            </div>
+            </div>
+            </div>
                 <!-- END BUTTON -->
-                </h1>
+
 
 
                 <!--<ol class="breadcrumb">

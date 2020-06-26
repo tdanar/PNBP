@@ -1405,6 +1405,7 @@ class CRUDBooster
         $button_bulk_action = 'TRUE';
         $global_privilege = 'FALSE';
 
+
         $php = '
 <?php namespace App\Http\Controllers;
 
@@ -1426,7 +1427,6 @@ class CRUDBooster
 			$this->button_table_action = '.$button_table_action.';
 			$this->button_action_style = "'.$button_action_style.'";
             $this->button_add          = '.$button_add.';
-            $this->label_add_button    = '.$label_add_button.';
 			$this->button_delete       = '.$button_delete.';
 			$this->button_edit         = '.$button_edit.';
 			$this->button_detail       = '.$button_detail.';

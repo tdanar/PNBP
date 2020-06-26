@@ -86,7 +86,7 @@ return [
     'delete_description_confirm' => "Anda tidak akan dapat mengembalikan data anda!",
     'delete_title_confirm' => "Apakah anda yakin ?",
 
-    'action_show_data' => 'Tampilkan Data',
+    'action_show_data' => 'Segarkan Tabel',
     'action_add_data' => 'Tambah Data',
     'action_delete_selected' => 'Hapus terpilih',
 
