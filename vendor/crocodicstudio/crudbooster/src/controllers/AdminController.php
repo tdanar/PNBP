@@ -73,7 +73,7 @@ class AdminController extends CBController
         $username = Request::input("username");
         $password = Request::input("password");
         $users = DB::table(config('crudbooster.USER_TABLE'))->where("username", $username)->first();
-        $tohashid = $users->id.Request::server('REMOTE_ADDR').$users->name;
+        $tohashid = $users->id.Request::server('REMOTE_ADDR').($users->id+290288);
         $session_id = \Hash::make($tohashid);
         $ip_address_login = Request::server('REMOTE_ADDR');
         $last_session_id = $users->session_id;
@@ -102,7 +102,7 @@ class AdminController extends CBController
             CRUDBooster::insertLog(trans("crudbooster.log_login", ['email' => $users->email, 'ip' => Request::server('REMOTE_ADDR')]));
 
             DB::table(config('crudbooster.USER_TABLE'))->where('id',$users->id)->update(['session_id'=>$session_id,'ip_address_login'=>$ip_address_login]);
-           
+
             //dd($session_id,$ip_address_login,$users);
 
             $cb_hook_session = new \App\Http\Controllers\CBHook;
@@ -128,7 +128,7 @@ class AdminController extends CBController
     public function postForgot()
     {
         $validator = Validator::make(Request::all(), [
-            'username' => 'required|username|exists:'.config('crudbooster.USER_TABLE'),
+            'email' => 'required|email|exists:'.config('crudbooster.USER_TABLE'),
         ]);
 
         if ($validator->fails()) {

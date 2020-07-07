@@ -33,7 +33,8 @@
 					</div>
 					<div class="clear"></div>
 				</div>
-			</div>
+            </div>
+
 			<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -45,7 +46,7 @@
 
 </script>
 
-    <!-- Star javascript Home -->
+    <!-- Start javascript Home -->
     <script type="text/javascript" src="https://unpkg.com/popper.js@latest/dist/umd/popper.js"></script>
     <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
         <script type="text/javascript" src="/scripts/jquery.min.js"></script>
@@ -63,6 +64,50 @@
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
         <!-- AdminLTE App -->
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/dist/js/app.js') }}" type="text/javascript"></script>
+<!--BOOTSTRAP DATEPICKER-->
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+<link rel="stylesheet" href="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datepicker/datepicker3.css') }}">
+
+<!--BOOTSTRAP DATERANGEPICKER-->
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/daterangepicker/moment.min.js') }}"></script>
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<link rel="stylesheet" href="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/daterangepicker/daterangepicker-bs3.css') }}">
+
+<!-- Bootstrap time Picker -->
+<link rel="stylesheet" href="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/timepicker/bootstrap-timepicker.min.css') }}">
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+
+<link rel='stylesheet' href='{{ asset("vendor/crudbooster/assets/lightbox/dist/css/lightbox.min.css") }}'/>
+<script src="{{ asset('vendor/crudbooster/assets/lightbox/dist/js/lightbox.min.js') }}"></script>
+
+<!--SWEET ALERT-->
+<script src="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.min.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.css')}}">
+
+<!--MONEY FORMAT-->
+<script src="{{asset('vendor/crudbooster/jquery.price_format.2.0.min.js')}}"></script>
+
+<!--DATATABLE-->
+<link rel="stylesheet" href="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/dataTables.bootstrap.css')}}">
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
+
+<script>
+    var ASSET_URL = "{{asset('/')}}";
+    var APP_NAME = "{{Session::get('appname')}}";
+    var ADMIN_PATH = '{{url(config("crudbooster.ADMIN_PATH")) }}';
+    var NOTIFICATION_JSON = "{{route('NotificationsControllerGetLatestJson')}}";
+    var NOTIFICATION_INDEX = "{{route('NotificationsControllerGetIndex')}}";
+
+    var NOTIFICATION_YOU_HAVE = "{{trans('crudbooster.notification_you_have')}}";
+    var NOTIFICATION_NOTIFICATIONS = "{{trans('crudbooster.notification_notification')}}";
+    var NOTIFICATION_NEW = "{{trans('crudbooster.notification_new')}}";
+
+    $(function () {
+        $('.datatables-simple').DataTable();
+    })
+</script>
+<script type="text/javascript" src="{{asset('vendor/crudbooster/assets/js/main.js').'?r='.time()}}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("#my-menu").mmenu({
@@ -95,4 +140,6 @@
                 })
     </script>
 
+
 </footer>
+

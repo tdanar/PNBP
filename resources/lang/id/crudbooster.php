@@ -7,7 +7,7 @@ return [
     'page_title_forgot' => 'Lupa Password ?',
     'forgot_message' => 'Masukkan email terdaftar anda untuk meminta password ulang.',
     "forgot_text_try_again" => "Cobalah login kembali ?",
-    'text_no_notification' => "Anda mempunya 0 notifikasi",
+    'text_no_notification' => "Anda memiliki 0 notifikasi",
     'text_view_all_notification' => 'Lihat Semua',
     'label_button_profile' => "Profil",
     'filter_dialog_title' => 'Pengurutan dan Filterisasi',

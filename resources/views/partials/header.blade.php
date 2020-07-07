@@ -13,9 +13,11 @@
 								<div class="right-top">
                                     {{-- <span><font> </font>134</span> --}}
                                     @if ( Session::get('message') != '' )
-                                    <span>
-                                        {{ Session::get('message') }} | <a href="#" data-toggle="popover-login" data-content="<div class='holds-the-iframe'><iframe src='/ma/login' style='height:600px;width:450px;' frameborder='0'></iframe></div>">LOGIN</a>
-                                    </span>
+                                    <ul class="nav navbar-nav">
+                                        <li class="alert alert-warning alert-dismissable">{{ Session::get('message') }}&nbsp;<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                          </li>
+                                        <li class="dropdown user user-menu" ><a href="#" class="btn btn-primary" data-toggle="popover-login" data-content="<div class='holds-the-iframe'><iframe src='/ma/login' style='height:600px;width:450px;' frameborder='0'></iframe></div>">LOGIN</a></li>
+                                    </ul>
                                     @elseif (!empty($id))
                                     <ul class="nav navbar-nav">
                                             <li class="dropdown user user-menu">
@@ -23,13 +25,13 @@
                                                             <!-- The user image in the navbar-->
                                                             <img src="{{CRUDBooster::myPhoto()}}" class="user-image" alt="User Image">
                                                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                                            <span class="hidden-xs">{{CRUDBooster::myName()}}</span>
+                                                            <span class="hidden-xs">{{ str_limit(CRUDBooster::myUnit(), $limit = 50, $end = '...') }}</span>
                                                           </a>
-                                                          <ul class="dropdown-menu">
+                                                          <ul class="dropdown-menu dropdown-menu-right">
                                                                 <li class="user-header">
                                                                     <img src="{{CRUDBooster::myPhoto()}}" class="img-circle" alt="User Image">
-                                                                    <p>{{CRUDBooster::myName()}}
-                                                                        <small>{{CRUDBooster::myUnit()}}</small>
+                                                                    <p><small>{{CRUDBooster::myUnit()}}</small>
+                                                                        {{CRUDBooster::myName()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="user-footer">
@@ -42,9 +44,36 @@
                                                                 </li>
                                                           </ul>
                                             </li>
+                                            <li class="dropdown notifications-menu">
+                                                <a href="#" class="btn-flat btn-default dropdown-toggle" data-toggle="dropdown" title='Notifications' aria-expanded="false">
+                                                {{CRUDBooster::MyPrivilegeName()}} &nbsp;<i id='icon_notification' class="far fa-bell"></i>
+                                                    <span id='notification_count' class="label label-danger" style="display:none">0</span>
+                                                </a>
+                                                <ul id='list_notifications' class="dropdown-menu">
+                                                    <li class="header">{{trans("crudbooster.text_no_notification")}}</li>
+                                                    <li>
+                                                        <!-- inner menu: contains the actual data -->
+                                                        <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
+                                                            <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <em>{{trans("crudbooster.text_no_notification")}}</em>
+                                                                    </a>
+                                                                </li>
+
+                                                            </ul>
+                                                            <div class="slimScrollBar"
+                                                                style="width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 195.122px; background: rgb(0, 0, 0);"></div>
+                                                            <div class="slimScrollRail"
+                                                                style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="footer"><a href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
+                                                </ul>
+                                            </li>
                                         </ul>
 									@else
-									<a href="#" data-toggle="popover-login" data-content="<div class='holds-the-iframe'><iframe src='/ma/login' style='height:600px;width:450px;' frameborder='0'></iframe></div>">LOGIN</a>
+									<ul class="nav navbar-nav"><li class="dropdown user user-menu" ><a href="#" class="btn btn-primary" data-toggle="popover-login" data-content="<div class='holds-the-iframe'><iframe src='/ma/login' style='height:600px;width:450px;' frameborder='0'></iframe></div>">LOGIN</a></li></ul>
                                     @endif
 								</div>
 								<div class="clear"></div>

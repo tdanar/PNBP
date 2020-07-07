@@ -96,6 +96,14 @@
             display: block
         }
 
+        header .top-header .right-top a.btn-flat.dropdown-toggle{
+            color:rgb(0, 0, 0);
+            font-weight:bold;
+        }
+        header .top-header .right-top a:hover.btn-flat.dropdown-toggle{
+            color:#ffcb05;
+        }
+
         .holds-the-iframe {
                 background:url(/vendor/crudbooster/assets/lightbox/dist/images/loading.gif) center center no-repeat;
                 }

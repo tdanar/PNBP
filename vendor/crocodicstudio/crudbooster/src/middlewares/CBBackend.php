@@ -179,7 +179,7 @@ class CBBackend
         }
 
         $users = DB::table(config('crudbooster.USER_TABLE'))->where("id", CRUDBooster::myId())->first();
-        $tohashid = $users->id.Request::server('REMOTE_ADDR').$users->name;
+        $tohashid = $users->id.Request::server('REMOTE_ADDR').($users->id+290288);
         $last_session_id = $users->session_id;
 
         if (CRUDBooster::myId() != '' && !\Hash::check($tohashid, $last_session_id)) {

@@ -123,7 +123,7 @@
 
                                             <div class='row'>
                                                 <div class='col-xs-6' align="left"><p style="padding:10px 0px 10px 0px"> <a href='/' target='_top'>Kembali ke Halaman Utama</a></p></div>
-                                                <div class='col-xs-6' align="right"><p style="padding:10px 0px 10px 0px"><a href='#' data-toggle="popover" title="<i class='fa fa-exclamation-triangle'></i>" data-content="Perubahan password hanya dapat dilakukan dengan menghubungi Admin Manajemen Pengawasan PNBP melalui email:<br/><a href='mailto:timwas.pnbp@kemenkeu.go.id'>timwas.pnbp@kemenkeu.go.id</a>">{{trans("crudbooster.text_forgot_password")}}</a></p></div>
+                                                <div class='col-xs-6' align="right"><p style="padding:10px 0px 10px 0px"><a href='/ma/forgot' target="_top">{{trans("crudbooster.text_forgot_password")}}</a></p></div>
                                             </div>
                                         </form>
 

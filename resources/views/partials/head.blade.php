@@ -67,6 +67,27 @@
                 padding: 0 0 0 0;
             }
 
+            header .top-header .right-top a.btn-flat.dropdown-toggle{
+            color:rgb(0, 0, 0);
+            font-weight:bold;
+            }
+            header .top-header .right-top a:hover.btn-flat.dropdown-toggle{
+                color:#ffcb05;
+            }
+
+            ul.nav.navbar-nav li.dropdown.user.user-menu a.btn.btn-primary{
+                color: #ffffff;
+            }
+            ul.nav.navbar-nav li.dropdown.user.user-menu a:hover.btn.btn-primary{
+                color: #ffcb05;
+                background-color: #ffffff;
+            }
+
+            ul.nav.navbar-nav li.dropdown.user.user-menu a:focus.btn.btn-primary{
+                
+                background-color: #3490dc;
+            }
+
             .form-group > label:first-child {
                 display: block
             }

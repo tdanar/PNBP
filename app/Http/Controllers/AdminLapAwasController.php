@@ -31,7 +31,7 @@ use Illuminate\Http\Request as Rikues;
 			$this->button_bulk_action = true;
             $this->button_action_style = "button_icon";
 			$this->button_action_width = "3%";
-			$this->button_add = true;
+			$this->button_add = false;
 			$this->button_edit = true;
 			$this->button_delete = true;
 			$this->button_detail = true;
@@ -1067,7 +1067,7 @@ use Illuminate\Http\Request as Rikues;
                     $section->addText(' ', array('size' => 20));
                     $section->addText($judulIkhtisar,null,paragraphOptions(''));
                     $html = '<ol>';
-                    //dd($detail);
+
                     foreach ($detail->unique('id_temuan') as $val){
 
                             $html .= '<li><strong>Judul Temuan </strong><br/>'.$val->judul_temuan.'<br/>('.$val->jenis_temuan.')
