@@ -126,6 +126,7 @@ return [
          */
         Mews\Captcha\CaptchaServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+        Reliese\Coders\CodersServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
         Swap\Laravel\SwapServiceProvider::class,

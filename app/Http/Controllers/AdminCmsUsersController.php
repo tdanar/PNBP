@@ -68,7 +68,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_superadmin<>1 AND is_active<>0",'required'=>true);
         $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"select2","datatable"=>"t_ref_unit,unit",'required'=>true);
         }else{
-            $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"hidden","value"=>6);
+            $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"hidden","value"=>2);
             $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"hidden","value"=>$unit_id);
         }
         $this->form[] = array("label"=>"Nama Unit","name"=>"eselon","type"=>"text","required"=>true,"validation"=>"required","placeholder"=>"Isi dengan nama unit Eselon II atau III");
@@ -82,8 +82,9 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         }
 
         # END FORM DO NOT REMOVE THIS LINE
-
-        $this->addaction[] = ['label'=>'','title'=>'Paksa Log Out','url'=>CRUDBooster::mainpath('set-status/logout/[id]'),'icon'=>'fa fa-lock','color'=>'danger','showIf'=>"[ip_address_login] != ''"];
+        if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
+            $this->addaction[] = ['label'=>'','title'=>'Paksa Log Out','url'=>CRUDBooster::mainpath('set-status/logout/[id]'),'icon'=>'fa fa-lock','color'=>'danger','showIf'=>"[ip_address_login] != ''"];
+        }
 
 
 	}
@@ -175,7 +176,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
        if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3) { // This allows the SuperAdmin to still see himself in the list
         $unit_id = (int)(DB::table('cms_users')->select('id_kode_unit')->where('id',CRUDBooster::myId())->first())->id_kode_unit;
 
-        $query->whereNotIn('cms_users.id_cms_privileges', [2,3,4])->where('cms_users.id_kode_unit',$unit_id)->where('cms_users.id','<>',CRUDBooster::myId()); // Adds the restriction
+        $query->whereNotIn('cms_users.id_cms_privileges', [3,4])->where('cms_users.id_kode_unit',$unit_id)->where('cms_users.id','<>',CRUDBooster::myId()); // Adds the restriction
 
     }
 

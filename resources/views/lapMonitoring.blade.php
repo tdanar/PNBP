@@ -297,13 +297,25 @@ $(document).ready(function() {
         <td>{{$row->jml_pengawasan}}</td>
         <td>{{$row->jml_temuan}}</td>
         <td>{{$row->jml_rekomendasi}}</td>
-        <td><a class="btn btn-primary" href="/ma/monitoring/dlPDF/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"><i class="fa fa-file-pdf"></i> Download PDF</a>
+        <td>
+        @if (in_array(CRUDBooster::myPrivilegeId(),array(1,3,4)))
+        <a class="btn btn-primary" href="/ma/monitoring/dlPDF/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"><i class="fa fa-file-pdf"></i> Download PDF</a>
         <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content"><div class="text-center">Memproses...</div>
                         </div>
                     </div>
                 </div>
+        @elseif(CRUDBooster::myPrivilegeId() == 5 && CRUDBooster::myUnit() == $row->unit)
+        <a class="btn btn-primary" href="/ma/monitoring/dlPDF/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"><i class="fa fa-file-pdf"></i> Download PDF</a>
+        <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content"><div class="text-center">Memproses...</div>
+                        </div>
+                    </div>
+                </div>
+        @else
+        @endif
         </td>
         </tr>
 

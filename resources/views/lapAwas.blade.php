@@ -529,70 +529,10 @@ $(document).ready(function() {
         <th style="width:50px">Aksi</th>
     </tr>
   </thead>
-  {{--<tbody>
-    @foreach($result as $row)
-      <tr>
-         <td width="1%" align="center"></td>
-        <td>{{$row->tahun}}</td>
-        <td data-sort="{{strtotime($row->tanggal)}}">{{date('d M Y', strtotime($row->tanggal))}}</td>
-        <td>{{$row->no_lap}}</td>
-        <td>{{$row->nama_giat_was}}</td>
-        <td>{{$row->judul}}
-            <br/>
-            @if(!empty($row->judul))
-            @php $mydata = '<div class="row">
-                <div class="col-xs-3 text-right"><b>Kondisi:</b></div>
-                <div class="col-xs-9">'.$row->kondisi.'</div>
-            </div>
-            <div class="row">
-                <div class="col-xs-3 text-right"><b>Sebab:</b></div>
-                    <div class="col-xs-9">'.$row->sebab.'</div>
-            </div>
-            <div class="row">
-                <div class="col-xs-3 text-right"><b>Akibat:</b></div>
-                    <div class="col-xs-9">'.$row->akibat.'</div>
-            </div>';
-            @endphp
-            <br/><center>
-            <a class="btn btn-xs btn-success" href="javascript:void(0)" role="button" data-toggle="popover2" title="Detil" data-content=''><i class="fa fa-angle-down"></i>
-            </a>
-            </center>
-            @endif
-        </td>
-        <td>{{$row->KodeMatauang.' '.number_format($row->nilai_uang,2,",",".")}}</td>
-        <td>{{$row->rekomendasi}}</td>
-        <td>{{$row->status_tl}}</td>
-        <td width="20%">
-          <!-- To make sure we have read access, wee need to validate the privilege -->
-          <div class="btn-toolbar" role="toolbar">
-          <div class="btn-group btn-group-xs" role="group">
-          @if(CRUDBooster::isUpdate() && $button_edit)
-          <a class='btn btn-success' href='{{CRUDBooster::mainpath("edit/$row->id")}}' role="button" data-toggle="popover" title="Ubah Laporan" data-content="Silahkan mengubah identitas laporan No. {{$row->no_lap}} di sini."><i class="fa fa-pencil"></i></a>
-          @endif
-          @if(CRUDBooster::isView() && $button_edit)
-          <a class="btn btn-primary" href="{{CRUDBooster::adminPath($slug='lap_awas_temuan').'?return_url='.urlencode(Request::fullUrl()).'&parent_table=t_lap_awas&parent_columns=nama_giat_was,no_lap&parent_columns_alias=Nama Kegiatan,No. Lap&parent_id='.$row->id.'&foreign_key=id_lap&label=Temuan'}}" role="button" data-toggle="popover" title="Tambah/Hapus Temuan" data-content="Silahkan mengubah temuan-temuan laporan No. {{$row->no_lap}} di sini."><i class="fa fa-bars"></i></a>
 
-          @endif
-          @if(CRUDBooster::isView() && $button_edit)
-          <a class="btn btn-warning" href="{{CRUDBooster::adminPath($slug='lap_awas_rekomend').'?return_url='.urlencode(Request::fullUrl()).'&parent_table=t_lap_awas_temuan&parent_columns=judul&parent_columns_alias=Judul Temuan&parent_id='.$row->id_temuan.'&foreign_key=id_temuan&label=Rekomendasi'}}" role="button" data-toggle="popover" title="Tambah/Hapus Rekomendasi" data-content="Silahkan mengubah rekomendasi-rekomendasi laporan No. {{$row->no_lap}} di sini."><i class="fa fa-bars"></i></a>
-          @endif
-
-          @if(CRUDBooster::isDelete() && $button_edit && $row->id_status_kirim === 1)
-          <a class='btn btn-danger' href='#' onclick='{{CRUDBooster::deleteConfirm(CRUDBooster::mainpath("delete/$row->id"))}}' role="button" data-toggle="popover" title="Hapus Laporan" data-content="Anda dapat menghapus laporan No. {{$row->no_lap}} di sini. Penghapusan ini tidak dapat dikembalikan."><i class="fa fa-trash"></i></a>
-          @endif
-
-          @if(CRUDBooster::isView() && $button_edit)
-          <a class="btn btn-success" href="#" role="button" data-toggle="popover" title="Unduh Excel Laporan" data-content="Silahkan mengunduh laporan No. {{$row->no_lap}} di sini."><i class="fa fa-file-excel-o"></i></a>
-          @endif
-
-        </div>
-        </div>
-        <span style="opacity: 0.0;">{{$row->id_temuan}}</span>
-        </td>
-       </tr>
-    @endforeach
-  </tbody>--}}
 </table>
+
+
 
 
 

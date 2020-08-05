@@ -33,6 +33,8 @@ Route::group(['middleware' => ['web','XSS'], 'prefix' => config('crudbooster.ADM
     Route::get('lock-screen', ['uses' => 'AdminController@getLockscreen', 'as' => 'getLockScreen']);
     Route::post('forgot', ['uses' => 'AdminController@postForgot', 'as' => 'postForgot']);
     Route::get('forgot', ['uses' => 'AdminController@getForgot', 'as' => 'getForgot']);
+    Route::post('resetPassword', ['uses' => 'AdminController@postResetPass', 'as' => 'postResetPass']);
+    Route::get('resetPassword/{email?}/{token?}', ['uses' => 'AdminController@getResetPass', 'as' => 'getResetPass']);
     Route::post('register', ['uses' => 'AdminController@postRegister', 'as' => 'postRegister']);
     Route::get('register', ['uses' => 'AdminController@getRegister', 'as' => 'getRegister']);
     Route::get('logout', ['uses' => 'AdminController@getLogout', 'as' => 'getLogout']);

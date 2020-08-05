@@ -278,7 +278,7 @@ use Illuminate\Http\Request as Rikues;
             $data = [];
             $data['page_title'] = 'Monitoring Pengawasan PNBP';
             $data['input'] = collect($input);
-            if(CRUDBooster::myPrivilegeId() == 4){
+            if(in_array(CRUDBooster::myPrivilegeId(),array(4))){
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_ref_unit`.`unit`,
                 `t_ref_unit`.`id` AS `id_unit`,
                 `t_lap_awas`.`tahun`,
@@ -549,7 +549,6 @@ use Illuminate\Http\Request as Rikues;
                 ->where('t_ref_unit.id',$id_unit)
                 ->where('id_status_kirim',2)
                 ->get();
-
             }else{
                 $data['data'] = DB::table('t_lap_awas')
                 ->selectRaw('t_lap_awas.*, t_ref_unit.unit')

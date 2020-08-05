@@ -88,7 +88,7 @@
                                     <div class="login-box-body">
 
                                         @if ( Session::get('message') != '' )
-                                            <div class='alert alert-warning'>
+                                    <div class='alert alert-{{ Session::get('message_type') ? Session::get('message_type'):'warning' }}'>
                                                 {{ Session::get('message') }}
                                             </div>
                                         @endif

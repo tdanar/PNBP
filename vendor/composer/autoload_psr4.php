@@ -43,6 +43,7 @@ return array(
     'Swap\\Laravel\\' => array($vendorDir . '/florianv/laravel-swap/src'),
     'Swap\\' => array($vendorDir . '/florianv/swap/src'),
     'SuperClosure\\' => array($vendorDir . '/jeremeamia/superclosure/src'),
+    'Reliese\\' => array($vendorDir . '/reliese/laravel/src'),
     'Rap2hpoutre\\FastExcel\\' => array($vendorDir . '/rap2hpoutre/fast-excel/src'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'Psy\\' => array($vendorDir . '/psy/psysh/src'),

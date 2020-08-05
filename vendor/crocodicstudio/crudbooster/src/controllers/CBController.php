@@ -1139,7 +1139,7 @@ class CBController extends Controller
     public function getAdd()
     {
         $this->cbLoader();
-        if (! CRUDBooster::isCreate() && $this->global_privilege == false || $this->button_add == false) {
+        if (! CRUDBooster::isCreate() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }

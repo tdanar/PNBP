@@ -2,11 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{trans("crudbooster.page_title_forgot")}} : {{$appname}}</title>
-    <meta name='generator' content='CRUDBooster.com'/>
+    <title>{{trans("crudbooster.page_title_forgot")}} {{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Manajemen Pengawasan PNBP" }}</title>
     <meta name='robots' content='noindex,nofollow'/>
     <link rel="shortcut icon"
-          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
+          href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('media/favicon.ico') }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.2 -->
     <link href="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
@@ -37,6 +36,21 @@
             color: {{ CRUDBooster::getSetting("login_font_color")?:'#666666' }}  !important;
         }
     </style>
+    <script>
+            function refreshCaptcha(){
+                $.ajax({
+                url: "/refereshcapcha",
+                type: 'GET',
+                  dataType: 'html',
+                  success: function(json) {
+                    $('.refereshrecapcha').html(json);
+                  },
+                  error: function(data) {
+                    alert('Coba Lagi.');
+                  }
+                });
+                }
+        </script>
 </head>
 <body class="login-page">
 <div class="login-box">
@@ -50,7 +64,7 @@
     <div class="login-box-body">
 
         @if ( Session::get('message') != '' )
-            <div class='alert alert-warning'>
+        <div class='alert alert-{{ Session::get('message_type') ? Session::get('message_type'):'warning' }}'>
                 {{ Session::get('message') }}
             </div>
         @endif
@@ -62,6 +76,17 @@
                 <input type="email" class="form-control" name='email' required placeholder="Email Address"/>
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
+            <center>
+                                            <div class="form-inline">
+                                                <div class="form-group refereshrecapcha">
+                                                    {!! captcha_img('flat') !!}
+                                                </div>
+                                                <div class="form-group"><a href="javascript:void(0)" class="btn btn-default" onclick="refreshCaptcha()"><i class="fa fa-refresh"></i></a></div>
+                                            </div>
+
+
+                                            <p><input autocomplete='off' class="form-control" type="text" name="captcha"></p>
+                                            </center>
             <div class="row">
                 <div class="col-xs-8">
                     {{trans("crudbooster.forgot_text_try_again")}} <a href='{{route("getLogin")}}'>{{trans("crudbooster.click_here")}}</a>
@@ -73,7 +98,6 @@
         </form>
 
         <br/>
-        <!--a href="#">I forgot my password</a-->
 
     </div><!-- /.login-box-body -->
 </div><!-- /.login-box -->

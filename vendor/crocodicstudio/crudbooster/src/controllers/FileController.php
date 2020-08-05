@@ -6,6 +6,7 @@ use Request;
 use Response;
 use Storage;
 use CRUDBooster;
+use DB;
 
 class FileController extends Controller
 {
@@ -112,6 +113,8 @@ class FileController extends Controller
                 return Response::make($imgRaw, 200, $headers);
             }
         } else {
+            $unit_id = DB::table('cms_users')->where('id',intval($owner[2]))->first()->id_kode_unit;
+            
              if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4){
                 if (Request::get('download')) {
                 return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
@@ -125,7 +128,15 @@ class FileController extends Controller
                     } else {
                         return Response::file(storage_path('app/'.$fullFilePath), $headers);
                     }
-            }elseif($owner[2] == 'infografis'){
+                }elseif(CRUDBooster::myPrivilegeId() == 5 && CRUDBooster::myUnitId() == $unit_id){
+                    if (Request::get('download')) {
+                        return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
+
+                            } else {
+                                return Response::file(storage_path('app/'.$fullFilePath), $headers);
+                            }
+
+                }elseif($owner[2] == 'infografis'){
                 if (Request::get('download')) {
                     return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
 

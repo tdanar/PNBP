@@ -232,10 +232,11 @@
                 't_lap_awas.tahun' => 'tahun'
             ];
             $data['input'] = collect($input);
-            $data['tahunSelector'] = DB::table('t_lap_awas')->get();
-             if(CRUDBooster::myPrivilegeId() == 2){
+
+             if(in_array(CRUDBooster::myPrivilegeId(),array(2,5))){
                 $data['unit'] = CRUDBooster::myUnit();
                 //$data['idunit'] = CRUDBooster::myUnitId();
+                $data['tahunSelector'] = DB::table('t_lap_awas')->join('cms_users','cms_users.id','=','t_lap_awas.id_user')->where('cms_users.id_kode_unit',CRUDBooster::myUnitId())->get();
                 $data['result1'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
@@ -387,6 +388,7 @@
                                        ->groupBy('t_ref_matauang.kode')
                                        ->get();
              }else{
+                $data['tahunSelector'] = DB::table('t_lap_awas')->get();
                 $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
                                        ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
                                        ->where(

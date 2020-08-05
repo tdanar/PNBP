@@ -5,8 +5,8 @@ return [
     'text_forgot_password' => 'Lupa Password ?',
     'page_title_login' => 'Login Panel',
     'page_title_forgot' => 'Lupa Password ?',
-    'forgot_message' => 'Masukkan email terdaftar anda untuk meminta password ulang.',
-    "forgot_text_try_again" => "Cobalah login kembali ?",
+    'forgot_message' => 'Masukkan email yang sudah Anda daftarkan untuk me-reset password.',
+    "forgot_text_try_again" => "Coba login kembali ?",
     'text_no_notification' => "Anda memiliki 0 notifikasi",
     'text_view_all_notification' => 'Lihat Semua',
     'label_button_profile' => "Profil",
@@ -30,7 +30,7 @@ return [
     'text_loading' => 'Silahkan menunggu sebentar...',
 
     'message_after_logout' => 'Terima kasih, sampai jumpa lagi !',
-    'message_forgot_password' => 'Kami telah mengirimkan password baru ke email anda, silahkan cek di inbox atau spambox!',
+    'message_forgot_password' => 'Kami telah mengirimkan petunjuk me-reset password ke email Anda, silahkan cek di inbox atau spambox.',
 
     'page_not_found' => 'Oops! Halaman tidak ditemukan',
     'page_not_found_text' => 'Kami tidak dapat menemukan halaman yang anda cari.',

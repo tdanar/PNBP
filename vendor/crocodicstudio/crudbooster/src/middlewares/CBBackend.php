@@ -25,25 +25,40 @@ class CBBackend
         $admin_path = config('crudbooster.ADMIN_PATH') ?: 'admin';
         $data = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id`,
         `t_lap_awas`.`id_user`,
+        `t_ref_unit`.`unit`,
         `t_lap_awas`.`id_status_kirim`,
         `t_lap_awas_temuan`.`id` AS `id_temuan`,
         `t_lap_awas_rekomend`.`id` AS `id_rekomend`')->
+        leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
+        leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
         leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
         leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
         where('id_user',CRUDBooster::myId())->get();
+        $dataAppr = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id`,
+        `t_lap_awas`.`id_user`,
+        `t_ref_unit`.`unit`,
+        `cms_users`.`id_kode_unit`,
+        `t_lap_awas`.`id_status_kirim`,
+        `t_lap_awas_temuan`.`id` AS `id_temuan`,
+        `t_lap_awas_rekomend`.`id` AS `id_rekomend`')->
+        leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
+        leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
+        leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+        leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+        where('unit',CRUDBooster::myUnit())->get();
         $module = CRUDBooster::getCurrentModule()->path;
         $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));
         $extModule = Request::segment(1 + $adminPathSegments);
         $extModCol = ['validasi','kirim'];
-        $extModCol3 = ['excel','batal'];
+        $extModCol3 = ['excel','word','batal'];
         $extModCol4 = [];
 
 
         $colModule = collect([
-            ['module' => 'lap_awas', 'key' => 'id'],
-            ['module' => 'lap_awas_temuan', 'key' => 'id_temuan'],
-            ['module' => 'lap_awas_rekomend', 'key' => 'id_rekomend'],
-            ['module' => 'monitoring', 'key' => 'id'],
+            ['module' => 'lap_awas', 'key' => 'id', 'key2' => 'unit'],
+            ['module' => 'lap_awas_temuan', 'key' => 'id_temuan', 'key2' => 'unit'],
+            ['module' => 'lap_awas_rekomend', 'key' => 'id_rekomend', 'key2' => 'unit'],
+            ['module' => 'monitoring', 'key' => 'id', 'key2' => 'unit'],
         ]);
         //dd($colModule->where('module',$module)->flatten(1)[0]);
 
@@ -51,6 +66,8 @@ class CBBackend
         if ($colModule->where('module',$module)->flatten(1)[0]) {
             $m = $colModule->where('module',$module)->flatten(1)[0];
             $k = $colModule->where('module',$module)->flatten(1)[1];
+            $k2 = $colModule->where('module',$module)->flatten(1)[2];
+
 
 
             if(CRUDBooster::getCurrentMethod() == 'getIndex'){
@@ -110,20 +127,33 @@ class CBBackend
             if(CRUDBooster::getCurrentMethod() == 'getDetail'){
 
                 $id = CRUDBooster::getCurrentId();
+
                 if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
-                    if($data->whereIn($k,$id)->isEmpty()){
+                    if(CRUDBooster::myPrivilegeId() == 5){
+                        if($dataAppr->whereIn($k,$id)->isEmpty()){
+                            abort(404);
+                        }
+                    }
+                    elseif($data->whereIn($k,$id)->isEmpty()){
                         abort(404);
                     }
+
                 }
 
             }
 
             if(CRUDBooster::getCurrentMethod() == 'getDlPDF'){
+                $id = CRUDBooster::getCurrentId();
+                $id_unit = substr($id,0,-1);
 
                 if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 4){
-
-                        abort(404);
-
+                    if(CRUDBooster::myPrivilegeId() == 5){
+                        if($dataAppr->whereIn('id_kode_unit',$id_unit)->isEmpty()){
+                            abort(404);
+                        }
+                    }else{
+                            abort(404);
+                    }
                 }
 
             }
@@ -154,7 +184,11 @@ class CBBackend
             $id = intval(Request::segment(3));
 
                 if(!CRUDBooster::isSuperadmin() && CRUDBooster::myPrivilegeId() != 3){
-                    if($data->whereIn('id',$id)->isEmpty()){
+                    if(CRUDBooster::myPrivilegeId() == 5){
+                        if($dataAppr->whereIn('id',$id)->isEmpty()){
+                            abort(404);
+                        }
+                    }elseif($data->whereIn('id',$id)->isEmpty()){
                         abort(404);
                     }
                 }
@@ -179,7 +213,8 @@ class CBBackend
         }
 
         $users = DB::table(config('crudbooster.USER_TABLE'))->where("id", CRUDBooster::myId())->first();
-        $tohashid = $users->id.Request::server('REMOTE_ADDR').($users->id+290288);
+        $ran_num = 290288;
+        $tohashid = $users->id.Request::server('REMOTE_ADDR').($users->id+$ran_num);
         $last_session_id = $users->session_id;
 
         if (CRUDBooster::myId() != '' && !\Hash::check($tohashid, $last_session_id)) {

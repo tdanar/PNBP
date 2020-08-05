@@ -8,14 +8,14 @@ class XSS
     public function handle(Request $request, Closure $next)
     {
         $input = $request->all();
-       if ($request->has('isi')){
+       if ($request->has('isi') || $request->has('content')){
             array_walk_recursive($input, function(&$input) {
                 $input = $input;
-            });         
-        }else{       
+            });
+        }else{
             array_walk_recursive($input, function(&$input) {
                 $input = strip_tags($input);
-            });    
+            });
         }
         $request->merge($input);
         return $next($request);
