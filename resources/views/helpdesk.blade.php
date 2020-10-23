@@ -3,7 +3,7 @@
 <div class="clear"></div>
 <div class="container">
 <div class="row">
-    <div class="col-sm-7"><h5><img src="https://cdn-image.bisnis.com/posts/2018/05/18/796752/gedung-kemenkeu.jpeg"/></h5><br/><h4>&nbsp;</h4></div>
+    <div class="col-sm-7"><h5><img src="https://www.kemenkeu.go.id/media/6010/defaut1.jpg"/></h5><br/><h4>&nbsp;</h4></div>
     <div class="col-sm-5">
 
             <h5><span style="font-size: 1.25em;">TIM MANAJEMEN PENGAWASAN PNBP</span><br/>
@@ -27,5 +27,13 @@
         </div>
     </div>
 </div>
+<script>var LHC_API = LHC_API||{};
+    LHC_API.args = {mode:'widget',lhc_base_url:'//localhost:8080/index.php/',wheight:450,wwidth:350,pheight:520,pwidth:500,domain:'localhost:8000',leaveamessage:true,check_messages:false,lang:'idn/',position_placement:'middle_right'};
+    (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.setAttribute('crossorigin','anonymous'); po.async = true;
+    var date = new Date();po.src = '//localhost:8080/design/defaulttheme/js/widgetv2/index.js?'+(""+date.getFullYear() + date.getMonth() + date.getDate());
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+    </script>
 </div>
 @endsection

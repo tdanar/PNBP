@@ -15,6 +15,7 @@
     return view('partials.header');
 }); */
 Route::get('/','homepageController@index')->name('home');
+Route::get('/lhc_web','lhc_webController@getLHC');
 Route::get('/header','homepageController@header');
 Route::get('/helpdesk','helpdeskController@index')->name('helpdesk');
 Route::get('/faq','faqController@index')->name('faq');

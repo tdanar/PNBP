@@ -56,14 +56,50 @@
 			$this->form[] = ['label'=>'Kodefikasi Temuan','name'=>'id_up','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_temuan,Deskripsi','datatable_where'=>'id_up is null'];
             $this->form[] = ['label'=>'','name'=>'id_up2','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_temuan,Deskripsi','datatable_where'=>'id_up2 = 0','parent_select'=>'id_up'];
 			$this->form[] = ['label'=>'','name'=>'id_kod_temuan','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_temuan,Deskripsi','datatable_where'=>'id_up is not null and id_up2 != 0','parent_select'=>'id_up2'];
-            $this->form[] = ['label'=>'Kondisi','name'=>'kondisi','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Mata Uang','name'=>'id_mata_uang','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_matauang,kode'];
-			$this->form[] = ['label'=>'Nilai Uang','name'=>'nilai_uang','type'=>'money','validation'=>'required','width'=>'col-sm-10','decimals'=>'0'];
-            $this->form[] = ['label'=>'Lokasi','name'=>'lokasi','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-            $this->form[] = ['label'=>'Sebab','name'=>'sebab','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
-            $this->form[] = ['label'=>'Kodefikasi Sebab','name'=>'Id_up_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','datatable_where'=>'Id_up_sebab is null'];
-            $this->form[] = ['label'=>'','name'=>'id_kod_sebab','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','parent_select'=>'Id_up_sebab'];
-			$this->form[] = ['label'=>'Akibat','name'=>'akibat','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Jenis PNBP','name'=>'id_jenis_pnbp','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_jenis_pnbp,jenis_pnbp'];
+			$this->form[] = ['label'=>'Kondisi','name'=>'kondisi','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Lokasi','name'=>'lokasi','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			if(CRUDBooster::getCurrentMethod()=="getAdd"){
+				$parent_id = (int)Request::all()['parent_id'];
+				$id_jenis = DB::table('t_lap_awas')->select('id_jenis_was')->where('id',$parent_id)->first()->id_jenis_was;
+				
+				if($id_jenis == 1){
+					$this->form[] = ['label'=>'Mata Uang','name'=>'id_mata_uang','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_matauang,kode'];
+					$this->form[] = ['label'=>'Nilai Uang','name'=>'nilai_uang','type'=>'money','validation'=>'required','width'=>'col-sm-10','decimals'=>'0'];
+					$this->form[] = ['label'=>'Sebab','name'=>'sebab','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
+					$this->form[] = ['label'=>'Kodefikasi Sebab','name'=>'Id_up_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','datatable_where'=>'Id_up_sebab is null'];
+					$this->form[] = ['label'=>'','name'=>'id_kod_sebab','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','parent_select'=>'Id_up_sebab'];
+					$this->form[] = ['label'=>'Akibat','name'=>'akibat','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
+				}else{
+					$this->form[] = ['label'=>'Mata Uang','name'=>'id_mata_uang','type'=>'select','validation'=>'integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_matauang,kode'];
+					$this->form[] = ['label'=>'Nilai Uang','name'=>'nilai_uang','type'=>'money','width'=>'col-sm-10','decimals'=>'0'];
+					$this->form[] = ['label'=>'Sebab','name'=>'sebab','type'=>'textarea','width'=>'col-sm-10'];
+					$this->form[] = ['label'=>'Kodefikasi Sebab','name'=>'Id_up_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','datatable_where'=>'Id_up_sebab is null'];
+					$this->form[] = ['label'=>'','name'=>'id_kod_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','parent_select'=>'Id_up_sebab'];
+					$this->form[] = ['label'=>'Akibat','name'=>'akibat','type'=>'textarea','width'=>'col-sm-10'];
+				}
+			}
+			if(CRUDBooster::getCurrentMethod()=="getEdit"){
+				$parent_id = (int)Request::all()['parent_id'];
+				$id_jenis = DB::table('t_lap_awas')->select('id_jenis_was')->where('id',$parent_id)->first()->id_jenis_was;
+				
+				if($id_jenis == 1){
+					$this->form[] = ['label'=>'Mata Uang','name'=>'id_mata_uang','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_matauang,kode'];
+					$this->form[] = ['label'=>'Nilai Uang','name'=>'nilai_uang','type'=>'money','validation'=>'required','width'=>'col-sm-10','decimals'=>'0'];
+					$this->form[] = ['label'=>'Sebab','name'=>'sebab','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
+					$this->form[] = ['label'=>'Kodefikasi Sebab','name'=>'Id_up_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','datatable_where'=>'Id_up_sebab is null'];
+					$this->form[] = ['label'=>'','name'=>'id_kod_sebab','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','parent_select'=>'Id_up_sebab'];
+					$this->form[] = ['label'=>'Akibat','name'=>'akibat','type'=>'textarea','validation'=>'required|min:1','width'=>'col-sm-10'];
+				}else{
+					$this->form[] = ['label'=>'Mata Uang','name'=>'id_mata_uang','type'=>'select','validation'=>'integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_matauang,kode'];
+					$this->form[] = ['label'=>'Nilai Uang','name'=>'nilai_uang','type'=>'money','width'=>'col-sm-10','decimals'=>'0'];
+					$this->form[] = ['label'=>'Sebab','name'=>'sebab','type'=>'textarea','width'=>'col-sm-10'];
+					$this->form[] = ['label'=>'Kodefikasi Sebab','name'=>'Id_up_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','datatable_where'=>'Id_up_sebab is null'];
+					$this->form[] = ['label'=>'','name'=>'id_kod_sebab','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_kod_sebab,Deskripsi','parent_select'=>'Id_up_sebab'];
+					$this->form[] = ['label'=>'Akibat','name'=>'akibat','type'=>'textarea','width'=>'col-sm-10'];
+				}
+			}
+           
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM

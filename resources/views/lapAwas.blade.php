@@ -162,11 +162,9 @@ $(document).ready(function() {
 
                                                             };
                                                     if (full.id_status_kirim === "1" && (myId == 2 || myId == 1)){
-                                                        // if(!full.id_temuan){
+                                                        
                                                             return button2+button+buttonDtl+button4+button5+penanda;
-                                                        /* }else{
-                                                            return button2+buttonDtl+button+button4+button5+penanda+modalDtl;
-                                                        } */
+
 
                                                     }else if(full.id_status_kirim !== "1" && (myId == 3 || myId == 1)){
                                                         return buttonDtl+buttonBtl+penanda;
@@ -195,7 +193,7 @@ $(document).ready(function() {
                                         }
                                     }
                                 }],
-                    columnDefs: [ {
+                    columnDefs: [{
                                 targets: [3,13],
                                 render: $.fn.dataTable.render.ellipsis(40)
                                 },{
@@ -423,7 +421,8 @@ $(document).ready(function() {
             </select>
     </div>
 </div>
-@if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4)
+@if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4 || CRUDBooster::myPrivilegeId() == 5)
+@if(CRUDBooster::myPrivilegeId() != 5)
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter-unit">Kementerian / Lembaga : </label>
@@ -437,6 +436,7 @@ $(document).ready(function() {
             </select>
     </div>
 </div>
+@endif
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter-temuan">Klasifikasi Temuan : </label>

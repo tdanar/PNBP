@@ -79,7 +79,8 @@
             $this->form[] = ['label'=>'Periode Pengawasan','type'=>'label'];
             $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'custom','html'=>$periode,'validation'=>'required|integer|min:0'];
 			// $this->form[] = ['label'=>'Periode','name'=>'thn_mulai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun awal periode yang diawasi","title"=>"Silahkan pilih tahun awal periode pengawasan"];
-			// $this->form[] = ['label'=>'-','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
+            // $this->form[] = ['label'=>'-','name'=>'thn_usai','type'=>'select','validation'=>'required','width'=>'col-sm-5',"default" => "Pilih tahun akhir periode yang diawasi","title"=>"Silahkan pilih tahun akhir periode pengawasan"];
+			$this->form[] = ['label'=>'Informasi Lainnya','name'=>'info_lain','type'=>'textarea','validation'=>'min:1|max:60000','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'File PDF Laporan','name'=>'filename','type'=>'upload','validation'=>'required|mimes:pdf|max:20000','upload_encrypt'=>false, 'accept'=>'.pdf',"help"=>"Maksimum ukuran file 20MB"];
             $this->form[] = ['label'=>'Id User','name'=>'id_user','type'=>'hidden','value' => CRUDBooster::myId()];
             $this->form[] = ['label'=>'Status Kirim','name'=>'id_status_kirim','type'=>'hidden','value' => 1];
@@ -166,9 +167,7 @@
 	        |
 	        */
             //$this->index_button = array();
-            if (CRUDBooster::isCreate()){
-             $this->index_button[] = ['label'=>'Import dari Excel','url'=>'/ma/importAwas','icon'=>'fa fa-upload','indexonly' => 'true'];
-            }
+
             $this->index_button[] = ['label'=>'Export ke Excel','url'=>'#','icon'=>'fa fa-download','indexonly' => 'false'];
 
 
@@ -273,7 +272,7 @@
 		$this->button_show    = FALSE;
 		$this->button_add     = FALSE;
 		$this->button_delete  = FALSE;
-        $this->hide_form 	  = ['no_lap'];
+        $this->hide_form 	  = [];
 
 
 
@@ -496,10 +495,10 @@
                         }
                     }
                 }
-
+                CRUDBooster::redirect(CRUDBooster::adminPath($slug='lap_awas'), 'File Excel Anda sudah berhasil diunggah ke database!', 'success');
+                die;
             });
-            CRUDBooster::redirect(CRUDBooster::adminPath($slug='lap_awas'), 'File Excel Anda sudah berhasil diunggah ke database!', 'success');
-            die;
+
         }else if ($ext === 'csv'){
             $request->validate([
                 'import_file' => 'required|max:10000'
@@ -616,6 +615,53 @@
                 leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
                 leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 where('id_status_kirim',2)->
+                orderby('id','desc')->
+                get();
+             }else if(CRUDBooster::myPrivilegeId() == 5){
+                $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
+                `t_lap_awas`.`tahun`,
+                `t_ref_unit`.`unit`,
+                `t_lap_awas`.`no_lap`,
+                `t_lap_awas`.`tanggal`,
+                `t_lap_awas`.`nama_giat_was`,
+                `t_lap_awas`.`id`,
+                `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas`.`thn_mulai`,
+                `t_lap_awas`.`thn_usai`,
+                `t_ref_jenis_awas`.`jenis_awas`,
+                `t_lap_awas`.`created_at`,
+                `t_lap_awas`.`updated_at`,
+                `t_ref_kod_temuan`.`Kode` AS `KodeTemuan`,
+                `t_ref_kod_temuan`.`Deskripsi` AS `DeskTemuan`,
+                `t_ref_kod_sebab`.`Kode` AS `KodeSebab`,
+                `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
+                `t_lap_awas_temuan`.`id` AS `id_temuan`,
+                `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`kondisi`,
+                `t_lap_awas_temuan`.`sebab`,
+                `t_lap_awas_temuan`.`akibat`,
+                `t_ref_matauang`.`kode` AS `KodeMatauang`,
+                `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
+                `t_ref_statkirim`.`status` AS `StatKirim`,
+                `t_lap_awas_temuan`.`nilai_uang`,
+                `t_ref_kod_rekomendasi`.`Kode` AS `KodeRekomendasi`,
+                `t_ref_kod_rekomendasi`.`Deskripsi` AS `DeskRekomendasi`,
+                `t_ref_tl`.`deskripsi` AS `KodTL`,
+                `t_lap_awas_rekomend`.`id` AS `id_rekomendasi`,
+                `t_lap_awas_rekomend`.`status_tl`,
+                `t_lap_awas_rekomend`.`rekomendasi`')->
+                leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+                leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+                leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+                leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+                leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+                leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+                leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
+                leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
+                where('unit',CRUDBooster::myUnit())->
                 orderby('id','desc')->
                 get();
              }else{
