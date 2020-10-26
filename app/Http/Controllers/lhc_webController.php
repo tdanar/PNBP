@@ -8,7 +8,7 @@ use Redirect;
 class lhc_webController extends Controller
 {
     public function getLHC(){
-        $url = 'http://'.config('lhc.login_url');
+        $url = 'http://'.config('lhc.main_url');
         return Redirect::to($url);
     }
 }
