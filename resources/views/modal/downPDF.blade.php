@@ -21,8 +21,10 @@
                             <td>{{$row->no_lap}}</td>
                             <td>{{$row->nama_giat_was}}</td>
                             <td>
-                                @if($row->filename)
+                                @if($row->filename && in_array(CRUDBooster::myPrivilegeId(),array(1,3,4)))
                                 <a class="btn btn-primary" href="{{ asset($row->filename)}}" target="_blank">Unduh</a>
+                                @elseif($row->filename && in_array(CRUDBooster::myPrivilegeId(),array(2,5)))
+                                <a class="btn btn-default" href="#" disabled>Unduh</a>
                                 @else
                                 <span class="text-danger">File PDF rusak / belum diunggah</span>
                                 @endif

@@ -1,20 +1,9 @@
-{{-- @extends('crudbooster::admin_template')
-@section('content')
-  @if(g('return_url'))
-                <p><a title='Return' href='{{g("return_url")}}'><i class='fa fa-chevron-circle-left '></i>
-                        &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
-            @else
-                <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='fa fa-chevron-circle-left '></i>
-                        &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
-            @endif --}}
-
-
-            <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
 
 <div class="modal-body">
-  <div class='panel panel-default'>
+<div class='panel panel-default'>
     <div class='panel-heading'><strong><i class='fa fa-file'></i> Detail Laporan No. {{ $first->no_lap}}</strong></div>
     <div class='panel-body' style="padding:20px 0px 0px 0px">
             <div class='table-responsive'>
@@ -156,22 +145,63 @@
                 </table>
             </div>
     </div>
-    <div class="box-footer" style="background: #F5F5F5">
-        <div class="form-group">
-            <label class="control-label col-md-2">&ensp;</label>
-            <div class="col-md-4">
-            <a href='{{CRUDBooster::adminPath($slug='excel').'/'.$first->id}}' class='btn btn-success'><i class="fa fa-file-excel"></i> Ekspor ke Excel</a>
+    <div class="panel-footer" style="background: #F5F5F5">
+    <form method='post' id="form{{$first->id}}" enctype="multipart/form-data" action=''>
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="lap_id" value="{{$first->id}}">
+            <input type="hidden" name="user_id" value="{{CRUDBooster::myId()}}">
+                <div class="row">
+                    <label for="comment" class="text-bold">Komentar
+                            </label>
+                    <div style="width: 100%">
+                        <textarea class="col-sm-12" name="comment" id="comment" rows="5"></textarea>
+                    </div>
+                </div>
+            <div class="row">
+                <label class="text-bold">Tolak/Terima ? <span class="text-danger">*</span>
+                        </label>
+                <div style="width: 100%">
+                    <label class="radio-inline">
+                        <input type="radio" name="accept" id="tolak" value="0" required> Tolak
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="accept" id="terima" value="1" required> Terima
+                    </label>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">&ensp;</label>
-            <div class="col-md-4">
-            <a href='{{CRUDBooster::adminPath($slug='word').'/'.$first->id}}' class='btn btn-primary'><i class="fa fa-file-word"></i> Ekspor ke Word</a>
+            <div class="row">
+                <div class="col-md-12">&nbsp;</div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <input type="button" class="btn btn-default btn-block" value="Batal" id="batal" data-dismiss="modal"/>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <div id="divKirim0" class="btnSubmit" hidden>
+                        <input type="button" class="btn btn-primary btn-block" value="Kirim" id="kirim0" onclick="klikTolak({{$first->id}})"/>
+                    </div>
+                    <div id="divKirim1" class="btnSubmit" hidden>
+                        <input type="button" class="btn btn-primary btn-block" value="Kirim" id="kirim1" onclick="klikSetuju({{$first->id}})"/>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
     </div>
   </div>
 </div>
+
 <div class="modal-footer">
 </div>
-{{-- @endsection --}}
+<script>
+    $(document).ready(function(){
+        $("input[name$='accept']").click(function() {
+        var test = $(this).val();
+        //console.log(test);
+        $("div.btnSubmit").hide();
+        $("#divKirim" + test).show();
+    });
+    });
+</script>

@@ -16,6 +16,10 @@
 <script>
 $(document).ready(function() {
     var unit = {!! json_encode(CRUDBooster::myUnit()) !!};
+    var no_lap = escapeHtml(getParameterByName('no_lap'));
+    var inputer = escapeHtml(getParameterByName('user'));
+    var tahun = escapeHtml(getParameterByName('amp;tahun'));
+    var statusKirim = escapeHtml(getParameterByName('amp;statusKirim'));
     var table = $('#lapawas').DataTable({
 
             language:
@@ -114,6 +118,7 @@ $(document).ready(function() {
                                                     var rekpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_rekomend')) !!};
                                                     var delpath = {!! json_encode(CRUDBooster::mainpath()) !!}+'/delete/'+full.id;
                                                     var verpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/validasi/'+full.id;
+                                                    var revpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/reviu/'+full.id;
                                                     var batalpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/batal/'+full.id;
                                                     var begin = "<div class='btn-toolbar' role='toolbar'><div class='btn-group btn-group-xs' role='group'>";
                                                     var end = "</div></div>";
@@ -130,7 +135,13 @@ $(document).ready(function() {
                                                                                             '</div>'+
                                                                                         '</div>';
                                                                     var buttonBtl= '<a class="btn btn-warning btn-xs btn-block" href="#" onclick="klikBatal('+'\''+batalpath+'\''+')" role="button" data-toggle="popover" title="Pembatalan Pengiriman Laporan" data-content="Anda dapat membatalkan pengiriman laporan No. '+full.no_lap+' di sini. Pengguna harus mengirim ulang."><i class="fa fa-ban"></i></a>';
-
+                                                                    var buttonReviu = '<a class="btn btn-warning btn-xs btn-block" href="'+revpath+'" role="button" data-toggle="modal" title="Reviu Laporan" data-target="#reviumodal'+full.id+'"><i class="fa fa-check"></i></a>'+
+                                                                                    '<div id="reviumodal'+full.id+'" class="modal fade" role="dialog">'+
+                                                                                        '<div class="modal-dialog modal-lg" role="document">'+
+                                                                                            '<div class="modal-content"><div class="text-center">Memproses...</div>'+
+                                                                                                '</div>'+
+                                                                                            '</div>'+
+                                                                                        '</div>';
 
                                                                 case ({!! json_encode(CRUDBooster::isView()) !!}):
                                                                 var buttonDtl = '<a class="btn btn-primary btn-xs btn-block" href="'+mainpath+'/detail/'+full.id+'" role="button" title="Detil Laporan" data-toggle="modal" data-target="#detilmodal'+full.id+'"><i class="fa fa-eye"></i></a>'+
@@ -158,14 +169,16 @@ $(document).ready(function() {
                                                                     var button5 = '';
                                                                     var buttonDtl = '';
                                                                     var buttonBtl = '';
+                                                                    var buttonReviu = '';
 
 
                                                             };
-                                                    if (full.id_status_kirim === "1" && (myId == 2 || myId == 1)){
-                                                        
+                                                    if ((full.id_status_kirim === "1" || full.id_status_kirim === "4") && (myId == 2 || myId == 1)){
+
                                                             return button2+button+buttonDtl+button4+button5+penanda;
 
-
+                                                    }else if(full.id_status_kirim === "3" && myId == 5){
+                                                        return buttonDtl+buttonReviu+penanda;
                                                     }else if(full.id_status_kirim !== "1" && (myId == 3 || myId == 1)){
                                                         return buttonDtl+buttonBtl+penanda;
                                                     }else{
@@ -174,7 +187,9 @@ $(document).ready(function() {
 
                                                     },
                                         'orderable': false,
-                                        }
+                                        },
+                                        {'data':'inputer'},
+                                        {'data':'id_status_kirim'}
                                     ],
                     processing: true,
                     searching: true,
@@ -197,7 +212,7 @@ $(document).ready(function() {
                                 targets: [3,13],
                                 render: $.fn.dataTable.render.ellipsis(40)
                                 },{
-                                targets: [1,5,7,8,10,11,12,14,15],
+                                targets: [1,5,7,8,10,11,12,14,15,18,19],
                                 searchable: true,
                                 visible: false,
                                 } ],
@@ -240,6 +255,10 @@ $(document).ready(function() {
                                                 val = this.value;
                                                 table.column(16).search(val ? '^'+val+'$' : '', true, false).draw();
                                                 });
+                                    $('#table-filter4').on('change', function(){
+                                                val = this.value;
+                                                table.column(19).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
                                     $('#table-filter-unit').on('change', function(){
                                                 val = this.value;
                                                 table.column(1).search(val).draw();
@@ -262,7 +281,18 @@ $(document).ready(function() {
                                                 });
                             }
             });
-
+            if(no_lap){
+                table.column(3).search(no_lap).draw();
+            }
+            if(inputer){
+                table.column(18).search(inputer).draw();
+            }
+            if(tahun){
+                table.column(0).search(tahun).draw();
+            }
+            if(statusKirim){
+                table.column(19).search(statusKirim).draw();
+            }
 
             $(document.body).on('hide.bs.modal', function (e) {
                                             //divid = '#'+e.target.id;
@@ -275,7 +305,29 @@ $(document).ready(function() {
             $(".modal-body").html("");
         }); */
 
+function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+function escapeHtml(text) {
+  var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  if(text){
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }else{
+      return text
+  }
 
+}
 
     function klikDelete(link) {
          swal({
@@ -293,7 +345,7 @@ $(document).ready(function() {
 
     function klikKirim(link){
         swal({
-            title: "Anda yakin ingin lanjut mengirimkan laporan ini? ",
+            title: "Anda yakin ingin lanjut mengirimkan laporan ini ke approver Anda? ",
             text: "Setelah Kirim, Anda tidak dapat mengubah data laporan lagi",
             type: "warning",
             showCancelButton: true,
@@ -302,6 +354,41 @@ $(document).ready(function() {
             cancelButtonText: "Batal",
             closeOnConfirm: false },
             function(){  location.href=link });
+            null;
+    };
+
+    function klikTolak(id){
+        var formData = $('#form'+id).serialize();
+        //console.log(formData);
+        swal({
+            title: "Anda yakin ingin menolak laporan ini? ",
+            text: "Setelah Ditolak, laporan harus dikirim ulang oleh inputer Anda",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Tolak",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false },
+            function(){
+                location.href='/ma/rev?'+formData;
+             });
+            null;
+    };
+
+    function klikSetuju(id){
+        var formData = $('#form'+id).serialize();
+        swal({
+            title: "Anda yakin ingin menyetujui laporan ini? ",
+            text: "Setelah Disetujui, laporan terkirim ke Kementerian Keuangan dan tidak dapat diubah lagi.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Setuju",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false },
+            function(){
+                location.href='/ma/rev?'+formData;
+                });
             null;
     };
 
@@ -490,6 +577,19 @@ $(document).ready(function() {
             </select>
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label for="table-filter4">Status Kirim :</label>
+    </div>
+    <div class="col-xs-2">
+        <select id="table-filter4">
+            <option value="">All</option>
+            @foreach($result->unique('StatKirim')->where('StatKirim','!=',null)->sortBy('StatKirim') as $row)
+        <option value="{{$row->id_status_kirim}}">{{$row->StatKirim}}</option>
+            @endforeach
+            </select>
+    </div>
+</div>
 
 </div>
 </div>
@@ -527,6 +627,8 @@ $(document).ready(function() {
         <th title="Progres Rekomendasi">Progres Rekomendasi</th>
         <th title="Klasifikasi Tindak Lanjut">Status TL</th>
         <th style="width:50px">Aksi</th>
+        <th>Inputer</th>
+        <th>Status Kirim</th>
     </tr>
   </thead>
 

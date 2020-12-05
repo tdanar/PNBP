@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\t_comment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -75,4 +76,6 @@ class LapAwa extends Model
     {
         return $this->hasOne(RefJenisAwa::class,'id','id_jenis_was');
     }
+
+
 }

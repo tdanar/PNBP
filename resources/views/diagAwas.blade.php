@@ -8,10 +8,61 @@
 <script src="/vendor/amcharts/amcharts/serial.js" type="text/javascript"></script>
 <script src="/vendor/amcharts/amcharts/pie.js" type="text/javascript"></script>
 <script src="/scripts/lodash.min.js" type="text/javascript"></script>
+
+<!-- amCharts javascript code-->
+<script type="text/javascript">
+    var dataInputer = JSON.parse("{{$resultInputer}}".replace(/&quot;/g,'"'));
+    
+    AmCharts.makeChart("piegraphInputer",
+        {
+            "type": "pie",
+            "theme": "light",
+            "adjustPrecision": true,
+            "colors": [
+                                        "#67D0DD",
+                                        "#9FE481",
+                                        "#F6E785",
+                                        "#FAAFA5",
+                                        "#DC95DD",
+                                        "#A885EE"
+                                    ],
+            "titles": [
+                                        {
+                                            "id": "judul",
+                                            "size": 15,
+                                            "text": "Berdasarkan Inputer"
+                                        }
+                                    ],
+            "percentPrecision": 0,
+            "thousandsSeparator": ".",
+            "dataProvider": dataInputer,
+            "valueField": "Jumlah",
+            "titleField": "Nama",
+            "urlField": "url",
+            "outlineAlpha": 0.4,
+            "depth3D": 15,
+            "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+            "angle": 5,
+            "labelsEnabled": true,
+            "labelText": "([[percents]]%)",
+            "labelRadius": -35,
+            "innerRadius": "0%",
+            "legend": {
+                "enabled": true,
+                "align": "center",
+                "labelText": "[[title]]:",
+                "reversedOrder": true,
+                "maxColumns": 1,
+                "valueAlign": "left",
+                "verticalGap": 0
+                }
+        }
+    );
+</script>
 <!-- amCharts javascript code-->
     <script type="text/javascript">
         var data1 = JSON.parse("{{$result1}}".replace(/&quot;/g,'"'));
-        //console.log(data1);
+        console.log(data1);
         AmCharts.makeChart("piegraphs1",
             {
                 "type": "pie",
@@ -327,7 +378,12 @@ AmCharts.addInitHandler(function(chart) {
   }
 
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    if(x != null){
+        return x.toLocaleString('id-ID');
+    }else{
+        return null;
+    }
+    
 }
 
   function handleCustomMarkerToggle(legendEvent) {
@@ -426,8 +482,10 @@ AmCharts.addInitHandler(function(chart) {
                                             "text": ""
                                         }
                                     ],
+            "precision":2,
             "percentPrecision": 0,
             "thousandsSeparator": ".",
+            "decimalSeparator":",",
             "dataProvider": grouped[k],
             "valueAxes": [{
                             "position": "left",
@@ -487,8 +545,10 @@ AmCharts.addInitHandler(function(chart) {
                                             "text": ""
                                         }
                                     ],
+            "precision":2,
             "percentPrecision": 0,
             "thousandsSeparator": ".",
+            "decimalSeparator":",",
             "dataProvider": grouped2[k],
             "valueAxes": [{
                             "position": "left",
@@ -523,7 +583,9 @@ AmCharts.addInitHandler(function(chart) {
     }
 </script>
 <div class="row">
-<div class="col-sm-12"><center><h2>STATISTIK LAPORAN HASIL PENGAWASAN<br/><small>{{$unit}}</small></h2></center></div>
+<div class="col-sm-12"><center><h2>STATISTIK LAPORAN HASIL PENGAWASAN<br/><small>{{$unit}}<br/>
+</small></h2>
+</center></div>
 </div>
 <div class="row">
     <div class="col-sm-12"><center>
@@ -542,15 +604,32 @@ AmCharts.addInitHandler(function(chart) {
                 @endforeach
             </select>
         </div>
+        <div class="input-group">
+            <div class="input-group-addon">Status Kirim</div>
+            <select class="form-control" id="statusKirim" name="statusKirim">
+                <option value="">All</option>
+                @foreach($statusSelector->unique('status')->sortBy('status') as $row)
+                    @if($row->id_status_kirim == $input['statusKirim'])
+                    <option value="{{$row->id_status_kirim}}" selected="selected">{{$row->status}}</option>
+                    @else
+                    <option value="{{$row->id_status_kirim}}">{{$row->status}}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
         <button type="submit" class="btn btn-default">Tampilkan</button>
     </form>
     </center>
     </div>
 </div>
+@if($resultInputer)
+<div class="row">
+    <div id="piegraphInputer" style="height:500px; background-color: #FFFFFF;" class="col-md-12"></div>
+</div>
+@endif
 <div class="row">
     <div id="piegraphs1" style="height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
     <div id="piegraphs2" style="height:500px; background-color: #FFFFFF;" class="col-md-6"></div>
-
 </div>
 <h3>&nbsp;</h3>
 <div class="row">

@@ -60,10 +60,12 @@
                                 <td>
                                     @if ($countTemuan == 0)
                                     <span class="text-danger">Wajib isi temuan bila jenis pengawasan audit.</span>
+                                    @elseif ($countTemuan > 0 && $jenis_pnbp != 0)
+                                    <span class="text-danger">Jenis PNBP harus dipilih.</span>
                                     @elseif ($countTemuan > 0 && $kod_temuan != 0)
-                                    <span class="text-danger">Kodefikasi temuan harus diisi.</span>
+                                    <span class="text-danger">Kodefikasi temuan harus dipilih.</span>
                                     @elseif ($countTemuan > 0 && $kod_sebab != 0)
-                                    <span class="text-danger">Kodefikasi sebab harus diisi.</span>
+                                    <span class="text-danger">Kodefikasi sebab harus dipilih.</span>
                                     @else
                                     <span class="text-success">Input Temuan sudah sesuai ketentuan.</span>
                                     @endif
@@ -74,9 +76,9 @@
                                 <td>Temuan</td>
                                 <td>
                                     @if ($kod_temuan != 0)
-                                    <span class="text-danger">Kodefikasi temuan harus diisi.</span>
-                                    @elseif ($kod_sebab != 0)
-                                    <span class="text-danger">Kodefikasi sebab harus diisi.</span>
+                                    <span class="text-danger">Kodefikasi temuan harus dipilih.</span>
+                                    @elseif ($countTemuan > 0 && $jenis_pnbp != 0)
+                                    <span class="text-danger">Jenis PNBP harus dipilih.</span>
                                     @else
                                     <span class="text-success">Input Temuan sudah sesuai ketentuan.</span>
                                     @endif
@@ -115,7 +117,9 @@
                         echo 'disabled="disabled"';
                     }elseif($countTemuan > 0 && $countRekomend <= 0){
                         echo 'disabled="disabled"';
-                    }elseif($countTemuan > 0 && $kod_temuan != 0 && $kod_sebab != 0){
+                    }elseif($data->id_jenis_was == 1 && $countTemuan > 0 && ($kod_temuan != 0 || $kod_sebab != 0 || $jenis_pnbp != 0)){
+                        echo 'disabled="disabled"';
+                    }elseif($data->id_jenis_was != 1 && $countTemuan > 0 && ($kod_temuan != 0 || $jenis_pnbp != 0)){
                         echo 'disabled="disabled"';
                     }elseif($countTemuan > 0 && $cekRek > 0){
                         echo 'disabled="disabled"';

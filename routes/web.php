@@ -17,13 +17,14 @@
 Route::get('/','homepageController@index')->name('home');
 Route::get('/lhc_web','lhc_webController@getLHC');
 Route::get('/header','homepageController@header');
-Route::get('/helpdesk','helpdeskController@index')->name('helpdesk');
+
 Route::get('/faq','faqController@index')->name('faq');
 Route::get('/peraturan','peraturanController@index')->name('peraturan');
 Route::get('/refereshcapcha', 'helperController@refereshCapcha');
 Route::get('/artikel/{id}','AdminArticleController@showArticle')->name('article');
 Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBackend'])->group(function () {
     Route::get('/ma/importAwas', 'AdminLapAwasController@import');
+    Route::get('/helpdesk','helpdeskController@index')->name('helpdesk');
     Route::post('/api/getAwas', 'AdminLapAwasController@getDataWas');
     Route::get('/api/getAwas', 'AdminLapAwasController@getDataWas');
     Route::get('/api/getNestedWas', 'AdminLapAwasController@getNestedWas');
@@ -41,6 +42,9 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     Route::get('/ma/lap_awas_temuan/edit-temuan/{id}', 'AdminLapAwasTemuanController@postEditTemuan');
     Route::get('/ma/monitoring/dlPDF/{id}','AdminMonitoringController@getDlPDF');
     Route::get('/infopnbp','perantaraController@getIndex')->name('perantara');
+    Route::get('/ma/reviu/{id}','AdminLapAwasController@Reviu')->name('review');
+    Route::get('/ma/rev','AdminLapAwasController@Rev');
+    //Route::post('/ma/rev','AdminLapAwasController@Rev');
 });
 
 

@@ -26,7 +26,7 @@ $(document).ready(function() {
                     {!! json_encode($_GET['DeskRek'] == ''?'Semua Kodefikasi Rekomendasi, ':'Kodefikasi Rekomendasi: '.$_GET['DeskRek'].', ') !!}+'\n'+
                     {!! json_encode($_GET['KodTL'] == ''?'Semua Status TL, ':'Status TL: '.$_GET['KodTL'].', ') !!}+'\n'+
                     {!! json_encode($_GET['statusKirim'] == ''?'Semua Status Kirim':'Status Kirim: '.$_GET['statusKirim']) !!};
-    
+
     var table = $('#lapawas').DataTable({
 
             language:
@@ -145,7 +145,7 @@ $(document).ready(function() {
                 mergeCells(rows, settings.COLUMN_THEME);
                 mergeCells(rows, settings.COLUMN_SUBTHEME);
                 mergeCells(rows, settings.COLUMN_SUBTHEME1);
-                
+
 
 
 
@@ -376,7 +376,7 @@ $(document).ready(function() {
       @php($total_rekomendasi = 0)
 
       @if ($collection)
-        
+
           @foreach ($collection as $row)
         <tr>
         <td><center>{{$row->urutan}}</center></td>

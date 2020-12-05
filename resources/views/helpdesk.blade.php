@@ -28,7 +28,7 @@
     </div>
 </div>
 <script>var LHC_API = LHC_API||{};
-    LHC_API.args = {mode:'widget',lhc_base_url:'//localhost:8080/index.php/',wheight:450,wwidth:350,pheight:520,pwidth:500,domain:'localhost:8000',leaveamessage:true,check_messages:false,lang:'idn/',position_placement:'middle_right'};
+    LHC_API.args = {mode:'widget',lhc_base_url:'//localhost:8080/',wheight:450,wwidth:350,pheight:520,pwidth:500,leaveamessage:true,theme:1,check_messages:false,lang:'idn'};
     (function() {
     var po = document.createElement('script'); po.type = 'text/javascript'; po.setAttribute('crossorigin','anonymous'); po.async = true;
     var date = new Date();po.src = '//localhost:8080/design/defaulttheme/js/widgetv2/index.js?'+(""+date.getFullYear() + date.getMonth() + date.getDate());
