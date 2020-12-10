@@ -122,59 +122,12 @@
 
 								<script type="text/javascript">
 								var chart;
-						        var chartData = [
-
-                                                {
-                                                "Tahun PNBP": "2014",
-                                                "Penerimaan SDA": 240.85,
-                                                "Belanja Pemerintah atas Laba BUMN": 40.31,
-                                                "Pendapatan dari Kekayaan Negara Dipisahkan": 0,
-                                                "PNBP Lainnya": 87.75,
-                                                "Pendapatan BLU": 29.68,
-                                                "Total": 398.59
-                                                },
-                                                {
-                                                "Tahun PNBP": "2015",
-                                                "Penerimaan SDA": 100.97,
-                                                "Belanja Pemerintah atas Laba BUMN": 37.64,
-                                                "Pendapatan dari Kekayaan Negara Dipisahkan": 0,
-                                                "PNBP Lainnya": 81.7,
-                                                "Pendapatan BLU": 35.32,
-                                                "Total": 255.63
-                                                },
-                                                {
-                                                "Tahun PNBP": "2016",
-                                                "Penerimaan SDA": 64.9,
-                                                "Belanja Pemerintah atas Laba BUMN": 37.13,
-                                                "Pendapatan dari Kekayaan Negara Dipisahkan": 0,
-                                                "PNBP Lainnya": 118,
-                                                "Pendapatan BLU": 41.95,
-                                                "Total": 261.98
-                                                },
-                                                {
-                                                "Tahun PNBP": "2017",
-                                                "Penerimaan SDA": 111.13,
-                                                "Belanja Pemerintah atas Laba BUMN": 43.9,
-                                                "Pendapatan dari Kekayaan Negara Dipisahkan": 0,
-                                                "PNBP Lainnya": 108.84,
-                                                "Pendapatan BLU": 47.35,
-                                                "Total": 311.22
-                                                },
-                                                {
-                                                "Tahun PNBP": "2018",
-                                                "Penerimaan SDA": 180.6,
-                                                "Belanja Pemerintah atas Laba BUMN": 0,
-                                                "Pendapatan dari Kekayaan Negara Dipisahkan": 45.06,
-                                                "PNBP Lainnya": 128.57,
-                                                "Pendapatan BLU": 55.09,
-                                                "Total": 409.32
-                                                }
-
-                                        ];
+						        var chartData = JSON.parse("{{$pnbp_jenis}}".replace(/&quot;/g,'"'));
+                                       // console.log(chartData);
 							AmCharts.ready(function () {
 							chart = new AmCharts.AmSerialChart();
 							chart.dataProvider = chartData;
-							chart.categoryField = "Tahun PNBP";
+							chart.categoryField = "Tahun";
 							chart.color = "#222222";
 							chart.fontSize = 14;
 							//chart.startDuration = 1;
@@ -278,40 +231,12 @@
 							chart.addLegend(legend);
 							chart.write("graphs1");
 						});
-						var chartData2 = [
-
-								{
-								"Tahun": "2014",
-                                "Realisasi PNBP": 398.6,
-                                "Realisasi Penerimaan Negara": 1550.5,
-                                "Persentase": ((398.6/1550.5)*100).toFixed(2) },
-								{
-								"Tahun": "2015",
-								"Realisasi PNBP": 255.6,
-                                "Realisasi Penerimaan Negara": 1508,
-                                "Persentase": ((255.6/1508)*100).toFixed(2) },
-								{
-								"Tahun": "2016",
-								"Realisasi PNBP": 261.9,
-                                "Realisasi Penerimaan Negara": 1555.9,
-                                "Persentase": ((261.9/1555.9)*100).toFixed(2) },
-								{
-								"Tahun": "2017",
-								"Realisasi PNBP": 308.4,
-                                "Realisasi Penerimaan Negara": 1655.8,
-                                "Persentase": ((308.4/1655.8)*100).toFixed(2) },
-								{
-								"Tahun": "2018",
-								"Realisasi PNBP": 409.3,
-                                "Realisasi Penerimaan Negara": 1943.7,
-                                "Persentase": ((409.3/1943.7)*100).toFixed(2) },
-
-						];
+						var chartData2 = JSON.parse("{{$pnbp_tren}}".replace(/&quot;/g,'"'));
 						AmCharts.ready(function () {
 							chart = new AmCharts.AmSerialChart();
 
 							chart.dataProvider = chartData2;
-							chart.categoryField = "Tahun";
+							chart.categoryField = "tahun";
 							chart.startDuration = 1;
 
 							//chart.handDrawn = true;
@@ -336,9 +261,9 @@
 							graph1.type = "line";
 							graph1.title = "Realisasi PNBP";
 							graph1.lineColor = "#FF0017";
-							graph1.valueField = "Realisasi PNBP";
+							graph1.valueField = "realisasi_pnbp";
 							graph1.lineThickness = 10;
-                            graph1.labelText = "[[Persentase]]%";
+                            graph1.labelText = "[[persentase]]%";
                             graph1.fontSize = 30
 
 							graph1.customBullet = "/images/point_hijau.png";
@@ -350,7 +275,7 @@
 							graph2.type = "line";
 							graph2.title = "Realisasi Penerimaan Negara";
 							graph2.lineColor = "#194C85";
-							graph2.valueField = "Realisasi Penerimaan Negara";
+							graph2.valueField = "realisasi_pn";
 							graph2.lineThickness = 10;
 
                             graph2.customBullet = "/images/point_merah.png";
@@ -531,8 +456,10 @@
                         </div>
                         <!-- amCharts javascript sources -->
                         <script src="/vendor/amcharts/amcharts/pie.js" type="text/javascript"></script>
+                        <script src="/scripts/lodash.min.js" type="text/javascript"></script>
                         <!-- amCharts javascript code -->
                             <script type="text/javascript">
+                                var data2= JSON.parse("{{$pnbp_tl}}".replace(/&quot;/g,'"'));
                                 AmCharts.makeChart("piegraphs3",
                                     {
                                         "type": "pie",
@@ -540,7 +467,7 @@
                                         "angle": 20,
                                         "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
                                         "depth3D": 30,
-                                        "labelRadius": 20,
+                                        "labelRadius": -100,
                                         "labelText": "[[percents]]%<br>[[title]]",
                                         "colors": [
                                             "#88E0B0",
@@ -550,8 +477,8 @@
                                         ],
                                         "marginBottom": 0,
 					                    "marginTop": 0,
-                                        "titleField": "status",
-                                        "valueField": "value",
+                                        "titleField": "Jenis Tindak Lanjut",
+                                        "valueField": "Jumlah",
                                         "decimalSeparator": ",",
                                         "fontFamily": "Calibri",
                                         "fontSize": 12,
@@ -575,90 +502,81 @@
                                                 "text": "Status Tindak Lanjut Temuan Pengawasan"
                                             }
                                         ],
-                                        "dataProvider": [
-                                            {
-                                                "status": "Sesuai",
-                                                "value": "0.5"
-                                            },
-                                            {
-                                                "status": "Belum Sesuai",
-                                                "value": "0.24"
-                                            },
-                                            {
-                                                "status": "Belum Ditindaklanjuti",
-                                                "value": "0.16"
-                                            },
-                                            {
-                                                "status": "Tidak Ditindaklanjuti",
-                                                "value": "0.1"
-                                            }
-                                        ]
+                                        "dataProvider": data2
                                     }
                                 );
                             </script>
 
                         <!-- amCharts javascript code -->
                         <script type="text/javascript">
-                            AmCharts.makeChart("piegraphs4",
+                            var data1 = JSON.parse("{{$pnbp_temuan}}".replace(/&quot;/g,'"'));
+                            AmCharts.addInitHandler(function(chart) {
+                                if (chart.legend === undefined || chart.legend.truncateLabels === undefined)
+                                    return;
+
+                                // init fields
+                                var titleField = chart.titleField;
+                                var legendTitleField = chart.titleField+"Legend";
+
+                                // iterate through the data and create truncated label properties
+                                for(var i = 0; i < chart.dataProvider.length; i++) {
+                                    var label = chart.dataProvider[i][chart.titleField];
+                                    if (label.length > chart.legend.truncateLabels)
+                                    label = label.substr(0, chart.legend.truncateLabels-1)+'...'
+                                    chart.dataProvider[i][legendTitleField] = label;
+                                }
+
+                                // replace chart.titleField to show our own truncated field
+                                chart.titleField = legendTitleField;
+
+                                // make the balloonText use full title instead
+                                chart.balloonText = chart.balloonText.replace(/\[\[title\]\]/, "[["+titleField+"]]");
+
+                                }, ["pie"]);
+                            var chart = AmCharts.makeChart("piegraphs4",
                                 {
                                     "type": "pie",
                                     "adjustPrecision": true,
                                     "angle": 20,
                                     "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
                                     "depth3D": 30,
-                                    "labelRadius": 20,
+                                    "labelRadius": -100,
                                     "labelText": "[[percents]]%<br>[[title]]",
                                     "colors": [
                                         "#6ABBFC",
                                         "#FFE457",
                                         "#2DFF00",
                                         "#8D95F8"
-                                    ],
+                                        ],
                                     "marginBottom": 0,
 					                "marginTop": 0,
-                                    "titleField": "category",
-                                    "valueField": "column-1",
-                                    "decimalSeparator": ",",
-                                    "fontFamily": "Calibri",
-                                    "fontSize": 12,
-                                    "percentPrecision": 0,
-                                    "thousandsSeparator": ".",
-                                    "allLabels": [],
-                                    "balloon": {},
-                                    "legend": {
-                                        "enabled": true,
+                                    "titles": [
+                                                                {
+                                                                    "id": "judul",
+                                                                    "size": 25,
+                                                                    "text": "Berdasarkan Jenis Temuan"
+                                                                }
+                                                            ],
+                                    "dataProvider": data1,
+                                    "valueField": "Jumlah",
+                                    "titleField": "Jenis Temuan",
+                                        "decimalSeparator": ",",
+                                        "fontFamily": "Calibri",
+                                        "fontSize": 12,
+                                        "percentPrecision": 0,
+                                        "thousandsSeparator": ".",
+                                        "allLabels": [],
+                                        "balloon": {},
+                                        "legend": {
+                                            "enabled": true,
                                             "align": "center",
                                             "labelText": "[[title]]:",
                                             "markerType": "circle",
                                             "maxColumns": 2,
                                             "valueAlign": "left",
                                             "valueText": "[[percents]]%"
-                                    },
-                                    "titles": [
-                                        {
-                                            "id": "judul",
-                                            "size": 25,
-                                            "text": "Temuan Pengawasan"
                                         }
-                                    ],
-                                    "dataProvider": [
-                                        {
-                                            "category": "Kelemahan SPI",
-                                            "column-1": "0.5"
-                                        },
-                                        {
-                                            "category": "Temuan 3E",
-                                            "column-1": "0.24"
-                                        },
-                                        {
-                                            "category": "Potensi Kerugian Negara",
-                                            "column-1": "0.16"
-                                        },
-                                        {
-                                            "category": "Kerugian Negara",
-                                            "column-1": "0.1"
-                                        }
-                                    ]
+
                                 }
                             );
                         </script>
@@ -798,7 +716,7 @@
                             <a href="/ma/lap_awas"><div class="ico_1"><span>E-Reporting</span></div></a>
                             <a href="/infopnbp"><div class="ico_2"><span>Info PNBP</span></div></a>
                             <a href="/helpdesk"><div class="ico_3"><span>Hubungi Kami</span></div></a>
-                            <a href="/faq"><div class="ico_4"><span>F.A.Q.</span></div></a>
+                            <a href="/faq"><div class="ico_4"><span>Panduan</span></div></a>
                             <div class="clear"></div>
                         </div>
                     </div>

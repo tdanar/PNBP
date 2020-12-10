@@ -41,6 +41,7 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     Route::get('/ma/lap_awas_temuan/add-temuan', 'AdminLapAwasTemuanController@postAddTemuan');
     Route::get('/ma/lap_awas_temuan/edit-temuan/{id}', 'AdminLapAwasTemuanController@postEditTemuan');
     Route::get('/ma/monitoring/dlPDF/{id}','AdminMonitoringController@getDlPDF');
+    Route::get('/ma/monitoring/tlanjut/{id}','AdminLapAwasTlanjutController@getTlanjut');
     Route::get('/infopnbp','perantaraController@getIndex')->name('perantara');
     Route::get('/ma/reviu/{id}','AdminLapAwasController@Reviu')->name('review');
     Route::get('/ma/rev','AdminLapAwasController@Rev');

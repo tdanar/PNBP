@@ -36,12 +36,13 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
+			$this->form[] = ['label'=>'Id','name'=>'id','type'=>'number','validation'=>'required','width'=>'col-sm-9'];
 			$this->form[] = ['label'=>'Tahun','name'=>'tahun','type'=>'text','validation'=>'required|min:1|max:5|regex:/^[0-9]+$/','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Tahun","name"=>"tahun","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ['label'=>'Tahun','name'=>'tahun','type'=>'text','validation'=>'required|min:1|max:5|regex:/^[0-9]+$/','width'=>'col-sm-10'];
 			# OLD END FORM
 
 			/* 

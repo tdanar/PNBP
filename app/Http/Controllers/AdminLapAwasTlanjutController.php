@@ -26,7 +26,7 @@
                 $this->button_delete = false;
 
 			$this->button_detail = true;
-			$this->button_show = true;
+			$this->button_show = false;
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
@@ -119,8 +119,9 @@
 	        | @icon  = Icon from Awesome.
 	        |
 	        */
-	        $this->index_button = array();
-
+	        //$this->index_button = array();
+            $this->index_button[] = ['label'=>'Export ke Excel','url'=>'#','icon'=>'fa fa-download','indexonly' => 'false'];
+            $this->index_button[] = ['label'=>'Refresh Tabel','url'=>'/ma/lap_awas_tlanjut','icon'=>'fa fa-table','indexonly' => 'false'];
 
 
 	        /*
@@ -452,7 +453,11 @@
                 ->get();
                 $data['indexRekomend'] = DB::table('t_lap_awas')->selectRaw(
                     'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
-                    count(`t_lap_awas_rekomend`.`id`) AS `jml_rekomendasi`'
+                    count(`t_lap_awas_rekomend`.`id`) AS `jml_rekomendasi`,
+                    sum(if(`t_ref_tl`.`id` = 1, 1, 0)) AS `jml_tl_1`,
+                    sum(if(`t_ref_tl`.`id` = 2, 1, 0)) AS `jml_tl_2`,
+                    sum(if(`t_ref_tl`.`id` = 3, 1, 0)) AS `jml_tl_3`,
+                    sum(if(`t_ref_tl`.`id` = 4, 1, 0)) AS `jml_tl_4`'
                 )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
                 ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
                 ->leftjoin('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
@@ -480,6 +485,10 @@
                 foreach($data['indexWas'] as $was){
                     $was->jml_temuan = $data['indexTemuan']->where('ID',$was->ID)->first()->jml_temuan;
                     $was->jml_rekomendasi = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_rekomendasi;
+                    $was->jml_tl_1 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_1;
+                    $was->jml_tl_2 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_2;
+                    $was->jml_tl_3 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_3;
+                    $was->jml_tl_4 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_4;
                     $collect[] = $was;
                 }
 
@@ -588,7 +597,11 @@
                 ->get();
                 $data['indexRekomend'] = DB::table('t_lap_awas')->selectRaw(
                     'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
-                    count(`t_lap_awas_rekomend`.`id`) AS `jml_rekomendasi`'
+                    count(`t_lap_awas_rekomend`.`id`) AS `jml_rekomendasi`,
+                    sum(if(`t_ref_tl`.`id` = 1, 1, 0)) AS `jml_tl_1`,
+                    sum(if(`t_ref_tl`.`id` = 2, 1, 0)) AS `jml_tl_2`,
+                    sum(if(`t_ref_tl`.`id` = 3, 1, 0)) AS `jml_tl_3`,
+                    sum(if(`t_ref_tl`.`id` = 4, 1, 0)) AS `jml_tl_4`'
                 )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
                 ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
                 ->leftjoin('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
@@ -616,6 +629,10 @@
                 foreach($data['indexWas'] as $was){
                     $was->jml_temuan = $data['indexTemuan']->where('ID',$was->ID)->first()->jml_temuan;
                     $was->jml_rekomendasi = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_rekomendasi;
+                    $was->jml_tl_1 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_1;
+                    $was->jml_tl_2 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_2;
+                    $was->jml_tl_3 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_3;
+                    $was->jml_tl_4 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_4;
                     $collect[] = $was;
                 }
 
@@ -720,7 +737,11 @@
                 ->get();
                 $data['indexRekomend'] = DB::table('t_lap_awas')->selectRaw(
                     'concat(`t_ref_unit`.`id`,`t_lap_awas`.`id_jenis_was`) AS `ID`,
-                    count(`t_lap_awas_rekomend`.`id`) AS `jml_rekomendasi`'
+                    count(`t_lap_awas_rekomend`.`id`) AS `jml_rekomendasi`,
+                    sum(if(`t_ref_tl`.`id` = 1, 1, 0)) AS `jml_tl_1`,
+                    sum(if(`t_ref_tl`.`id` = 2, 1, 0)) AS `jml_tl_2`,
+                    sum(if(`t_ref_tl`.`id` = 3, 1, 0)) AS `jml_tl_3`,
+                    sum(if(`t_ref_tl`.`id` = 4, 1, 0)) AS `jml_tl_4`'
                 )->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
                 ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')
                 ->leftjoin('t_lap_awas_temuan','t_lap_awas.id','=','t_lap_awas_temuan.id_lap')
@@ -747,6 +768,11 @@
                 foreach($data['indexWas'] as $was){
                     $was->jml_temuan = $data['indexTemuan']->where('ID',$was->ID)->first()->jml_temuan;
                     $was->jml_rekomendasi = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_rekomendasi;
+                    $was->jml_tl_1 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_1;
+                    $was->jml_tl_2 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_2;
+                    $was->jml_tl_3 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_3;
+                    $was->jml_tl_4 = $data['indexRekomend']->where('ID',$was->ID)->first()->jml_tl_4;
+
                     $collect[] = $was;
                 }
 
@@ -766,11 +792,35 @@
                 $data['collection'] = $collect;
              }
 
-             //dd($data['collection']);
+            //dd($data);
 
             $this->cbView('lapTLanjut',$data);
 
 
+        }
+
+        public function getTlanjut($id){
+            $id_unit = substr($id,0,-1);
+            $id_jenis_was = substr($id,-1);
+            if(CRUDBooster::myPrivilegeId() == 4){
+                $data['data'] = DB::table('t_lap_awas')
+                ->selectRaw('t_lap_awas.*, t_ref_unit.unit, t_ref_unit.id as id_unit')
+                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
+                //->where('t_lap_awas.id_jenis_was',$id_jenis_was)
+                ->where('t_ref_unit.id',$id_unit)
+                ->where('id_status_kirim',2)
+                ->get();
+            }else{
+                $data['data'] = DB::table('t_lap_awas')
+                ->selectRaw('t_lap_awas.*, t_ref_unit.unit, t_ref_unit.id as id_unit')
+                ->join('cms_users','t_lap_awas.id_user','=','cms_users.id')->join('t_ref_unit','cms_users.id_kode_unit','=','t_ref_unit.id')
+                //->where('t_lap_awas.id_jenis_was',$id_jenis_was)
+                ->where('t_ref_unit.id',$id_unit)
+                ->get();
+            }
+
+            //dd($id_unit,$id_jenis_was);
+            return view('modal.tlanjut',$data);
         }
 
 

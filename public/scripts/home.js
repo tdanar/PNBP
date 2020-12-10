@@ -1,3 +1,13 @@
+$(function(){
+    $('a.disabled').on('click',function(event){
+        event.preventDefault();
+    }).removeClass('disabled');
+});
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+            
             var chart;
             /*var chartData = [
                 {

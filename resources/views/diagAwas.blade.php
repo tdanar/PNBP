@@ -62,7 +62,7 @@
 <!-- amCharts javascript code-->
     <script type="text/javascript">
         var data1 = JSON.parse("{{$result1}}".replace(/&quot;/g,'"'));
-        console.log(data1);
+        //console.log(data1);
         AmCharts.makeChart("piegraphs1",
             {
                 "type": "pie",

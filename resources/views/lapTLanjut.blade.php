@@ -50,6 +50,7 @@ $(document).ready(function() {
                         sLast:     "Terakhir"
                         }
                     },
+                    order:[[0,'asc'],[1,'asc'],[2,'asc']],
                     processing: true,
                     searching: true,
                     paging: true,
@@ -113,6 +114,9 @@ $(document).ready(function() {
             });
 
 });
+    $('.modal').on('hidden.bs.modal', function () {
+        location.reload();
+      });
 
     function klikDelete(link) {
          swal({
@@ -194,7 +198,7 @@ $(document).ready(function() {
 @section('content')
 
 <div class="col-xs-12 col-sm-12">
-<form class="form-horizontal" action="{{ URL::to('/ma/monitoring/') }}">
+<form class="form-horizontal" action="{{ URL::to('/ma/lap_awas_tlanjut/') }}">
     {{ csrf_field() }}
 <div class="row">
     <div class="col-xs-3 text-right">
@@ -391,21 +395,59 @@ $(document).ready(function() {
         <td>
             <div style="vertical-align: middle">
         @if (in_array(CRUDBooster::myPrivilegeId(),array(1,3,4)))
-        <a class="btn btn-primary" href="/ma/monitoring/dlPDF/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"><i class="fa fa-file-pdf"></i> Preview</a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}</span>
-        <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content"><div class="text-center">Memproses...</div>
-                        </div>
-                    </div>
-                </div>
+                @if($row->jml_rekomendasi-(int)$row->jml_tl_1 == 0)
+                <button type="button" class="btn btn-success btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                @elseif((int)$row->jml_tl_2 > 0)
+                <button type="button" class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                @elseif((int)$row->jml_tl_3 > 0)
+                <button type="button" class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                @elseif((int)$row->jml_tl_4 > 0)
+                <button type="button" class="btn btn-dark btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                @else
+                <button type="button" class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                @endif
         @elseif(in_array(CRUDBooster::myPrivilegeId(),array(2,5)) && CRUDBooster::myUnit() == $row->unit)
-        <a class="btn btn-primary" href="/ma/monitoring/dlPDF/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"><i class="fa fa-file-pdf"></i> Preview</a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}</span>
-        <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content"><div class="text-center">Memproses...</div>
+                @if($row->jml_rekomendasi-(int)$row->jml_tl_1 == 0)
+                <a type="button" class="btn btn-success btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content"><div class="text-center">Memproses...</div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @elseif((int)$row->jml_tl_2 > 0)
+                <a type="button" class="btn btn-warning btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content"><div class="text-center">Memproses...</div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif((int)$row->jml_tl_3 > 0)
+                <a type="button" class="btn btn-danger btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content"><div class="text-center">Memproses...</div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif((int)$row->jml_tl_4 > 0)
+                <a type="button" class="btn btn-dark btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content"><div class="text-center">Memproses...</div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                <a type="button" class="btn btn-danger btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
+                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content"><div class="text-center">Memproses...</div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
         @else
         @endif
             </div>

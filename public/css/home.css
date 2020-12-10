@@ -1,5 +1,26 @@
 @import '../vendor/owlcarousel/owl.carousel.min.css';
 @import '../vendor/owlcarousel/owl.theme.default.min.css';
+
+a.disabled{
+    pointer-events: none;
+    cursor: default;
+}
+
+.btn-circle {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	padding: 6px 0;
+	font-size: 12px;
+	line-height: 1.42;
+	border-radius: 15px;
+  }
+
+  .btn-dark{
+	background-color:black;
+	color:white;
+	}
+
 .bg_search{
 	position:fixed;
 	background:rgba(0,0,0,.5);

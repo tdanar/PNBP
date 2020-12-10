@@ -13,6 +13,9 @@ class faqController extends Controller {
         $data['id'] = CRUDBooster::myId();
         $data['nama'] = CRUDBooster::myName();
         $data['foto'] = CRUDbooster::myPhoto();
+        $data['panduan_emawas'] = DB::table('t_panduan')->where('kategori','Panduan terkait Penggunaan e-Mawas PNBP')->where('show',1)->get();
+        $data['panduan_pnbp'] = DB::table('t_panduan')->where('kategori','Panduan terkait Pengawasan PNBP')->where('show',1)->get();
+
         //dd($data);
         return View::make('faq')->with($data);
     }

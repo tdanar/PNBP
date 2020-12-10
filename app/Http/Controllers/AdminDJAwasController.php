@@ -572,8 +572,29 @@
                                        ->get();
              } */
              else{
+
+                $queryku = '&'.implode('&', array_map(
+                    function ($v, $k) { return sprintf("%s=%s", $k, $v); },
+                    $input,
+                    array_keys($input)
+                ));
                 $data['tahunSelector'] = DB::table('t_lap_awas')->get();
                 $data['statusSelector'] = DB::table('t_lap_awas')->leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->leftjoin('t_ref_statkirim','t_ref_statkirim.id','=','t_lap_awas.id_status_kirim')->where('cms_users.id_kode_unit',CRUDBooster::myUnitId())->get();
+                $data['resultInputer'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,cms_users.name AS `Nama`,CONCAT("/ma/lap_awas?user=",cms_users.name,"'.$queryku.'") AS `url`')
+                                            ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
+                                            ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
+                                            ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
+                                            ->where(
+                                                    function ($query) use ($input, $filters) {
+                                                        foreach ($filters as $column => $key) {
+                                                            $query->when(array_get($input, $key), function ($query, $value) use ($column) {
+                                                                $query->where($column, $value);
+                                                            });
+                                                        }
+                                                    }
+                                                )
+                                            ->groupBy('cms_users.name')
+                                            ->get());
                 $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
                                        ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
                                        ->where(

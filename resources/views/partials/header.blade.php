@@ -187,7 +187,7 @@
 											<a href="\helpdesk">Hubungi Kami<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\faq">FAQ<div class="mobileTriggerButton"></div></a>
+											<a href="\faq">Panduan<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
                                             <a href="javascript:void(0)">Tautan<div class="mobileTriggerButton"></div></a>
@@ -234,7 +234,7 @@
                                                     <a href="\helpdesk">Hubungi Kami</a>
                                                 </li>
                                                 <li>
-                                                    <a href="\faq">FAQ</a>
+                                                    <a href="\faq">Panduan</a>
                                                 </li>
                                                 <li>
                                                     <span>
