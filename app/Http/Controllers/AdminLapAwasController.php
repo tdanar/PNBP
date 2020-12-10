@@ -798,16 +798,16 @@
             `t_lap_awas_rekomend`.`tgl_tl`,
             `t_lap_awas_rekomend`.`tl`,
             `t_lap_awas_rekomend`.`rekomendasi`')->
-            join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
-            join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
-            join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
+            leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
+            leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
             join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
             join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
-            join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
-            join('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
-            join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+            leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
+            leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
+            leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
             join('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
-            where('t_lap_awas_temuan.id_lap',$id)->get();
+            where('t_lap_awas.id',$id)->get();
 
             $detail['countTemuan'] = DB::table('t_lap_awas_temuan')->where('id_lap',$id)->count();
             $detail['countRekomend'] = DB::table('t_lap_awas_rekomend')->join('t_lap_awas_temuan','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('id_lap',$id)->count();

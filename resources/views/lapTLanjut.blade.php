@@ -18,15 +18,6 @@
 <script>
 $(document).ready(function() {
     var unit = {!! json_encode(CRUDBooster::myUnit()) !!};
-    var pesanAtas = {!! json_encode($_GET['tahun'] == ''?'Semua Tahun,':'Tahun: '.$_GET['tahun'].', ') !!}+'\n'+
-                    {!! json_encode($_GET['unit'] == ''?'Semua Kementerian/Lembaga, ':'Kementerian/Lembaga: '.$_GET['unit'].', ') !!}+'\n'+
-                    {!! json_encode($_GET['jenis_was'] == ''?'Semua Jenis Pengawasan, ':'Jenis Pengawasan: '.$_GET['jenis_was'].', ') !!}+'\n'+
-                    {!! json_encode($_GET['DeskTemuan'] == ''?'Semua Kodefikasi Temuan, ':'Kodefikasi Temuan: '.$_GET['DeskTemuan'].', ') !!}+'\n'+
-                    {!! json_encode($_GET['DeskSebab'] == ''?'Semua Kodefikasi Sebab, ':'Kodefikasi Sebab: '.$_GET['DeskSebab'].', ') !!}+'\n'+
-                    {!! json_encode($_GET['DeskRek'] == ''?'Semua Kodefikasi Rekomendasi, ':'Kodefikasi Rekomendasi: '.$_GET['DeskRek'].', ') !!}+'\n'+
-                    {!! json_encode($_GET['KodTL'] == ''?'Semua Status TL, ':'Status TL: '.$_GET['KodTL'].', ') !!}+'\n'+
-                    {!! json_encode($_GET['statusKirim'] == ''?'Semua Status Kirim':'Status Kirim: '.$_GET['statusKirim']) !!};
-
     var table = $('#lapawas').DataTable({
 
             language:
@@ -50,26 +41,158 @@ $(document).ready(function() {
                         sLast:     "Terakhir"
                         }
                     },
-                    order:[[0,'asc'],[1,'asc'],[2,'asc']],
+                    order:[[0,'desc'],[1,'desc']],
+                    serverSide: true,
+                    ajax: {
+                                url: '/api/getAwas',
+                                type: 'POST'
+                            },
+                    columns: [
+                                        { 'data': 'tahun'},
+
+                                        { 'data': 'unit'},
+
+                                        { 'data': 'tanggal', 'render':  function (data, type, full, meta){
+                                            if (data != null && (type === 'display' || type === 'filter')) {
+                                                let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                                                            return new Date(data).toLocaleString("id-ID",options);
+                                                }
+                                            return data;
+                                        }},
+                                        { 'data': 'no_lap'},
+                                        { 'data': 'nama_giat_was'},
+
+                                        { 'data': 'jenis_awas'},
+
+                                        { 'data': 'judul',
+                                            'render': function (data, type, full, meta) {
+                                                if (data != null && (type === 'display' || type === 'filter') ){
+                                                    var detil = '<div class="row">'+
+                                                                '<div class="col-xs-3 text-right"><b>Kondisi:</b></div>'+
+                                                                '<div class="col-xs-9">'+full.kondisi+'</div>'+
+                                                            '</div>'+
+                                                            '<div class="row">'+
+                                                                '<div class="col-xs-3 text-right"><b>Sebab:</b></div>'+
+                                                                    '<div class="col-xs-9">'+full.sebab+'</div>'+
+                                                            '</div>'+
+                                                            '<div class="row">'+
+                                                                '<div class="col-xs-3 text-right"><b>Akibat:</b></div>'+
+                                                                    '<div class="col-xs-9">'+full.akibat+'</div>'+
+                                                            '</div>';
+                                                    return  data+'<br/><center><a class="btn btn-xs btn-success" href="javascript:void(0)" role="button" data-toggle="popover2" title="Detil" data-content='+'\''+detil+'\''+'><i class="fa fa-angle-down"></i></a></center>';
+
+                                                }
+                                                return data;
+                                            }
+                                        },
+
+                                        {'data': 'DeskTemuan'},
+                                        {'data': 'kondisi'},
+
+                                        { 'data': 'nilai_uang',
+                                            'render': function (data, type, full, meta) {
+                                                if(full.nilai_uang != null && (type === 'display' || type === 'filter')){
+                                                    return full.KodeMatauang+' '+full.nilai_uang.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                                }
+                                                return data;
+                                            }
+                                        },
+
+                                        {'data': 'sebab'},
+                                        {'data': 'DeskSebab'},
+                                        {'data': 'akibat'},
+
+                                        { 'data': 'rekomendasi'},
+
+                                        {'data': 'DeskRekomendasi'},
+                                        {'data': 'tl'},
+
+
+                                        { 'data': 'KodTL','render': function (data, type, full, meta) {
+                                           if(full.KodTL == 'Sesuai'){
+                                               return '<div class="btn btn-success btn-circle" title="Sesuai"></div>'
+                                           }else if(full.KodTL == 'Belum Sesuai'){
+                                            return '<div class="btn btn-warning btn-circle" title="Belum Sesuai"></div>'
+                                            }else if(full.KodTL == 'Tidak dapat ditindaklanjuti'){
+                                                return '<div class="btn btn-black btn-circle" title="Tidak dapat ditindaklanjuti"></div>'
+                                            }else if(full.KodTL == 'Belum Ditindaklanjuti'){
+                                                return '<div class="btn btn-danger btn-circle" title="Belum Ditindaklanjuti"></div>'
+                                           }else{
+                                                return '<div class="btn btn-primary btn-circle" title="Tidak Ada Rekomendasi"></div>'
+                                           } 
+                                        }},
+                                        { 'render': function (data, type, full, meta) {
+                                                    var myId = {!! json_encode(CRUDBooster::myPrivilegeId()) !!};
+                                                    var mainpath = {!! json_encode(CRUDBooster::mainpath()) !!};
+                                                    var temuanpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_temuan')) !!};
+                                                    var rekpath = {!! json_encode(CRUDBooster::adminPath($slug='lap_awas_rekomend')) !!};
+                                                    var delpath = {!! json_encode(CRUDBooster::mainpath()) !!}+'/delete/'+full.id;
+                                                    var addpath = {!! json_encode(CRUDBooster::mainpath()) !!}+'/addTL/'+full.id;
+                                                    var verpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/validasi/'+full.id;
+                                                    var revpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/reviu/'+full.id;
+                                                    var batalpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/batal/'+full.id;
+                                                    var begin = "<div class='btn-toolbar' role='toolbar'><div class='btn-group btn-group-xs' role='group'>";
+                                                    var end = "</div></div>";
+                                                    var penanda = '<span style="color: #ffffff; opacity: 0.0;">'+full.id+'</span>';
+
+                                                    switch (true) {
+                                                                case ({!! json_encode(CRUDBooster::isUpdate()) !!}):
+                                                                    var button = '<a class="btn btn-success btn-xs btn-block" href="'+addpath+'" role="button" data-toggle="modal" title="Tindak Lanjut" data-target="#addTl'+full.id+'"><i class="fa fa-pen-nib"></i></a>'+
+                                                                                    '<div id="addTl'+full.id+'" class="modal fade" role="dialog">'+
+                                                                                        '<div class="modal-dialog modal-lg" role="document">'+
+                                                                                            '<div class="modal-content"><div class="text-center">Memproses...</div>'+
+                                                                                                '</div>'+
+                                                                                            '</div>'+
+                                                                                        '</div>';
+
+                                                                case ({!! json_encode(CRUDBooster::isView()) !!}):
+
+                                                                case ({!! json_encode(CRUDBooster::isDelete()) !!}):
+
+                                                                break;
+
+                                                                default:
+                                                                    var button = '';
+
+
+                                                            };
+                                                    if(full.id_rekomendasi != null){
+                                                        return button+penanda;
+                                                    }else{
+                                                        return penanda;
+                                                    }
+                                                    
+
+                                                    },
+                                        'orderable': false,
+                                        },
+                                        {'data':'inputer'},
+                                        {'data':'id_status_kirim'}
+                                    ],
                     processing: true,
                     searching: true,
+                    deferRender: true,
                     paging: true,
                     scrollX: true,
                     dom:'B<"col-xs-3 col-xs-offset-9"f>tr<"col-xs-6 col-sm-6"i><"col-xs-6 col-sm-6"p>',
                     buttons: [{
                                     extend: 'excel',
                                     header: true,
-                                    footer: true,
-                                    title: unit,
-                                    messageTop: pesanAtas,
+                                    messageTop: unit,
                                     exportOptions: {
-                                        columns: [1,2,3,4,5]
+                                        columns: [' :not(:last-child)'],
+                                        orthogonal: {
+                                            'type': null
+                                        }
                                     }
                                 }],
                     columnDefs: [{
-                                targets: [6],
-                                searchable: false,
-                                orderable: false,
+                                targets: [3,13],
+                                render: $.fn.dataTable.render.ellipsis(40)
+                                },{
+                                targets: [1,5,7,8,10,11,12,14,15,18,19],
+                                searchable: true,
+                                visible: false,
                                 } ],
                     initComplete: function() {
                                     var $buttons = $('.dt-buttons').hide();
@@ -81,19 +204,6 @@ $(document).ready(function() {
 
                                 },
                     drawCallback: function ( settings ) {
-
-                                    $('#table-filter2').on('change', function(e){
-                                                table.column(5).search(this.value).draw();
-                                                e.preventDefault();
-                                                });
-                                    $('#table-filter3').on('change', function(e){
-                                                table.column(9).search(this.value).draw();
-                                                e.preventDefault();
-                                                });
-                                    $('#table-filter-paging').on('change', function(){
-                                                val = this.value;
-                                                table.page.len(val).draw();
-                                                });
 
                                     $('[data-toggle="popover"]').popover({
                                         trigger: "hover",
@@ -109,55 +219,167 @@ $(document).ready(function() {
                                         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 style="background-color:green;color:white;" class="popover-title text-uppercase"></h3><div class="popover-content"></div></div>',
                                         html: true
                                     });
+
                                     drawCallback(this.api());
+                                    $('#table-filter').on('change', function(){
+                                                val = this.value;
+                                                table.column(0).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
+                                    $('#table-filter2').on('change', function(){
+                                                val = this.value;
+                                                table.column(5).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
+                                    $('#table-filter3').on('change', function(){
+                                                val = this.value;
+                                                table.column(16).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
+                                    $('#table-filter4').on('change', function(){
+                                                val = this.value;
+                                                table.column(19).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                });
+                                    $('#table-filter-unit').on('change', function(){
+                                                val = this.value;
+                                                table.column(1).search(val).draw();
+                                                });
+                                    $('#table-filter-temuan').on('change', function(){
+                                                val = this.value;
+                                                table.column(7).search(val).draw();
+                                                });
+                                    $('#table-filter-sebab').on('change', function(){
+                                                val = this.value;
+                                                table.column(11).search(val).draw();
+                                                });
+                                    $('#table-filter-rekomend').on('change', function(){
+                                                val = this.value;
+                                                table.column(14).search(val).draw();
+                                                });
+                                    $('#table-filter-paging').on('change', function(){
+                                                val = this.value;
+                                                table.page.len(val).draw();
+                                                });
                             }
             });
 
-});
-    $('.modal').on('hidden.bs.modal', function () {
-        location.reload();
-      });
+            $(document.body).on('hide.bs.modal', function (e) {
+                                            //divid = '#'+e.target.id;
+                                            //$(e.target).removeData('bs.modal');
+                                            table.draw(false);
 
-    function klikDelete(link) {
+        });
+
+});
+   
+
+function klikDelete(link) {
          swal({
-            title: "Apakah anda yakin ?",
+            title: "Apakah anda yakin menghapus laporan ini?",
             text: "Anda tidak akan dapat mengembalikan data anda!",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#ff0000",
-            confirmButtonText: "Ya",
-            cancelButtonText: "Tidak",
+            confirmButtonText: "Hapus",
+            cancelButtonText: "Batal",
             closeOnConfirm: false },
             function(){  location.href=link });
             null;
         };
 
-        function drawCallback(api) {
+    function klikKirim(link){
+        swal({
+            title: "Anda yakin ingin lanjut mengirimkan laporan ini ke approver Anda? ",
+            text: "Setelah Kirim, Anda tidak dapat mengubah data laporan lagi",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Kirim",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false },
+            function(){  location.href=link });
+            null;
+    };
+
+    function klikTolak(id){
+        var formData = $('#form'+id).serialize();
+        //console.log(formData);
+        swal({
+            title: "Anda yakin ingin menolak laporan ini? ",
+            text: "Setelah Ditolak, laporan harus dikirim ulang oleh inputer Anda",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Tolak",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false },
+            function(){
+                location.href='/ma/rev?'+formData;
+             });
+            null;
+    };
+
+    function klikSetuju(id){
+        var formData = $('#form'+id).serialize();
+        swal({
+            title: "Anda yakin ingin menyetujui laporan ini? ",
+            text: "Setelah Disetujui, laporan terkirim ke Kementerian Keuangan dan tidak dapat diubah lagi.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Setuju",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false },
+            function(){
+                location.href='/ma/rev?'+formData;
+                });
+            null;
+    };
+
+    function klikBatal(link){
+        swal({
+            title: "Anda yakin ingin membatalkan pengiriman laporan ini? ",
+            text: "Setelah klik Ya, Pengguna wajib mengirimnya kembali",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f39c12",
+            confirmButtonText: "Ya",
+            cancelButtonText: "Tidak",
+            closeOnConfirm: false },
+            function(){  location.href=link });
+            null;
+    };
+
+
+
+
+    function drawCallback(api) {
         var info = api.page.info();
         var last = (api.columns(':visible')[0].length)-1;
-
+        //console.log(api.columns());
         if(info.recordsDisplay != 0){
-        var rows = api.rows( {page:'current'} ).nodes(),
+            var rows = api.rows( {page:'current'} ).nodes(),
             settings = {
-                    "COLUMN_THEME" : 1,
-                    "COLUMN_SUBTHEME" : 3,
-                    "COLUMN_SUBTHEME1" : 13
+                    "COLUMN_THEME" : 0,
+                    "COLUMN_SUBTHEME" : 1,
+                    "COLUMN_SUBTHEME2" : 2,
+                    "COLUMN_SUBTHEME3" : 3,
+                    "COLUMN_SUBTHEME4" : 4,
+                    "COLUMN_SUBTHEME5" : 5,
+                    "COLUMN_THEME2" : last
 
             };
 
                 $("#lapawas").find('td').show();
                 mergeCells(rows, settings.COLUMN_THEME);
                 mergeCells(rows, settings.COLUMN_SUBTHEME);
-                mergeCells(rows, settings.COLUMN_SUBTHEME1);
-
-
-
-
-    }else{
-
-    }
+                mergeCells(rows, settings.COLUMN_SUBTHEME2);
+                mergeCells(rows, settings.COLUMN_SUBTHEME3);
+                mergeCells(rows, settings.COLUMN_SUBTHEME4);
+                mergeCells(rows, settings.COLUMN_SUBTHEME5);
+                mergeCells(rows, settings.COLUMN_THEME2);
+        }else{
         }
-        function mergeCells(rows, rowIndex) {
+
+            }
+    function mergeCells(rows, rowIndex) {
         var last = null,
                 currentRow = null,
                 k = null,
@@ -196,280 +418,158 @@ $(document).ready(function() {
 </script>
 @endpush
 @section('content')
-
 <div class="col-xs-12 col-sm-12">
-<form class="form-horizontal" action="{{ URL::to('/ma/lap_awas_tlanjut/') }}">
-    {{ csrf_field() }}
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Tahun Pengawasan : </label>
-    </div>
-    <div class="col-xs-2">
-    <select class="form-control" name="tahun">
-        <option value="">All</option>
-        @foreach($result->unique('tahun')->sortBy('tahun') as $row)
-        @if($row->tahun == $input['tahun'])
-        <option value="{{$row->tahun}}" selected="selected">{{$row->tahun}}</option>
-        @else
-        <option value="{{$row->tahun}}">{{$row->tahun}}</option>
-        @endif
-        @endforeach
-        </select>
-    </div>
-</div>
-@if(in_array(CRUDBooster::myPrivilegeId(),array(1,3,4)))
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Kementerian / Lembaga : </label>
-    </div>
-    <div class="col-xs-2">
-    <select class="form-control" name="unit">
-        <option value="">All</option>
-        @foreach($result->unique('unit')->sortBy('unit') as $row)
-            @if($row->unit == $input['unit'])
-            <option value="{{$row->unit}}" selected="selected">{{$row->unit}}</option>
-            @else
-            <option value="{{$row->unit}}">{{$row->unit}}</option>
-            @endif
-        @endforeach
-        </select>
-    </div>
-</div>
-@endif
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Jenis Pengawasan : </label>
-    </div>
-    <div class="col-xs-2">
-        <select class="form-control" name="jenis_was">
+    <div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter">Tahun Pengawasan : </label>
+        </div>
+        <div class="col-xs-2">
+        <select id="table-filter">
             <option value="">All</option>
-            @foreach($result->unique('jenis_awas')->sortBy('jenis_awas') as $row)
-                @if($row->jenis_awas == $input['jenis_was'])
-                <option value="{{$row->jenis_awas}}" selected="selected">{{$row->jenis_awas}}</option>
-                @else
-                <option value="{{$row->jenis_awas}}">{{$row->jenis_awas}}</option>
-                @endif
+            @foreach($result->unique('tahun') as $row)
+            <option>{{$row->tahun}}</option>
             @endforeach
             </select>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Klasifikasi Temuan : </label>
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter2">Jenis Pengawasan : </label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter2">
+                <option value="">All</option>
+                @foreach($result->unique('jenis_awas') as $row)
+                <option>{{$row->jenis_awas}}</option>
+                @endforeach
+                </select>
+        </div>
     </div>
-    <div class="col-xs-2">
-        <select class="form-control" name="klasTemuan">
-            <option value="">All</option>
-            @foreach($result->unique('KlasTemuan')->where('KlasTemuan','!=',null)->sortBy('KlasTemuan') as $row)
-            @if($row->IdKlasTemuan == $input['klasTemuan'])
-                <option value="{{$row->IdKlasTemuan}}" selected="selected">{{$row->KlasTemuan}}</option>
-            @else
-                <option value="{{$row->IdKlasTemuan}}">{{$row->KlasTemuan}}</option>
-            @endif
-            @endforeach
-            </select>
+    @if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4 || CRUDBooster::myPrivilegeId() == 5)
+    @if(CRUDBooster::myPrivilegeId() != 5)
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter-unit">Kementerian / Lembaga : </label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter-unit">
+                <option value="">All</option>
+                @foreach($result->unique('unit') as $row)
+                <option>{{$row->unit}}</option>
+                @endforeach
+                </select>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Klasifikasi Sebab : </label>
+    @endif
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter-temuan">Klasifikasi Temuan : </label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter-temuan">
+                <option value="">All</option>
+                @foreach($result->unique('DeskTemuan')->where('DeskTemuan','!=',null) as $row)
+                <option>{{$row->DeskTemuan}}</option>
+                @endforeach
+                </select>
+        </div>
     </div>
-    <div class="col-xs-2">
-        <select class="form-control" name="klasSebab">
-            <option value="">All</option>
-            @foreach($result->unique('KlasSebab')->where('KlasSebab','!=',null)->sortBy('KlasSebab') as $row)
-                @if($row->IdKlasSebab == $input['klasSebab'])
-                    <option value="{{$row->IdKlasSebab}}" selected="selected">{{$row->KlasSebab}}</option>
-                @else
-                    <option value="{{$row->IdKlasSebab}}">{{$row->KlasSebab}}</option>
-                @endif
-            @endforeach
-            </select>
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter-sebab">Klasifikasi Sebab : </label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter-sebab">
+                <option value="">All</option>
+                @foreach($result->unique('DeskSebab')->where('DeskSebab','!=',null) as $row)
+                <option>{{$row->DeskSebab}}</option>
+                @endforeach
+                </select>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Klasifikasi Rekomendasi : </label>
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter-rekomend">Klasifikasi Rekomendasi : </label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter-rekomend">
+                <option value="">All</option>
+                @foreach($result->unique('DeskRekomendasi')->where('DeskRekomendasi','!=',null) as $row)
+                <option>{{$row->DeskRekomendasi}}</option>
+                @endforeach
+                </select>
+        </div>
     </div>
-    <div class="col-xs-2">
-        <select class="form-control" name="klasRek">
-            <option value="">All</option>
-            @foreach($result->unique('DeskRekomendasi')->where('DeskRekomendasi','!=',null)->sortBy('DeskRekomendasi') as $row)
-                @if($row->IdKlasRekomendasi == $input['klasRek'])
-                    <option value="{{$row->IdKlasRekomendasi}}" selected="selected">{{$row->DeskRekomendasi}}</option>
-                @else
-                    <option value="{{$row->IdKlasRekomendasi}}">{{$row->DeskRekomendasi}}</option>
-                @endif
-            @endforeach
-            </select>
+    @endif
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter3">Status Tindak Lanjut :</label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter3">
+                <option value="">All</option>
+                @foreach($result->unique('KodTL')->where('KodTL','!=',null) as $row)
+                <option>{{$row->KodTL}}</option>
+                @endforeach
+                </select>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Status Tindak Lanjut : </label>
+    <div class="row">
+        <div class="col-xs-3 text-right">
+            <label for="table-filter4">Status Kirim :</label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter4">
+                <option value="">All</option>
+                @foreach($result->unique('StatKirim')->where('StatKirim','!=',null)->sortBy('StatKirim') as $row)
+            <option value="{{$row->id_status_kirim}}">{{$row->StatKirim}}</option>
+                @endforeach
+                </select>
+        </div>
     </div>
-    <div class="col-xs-2">
-        <select class="form-control" name="KodTL">
-            <option value="">All</option>
-            @foreach($result->unique('KodTL')->where('KodTL','!=',null)->sortBy('KodTL') as $row)
-                @if($row->KodTL == $input['KodTL'])
-                <option value="{{$row->KodTL}}" selected="selected">{{$row->KodTL}}</option>
-                @else
-                <option value="{{$row->KodTL}}">{{$row->KodTL}}</option>
-                @endif
-            @endforeach
-            </select>
+    
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>Status Kirim : </label>
     </div>
-    <div class="col-xs-2">
-        <select class="form-control" name="statusKirim">
-            <option value="">All</option>
-            @foreach($result->unique('statusKirim')->where('statusKirim','!=',null)->sortBy('statusKirim') as $row)
-                @if($row->statusKirim == $input['statusKirim'])
-                <option value="{{$row->statusKirim}}" selected="selected">{{$row->statusKirim}}</option>
-                @else
-                <option value="{{$row->statusKirim}}">{{$row->statusKirim}}</option>
-                @endif
-            @endforeach
-            </select>
+    <div class="row">
+        <div class="col-xs-10 text-right">
+            <label for="table-filter-paging">Pilih Paging : </label>
+        </div>
+        <div class="col-xs-2">
+            <select id="table-filter-paging">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="-1">All</option>
+                </select>
+        </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-3 text-right">
-        <label>&nbsp; </label>
-    </div>
-    <div class="col-xs-2">
-        <button type="submit" class="btn btn-default">Tampilkan</button>
-    </div>
-</div>
-</form>
-</div>
-<div class="row">
-    <div class="col-xs-10 text-right">
-        <label for="table-filter-paging">Pilih Paging : </label>
-    </div>
-    <div class="col-xs-2">
-        <select id="table-filter-paging">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="-1">All</option>
-            </select>
-    </div>
-</div>
 <table id="lapawas" border="1" class="display" style="width:100%">
-  <thead>
-      <tr style="background-color:#A9A9A9;">
-        <th>No.</th>
-        <th>Kementerian / Lembaga</th>
-        <th>Jenis Pengawasan</th>
-        <th>Jumlah Pengawasan</th>
-        <th>Jumlah Temuan</th>
-        <th>Jumlah Rekomendasi</th>
-        <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody>
-      @php($total_awas = 0)
-      @php($total_temuan = 0)
-      @php($total_rekomendasi = 0)
-
-      @if ($collection)
-
-          @foreach ($collection as $row)
-        <tr>
-        <td><center>{{$row->urutan}}</center></td>
-        <td>{{$row->unit}}</td>
-        <td>{{$row->jenis_awas}}</td>
-        <td>{{$row->jml_pengawasan}}</td>
-        @php($total_awas += $row->jml_pengawasan)
-        <td>{{$row->jml_temuan}}</td>
-        @php($total_temuan += $row->jml_temuan)
-        <td>{{$row->jml_rekomendasi}}</td>
-        @php($total_rekomendasi += $row->jml_rekomendasi)
-        <td>
-            <div style="vertical-align: middle">
-        @if (in_array(CRUDBooster::myPrivilegeId(),array(1,3,4)))
-                @if($row->jml_rekomendasi-(int)$row->jml_tl_1 == 0)
-                <button type="button" class="btn btn-success btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                @elseif((int)$row->jml_tl_2 > 0)
-                <button type="button" class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                @elseif((int)$row->jml_tl_3 > 0)
-                <button type="button" class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                @elseif((int)$row->jml_tl_4 > 0)
-                <button type="button" class="btn btn-dark btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                @else
-                <button type="button" class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="top" title="{{$row->KodTL}}"></button><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                @endif
-        @elseif(in_array(CRUDBooster::myPrivilegeId(),array(2,5)) && CRUDBooster::myUnit() == $row->unit)
-                @if($row->jml_rekomendasi-(int)$row->jml_tl_1 == 0)
-                <a type="button" class="btn btn-success btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content"><div class="text-center">Memproses...</div>
-                            </div>
-                        </div>
-                    </div>
-                @elseif((int)$row->jml_tl_2 > 0)
-                <a type="button" class="btn btn-warning btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content"><div class="text-center">Memproses...</div>
-                            </div>
-                        </div>
-                    </div>
-                @elseif((int)$row->jml_tl_3 > 0)
-                <a type="button" class="btn btn-danger btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content"><div class="text-center">Memproses...</div>
-                            </div>
-                        </div>
-                    </div>
-                @elseif((int)$row->jml_tl_4 > 0)
-                <a type="button" class="btn btn-dark btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content"><div class="text-center">Memproses...</div>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                <a type="button" class="btn btn-danger btn-circle" href="/ma/monitoring/tlanjut/{{$row->ID}}" data-toggle="modal" data-target="#dlPDF{{$row->ID}}"></a><span style="color: #ffffff; opacity: 0.0;">{{$row->id_unit}}{{$row->jenis_awas}}</span>
-                <div id="dlPDF{{$row->ID}}" class="modal fade" role="dialog">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content"><div class="text-center">Memproses...</div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-        @else
-        @endif
-            </div>
-        </td>
-        </tr>
-
-        @endforeach
-
-      @endif
-  </tbody>
-  <tfoot>
-      <tr>
-          <td colspan="3">Total:</td>
-          <td>{{$total_awas}}</td>
-          <td>{{$total_temuan}}</td>
-          <td>{{$total_rekomendasi}}</td>
-          <td><div class="row">&nbsp;</div></td>
+    <thead>
+        <tr style="background-color:#A9A9A9;">
+          <th title="Tahun Pengawasan">Thn. Pgwsn</th>
+          <th title="Unit">Unit</th>
+          <th title="Tanggal Laporan">Tgl. Lap.</th>
+          <th title="Nomor Laporan">No. Lap.</th>
+          <th title="Nama Kegiatan Pengawasan">Nama Keg. Pgwsn</th>
+          <th title="Jenis Pengawasan">Jenis Pgwsn</th>
+          <th title="Judul Temuan">Temuan</th>
+          <th title="Klasifikasi Temuan">Klasifikasi Temuan</th>
+          <th title="Kondisi">Kondisi</th>
+          <th title="Nilai Temuan">Nilai</th>
+          <th title="Sebab">Sebab</th>
+          <th title="Klasifikasi Sebab">Klasifikasi Sebab</th>
+          <th title="Akibat">Akibat</th>
+          <th title="Rekomendasi">Rekomendasi</th>
+          <th title="Klasifikasi Rekomendasi">Klasifikasi Rekomendasi</th>
+          <th title="Progres Rekomendasi">Progres Rekomendasi</th>
+          <th title="Klasifikasi Tindak Lanjut">Status TL</th>
+          <th style="width:50px">Aksi</th>
+          <th>Inputer</th>
+          <th>Status Kirim</th>
       </tr>
-  </tfoot>
-</table>
-
-<!-- ADD A PAGINATION -->
-<p></p>
+    </thead>
+  
+  </table>
 
 @endsection

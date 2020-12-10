@@ -45,6 +45,10 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     Route::get('/infopnbp','perantaraController@getIndex')->name('perantara');
     Route::get('/ma/reviu/{id}','AdminLapAwasController@Reviu')->name('review');
     Route::get('/ma/rev','AdminLapAwasController@Rev');
+    Route::get('/ma/manajemenGrafik','manajemenGrafikController@Index');
+    Route::get('/ma/lap_awas_tlanjut/addTL/{id}', 'AdminLapAwasTlanjutController@getTlanjut');
+
+
     //Route::post('/ma/rev','AdminLapAwasController@Rev');
 });
 
