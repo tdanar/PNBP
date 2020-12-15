@@ -451,7 +451,19 @@
 						<div class="bgs123">
 							<div class="container">
 
-									<center class="bgs123-data"><b>Hasil Pengawasan PNBP oleh APIP K/L TA 2018</b></center>
+									<span class="bgs123-data">
+                                        <div class="row">
+                                            <div class="col-md-1">&nbsp;</div>
+                                            <div class="col-md-8"><b><span class="pull-right">Hasil Pengawasan PNBP oleh APIP K/L TA : </span></b></div>
+                                            <div class="col-md-1"> <select class="text-left" id="sel_tahun">
+                                                <option value="">All</option>
+                                                @foreach($tahunSelector->unique('tahun') as $row)
+                                                <option>{{$row->tahun}}</option>
+                                                @endforeach</select>
+                                            </div>
+                                            <div class="col-md-2">&nbsp;</div>
+                                        </div>
+                                    </span>
 							</div>
                         </div>
                         <!-- amCharts javascript sources -->

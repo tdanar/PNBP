@@ -33,8 +33,9 @@ class homepageController extends Controller {
             })->values()->toArray();
        $data['pnbp_jenis'] = json_encode($array_pnbps);
 
-            $get_trend = DB::table('t_diag_tren_pnbp')->selectRaw('tahun,realisasi_pnbp,realisasi_pn,persentase')->get();
+        $get_trend = DB::table('t_diag_tren_pnbp')->selectRaw('tahun,realisasi_pnbp,realisasi_pn,persentase')->get();
        $data['pnbp_tren'] = json_encode($get_trend);
+
 
        $data['pnbp_temuan'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan2.Deskripsi AS `Jenis Temuan`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
@@ -44,7 +45,9 @@ class homepageController extends Controller {
                                        ->where('t_lap_awas.id_status_kirim',2)
                                        ->groupBy('t_ref_kod_temuan2.Deskripsi')
                                        ->get());
-
+        $st_kirim = 2;
+        $l_tahun = 2019;
+        $data['tahunSelector'] = DB::table('t_lap_awas')->where('id_status_kirim',$st_kirim)->where('tahun','>=',2019)->get();
         $data['pnbp_tl'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
                                         ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                         ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')

@@ -35,17 +35,30 @@
                             <td class="pull-right"><strong>Nama Kegiatan Pengawasan</strong></td>
                             <td>: {{$first->nama_giat_was}}</td>
                         </tr>
-
+                        @if($first->info_lain)
+                        <tr>
+                            <td class="pull-right"><strong>Informasi Lainnya</strong></td>
+                            <td>: {{$first->info_lain}}
+                            </td>
+                        </tr>
+                        @endif
                         <tr>
                             <td class="pull-right"><strong>Status Kirim Laporan</strong></td>
                             <td>:
-                                @if($first->id_status_kirim == 1 || $first->id_status_kirim == 4)
+                                @if($first->id_status_kirim != 2)
                                 <strong class="text-danger">{{$first->StatKirim}}</strong>
                                 @else
                                 <strong class="text-success">{{$first->StatKirim}}</strong>
                                 @endif
                             </td>
                         </tr>
+                        @if($first->comment)
+                        <tr>
+                            <td class="pull-right"><strong>Komentar</strong></td>
+                            <td>: <span class="text-danger">{{$first->comment}}</span>
+                            </td>
+                        </tr>
+                        @endif
                         <tr>
                             <td class="pull-right"><strong>PDF Laporan</strong></td>
                             <td>:
@@ -76,7 +89,13 @@
                                                         <div class="row">
                                                             <div class="col-sm-12 text-justify"><strong class="text-primary">{{$index+1}}. {{$value->judul}}</strong></div>
                                                         </div>
-
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                &ensp;&ensp;&ensp;<strong>Jenis PNBP</strong>
+                                                            </div>
+                                                            <div class="col-sm-8 text-justify">{{$value->jenis_pnbp}}
+                                                            </div>
+                                                        </div>
                                                         <div class="row">
                                                                 <div class="col-sm-4">
                                                                     &ensp;&ensp;&ensp;<strong>Lokasi</strong>

@@ -58,9 +58,7 @@
                             <tr>
                                 <td>Temuan</td>
                                 <td>
-                                    @if ($countTemuan == 0)
-                                    <span class="text-danger">Wajib isi temuan bila jenis pengawasan audit.</span>
-                                    @elseif ($countTemuan > 0 && $jenis_pnbp != 0)
+                                    @if ($countTemuan > 0 && $jenis_pnbp != 0)
                                     <span class="text-danger">Jenis PNBP harus dipilih.</span>
                                     @elseif ($countTemuan > 0 && $kod_temuan != 0)
                                     <span class="text-danger">Kodefikasi temuan harus dipilih.</span>

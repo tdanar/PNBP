@@ -529,8 +529,14 @@
              if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
 
              //Create your own query
+            
              $data = [];
-             $data['page_title'] = 'Laporan Pengawasan PNBP';
+             if(CRUDBooster::myPrivilegeId() == 2 || CRUDBooster::myPrivilegeId() == 5){
+                $data['page_title'] = 'Laporan Pengawasan PNBP : '.CRUDBooster::myUnit();
+            }else{
+                $data['page_title'] = 'Laporan Pengawasan PNBP';
+            }
+             
              if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
@@ -551,6 +557,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -568,6 +576,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -597,6 +606,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -614,6 +625,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -644,6 +656,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -661,6 +675,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -691,6 +706,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -708,6 +725,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -744,7 +762,9 @@
          `t_ref_statkirim`.`status` AS `StatKirim`,
          `t_lap_awas`.`thn_mulai`,
          `t_lap_awas`.`thn_usai`,
+         `t_lap_awas`.`info_lain`,
          `t_lap_awas`.`filename`,
+         `t_lap_awas`.`comment`,
          substring_index(`t_lap_awas`.`filename`, "/", -1) AS namafile,
          `t_ref_jenis_awas`.`jenis_awas`,
          `t_lap_awas`.`created_at`,
@@ -762,6 +782,7 @@
             `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
             `t_lap_awas_temuan`.`id` AS `id_temuan`,
             `t_lap_awas_temuan`.`judul`,
+            `t_ref_jenis_pnbp`.`jenis_pnbp`,
             `t_lap_awas_temuan`.`lokasi`,
             `t_lap_awas_temuan`.`kondisi`,
             `t_lap_awas_temuan`.`sebab`,
@@ -770,6 +791,7 @@
             `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
             `t_lap_awas_temuan`.`nilai_uang`')->
             leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
             leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
             leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
             leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -836,6 +858,8 @@
          `t_ref_statkirim`.`status` AS `StatKirim`,
          `t_lap_awas`.`thn_mulai`,
          `t_lap_awas`.`thn_usai`,
+         `t_lap_awas`.`comment`,
+         `t_lap_awas`.`info_lain`,
          `t_lap_awas`.`filename`,
          substring_index(`t_lap_awas`.`filename`, "/", -1) AS namafile,
          `t_ref_jenis_awas`.`jenis_awas`,
@@ -854,6 +878,7 @@
             `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
             `t_lap_awas_temuan`.`id` AS `id_temuan`,
             `t_lap_awas_temuan`.`judul`,
+            `t_ref_jenis_pnbp`.`jenis_pnbp`,
             `t_lap_awas_temuan`.`lokasi`,
             `t_lap_awas_temuan`.`kondisi`,
             `t_lap_awas_temuan`.`sebab`,
@@ -862,6 +887,7 @@
             `t_ref_matauang`.`deskripsi` AS `DeskMatauang`,
             `t_lap_awas_temuan`.`nilai_uang`')->
             leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
             leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
             leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
             leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -957,6 +983,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -975,6 +1003,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -1010,6 +1039,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -1028,6 +1059,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -1064,6 +1096,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -1082,6 +1116,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -1114,6 +1149,8 @@
                 `t_ref_kod_sebab`.`Deskripsi` AS `DeskSebab`,
                 `t_lap_awas_temuan`.`id` AS `id_temuan`,
                 `t_lap_awas_temuan`.`judul`,
+                `t_lap_awas_temuan`.`id_jenis_pnbp`,
+                `t_ref_jenis_pnbp`.`jenis_pnbp`,
                 `t_lap_awas_temuan`.`kondisi`,
                 `t_lap_awas_temuan`.`sebab`,
                 `t_lap_awas_temuan`.`akibat`,
@@ -1132,6 +1169,7 @@
                 leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
                 leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
                 leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+                leftjoin('t_ref_jenis_pnbp','t_lap_awas_temuan.id_jenis_pnbp','=','t_ref_jenis_pnbp.id')->
                 leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
@@ -1477,12 +1515,25 @@
         }
 
         public function Batal($id){
+            $project = DB::table('t_lap_awas')->selectRaw('t_lap_awas.*,cms_users.name,cms_users.id_cms_privileges,cms_users.id_kode_unit')->leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->where('t_lap_awas.id',$id)->first();
+            $tosend = DB::table('cms_users')->select('id')->where('id',$project->id_user)->first()->id;
             try {
+                $config = [];
+                    $config['content'] = "[Dikembalikan] Administrator telah mengembalikan laporan dengan no.lap: ".$project->no_lap." ke status awal, harap untuk melakukan perbaikan.";
+                    $config['to'] = CRUDBooster::adminPath('lap_awas')."?no_lap=".$project->no_lap;
+                    $config['id_cms_users'] = [$tosend];
+
                 DB::table('t_lap_awas')
                     ->where('id', $id)
-                    ->update(['id_status_kirim' => 1]);
-
-            return redirect('/ma/lap_awas')->with('status','Laporan sudah dapat diedit kembali oleh pengguna!');
+                    ->update(['id_status_kirim' => 1,'comment' => 'Administrator telah mengembalikan laporan ke status awal']);
+                    $t_comment = new \App\t_comment;
+                    $t_comment->lap_id = $id;
+                    $t_comment->user_id = CRUDBooster::MyId();
+                    $t_comment->comment = 'Administrator telah mengembalikan laporan ke status awal';
+                    $t_comment->accept = 0;
+                    $t_comment->save();
+                    CRUDBooster::sendNotification($config);
+            return redirect('/ma/lap_awas')->with('status','Laporan sudah dapat diedit kembali oleh inputer!');
             } catch (Exception $e) {
                 report ($e);
                 return false;

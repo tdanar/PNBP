@@ -16,9 +16,15 @@
 <script>
 $(document).ready(function() {
     var unit = {!! json_encode(CRUDBooster::myUnit()) !!};
+    var myId = {!! json_encode(CRUDBooster::myPrivilegeId()) !!};
     var no_lap = escapeHtml(getParameterByName('no_lap'));
     var inputer = escapeHtml(getParameterByName('user'));
     var tahun = escapeHtml(getParameterByName('amp;tahun'));
+    var jAwas = escapeHtml(getParameterByName('amp;jAwas'));
+    var jTemuan = escapeHtml(getParameterByName('amp;jTemuan'));
+    var jSebab = escapeHtml(getParameterByName('amp;jSebab'));
+    var jRek = escapeHtml(getParameterByName('amp;jRek'));
+    var jTL = escapeHtml(getParameterByName('amp;jTL'));
     var statusKirim = escapeHtml(getParameterByName('amp;statusKirim'));
     var table = $('#lapawas').DataTable({
 
@@ -87,7 +93,7 @@ $(document).ready(function() {
                                                 return data;
                                             }
                                         },
-
+                                        {'data':'jenis_pnbp'},
                                         {'data': 'DeskTemuan'},
                                         {'data': 'kondisi'},
 
@@ -111,6 +117,7 @@ $(document).ready(function() {
 
 
                                         { 'data': 'KodTL'},
+                                        { 'data': 'StatKirim'},
                                         { 'render': function (data, type, full, meta) {
                                                     var myId = {!! json_encode(CRUDBooster::myPrivilegeId()) !!};
                                                     var mainpath = {!! json_encode(CRUDBooster::mainpath()) !!};
@@ -195,7 +202,7 @@ $(document).ready(function() {
                                                         }
                                                     }else if(full.id_status_kirim === "3" && myId == 5){
                                                         return buttonDtl+buttonReviu+penanda;
-                                                    }else if(full.id_status_kirim !== "1" && (myId == 3 || myId == 1)){
+                                                    }else if((!["1","3"].includes(full.id_status_kirim)) && (myId == 3 || myId == 1)){
                                                         return buttonDtl+buttonBtl+penanda;
                                                     }else{
                                                         return buttonDtl+penanda;
@@ -218,17 +225,17 @@ $(document).ready(function() {
                                     header: true,
                                     messageTop: unit,
                                     exportOptions: {
-                                        columns: [' :not(:last-child)'],
+                                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
                                         orthogonal: {
                                             'type': null
                                         }
                                     }
                                 }],
                     columnDefs: [{
-                                targets: [3,13],
+                                targets: [3,14],
                                 render: $.fn.dataTable.render.ellipsis(40)
                                 },{
-                                targets: [1,5,7,8,10,11,12,14,15,18,19],
+                                targets: [5,8,9,11,12,13,15,16,20,21],
                                 searchable: true,
                                 visible: false,
                                 } ],
@@ -269,27 +276,31 @@ $(document).ready(function() {
                                                 });
                                     $('#table-filter3').on('change', function(){
                                                 val = this.value;
-                                                table.column(16).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                table.column(17).search(val ? '^'+val+'$' : '', true, false).draw();
                                                 });
                                     $('#table-filter4').on('change', function(){
                                                 val = this.value;
-                                                table.column(19).search(val ? '^'+val+'$' : '', true, false).draw();
+                                                table.column(21).search(val ? '^'+val+'$' : '', true, false).draw();
                                                 });
                                     $('#table-filter-unit').on('change', function(){
                                                 val = this.value;
                                                 table.column(1).search(val).draw();
                                                 });
-                                    $('#table-filter-temuan').on('change', function(){
+                                    $('#table-filter-pnbp').on('change', function(){
                                                 val = this.value;
                                                 table.column(7).search(val).draw();
                                                 });
+                                    $('#table-filter-temuan').on('change', function(){
+                                                val = this.value;
+                                                table.column(8).search(val).draw();
+                                                });
                                     $('#table-filter-sebab').on('change', function(){
                                                 val = this.value;
-                                                table.column(11).search(val).draw();
+                                                table.column(12).search(val).draw();
                                                 });
                                     $('#table-filter-rekomend').on('change', function(){
                                                 val = this.value;
-                                                table.column(14).search(val).draw();
+                                                table.column(15).search(val).draw();
                                                 });
                                     $('#table-filter-paging').on('change', function(){
                                                 val = this.value;
@@ -301,14 +312,40 @@ $(document).ready(function() {
                 table.column(3).search(no_lap).draw();
             }
             if(inputer){
-                table.column(18).search(inputer).draw();
+                table.column(20).search(inputer).draw();
             }
             if(tahun){
                 table.column(0).search(tahun).draw();
             }
             if(statusKirim){
-                table.column(19).search(statusKirim).draw();
+                table.column(21).search(statusKirim).draw();
             }
+
+            if(jAwas){
+                table.column(5).search(jAwas).draw();
+            }
+
+            if(jTemuan){
+                table.column(8).search(jTemuan).draw();
+            }
+
+            if(jSebab){
+                table.column(12).search(jSebab).draw();
+            }
+
+            if(jRek){
+                table.column(15).search(jRek).draw();
+            }
+
+            if(jTL){
+                table.column(17).search(jTL).draw();
+            }
+
+            if(myId == 2 || myId == 5){
+                table.column(1).visible(false);
+            }
+
+
 
             $(document.body).on('hide.bs.modal', function (e) {
                                             //divid = '#'+e.target.id;
@@ -411,7 +448,7 @@ function escapeHtml(text) {
     function klikBatal(link){
         swal({
             title: "Anda yakin ingin membatalkan pengiriman laporan ini? ",
-            text: "Setelah klik Ya, Pengguna wajib mengirimnya kembali",
+            text: "Setelah klik Ya, Inputer wajib mengirimnya kembali",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#f39c12",
@@ -524,8 +561,9 @@ function escapeHtml(text) {
             </select>
     </div>
 </div>
-@if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4 || CRUDBooster::myPrivilegeId() == 5)
-@if(CRUDBooster::myPrivilegeId() != 5)
+{{-- @if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4 || CRUDBooster::myPrivilegeId() == 5) --}}
+
+@if(CRUDBooster::myPrivilegeId() != 2 || CRUDBooster::myPrivilegeId() != 5)
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter-unit">Kementerian / Lembaga : </label>
@@ -540,6 +578,19 @@ function escapeHtml(text) {
     </div>
 </div>
 @endif
+<div class="row">
+    <div class="col-xs-3 text-right">
+        <label for="table-filter-pnbp">Jenis PNBP : </label>
+    </div>
+    <div class="col-xs-2">
+        <select id="table-filter-pnbp">
+            <option value="">All</option>
+            @foreach($result->unique('jenis_pnbp')->where('jenis_pnbp','!=',null)->sortBy('jenis_pnbp') as $row)
+            <option>{{$row->jenis_pnbp}}</option>
+            @endforeach
+            </select>
+    </div>
+</div>
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter-temuan">Klasifikasi Temuan : </label>
@@ -579,7 +630,7 @@ function escapeHtml(text) {
             </select>
     </div>
 </div>
-@endif
+{{-- @endif --}}
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter3">Status Tindak Lanjut :</label>
@@ -632,6 +683,7 @@ function escapeHtml(text) {
         <th title="Nama Kegiatan Pengawasan">Nama Keg. Pgwsn</th>
         <th title="Jenis Pengawasan">Jenis Pgwsn</th>
         <th title="Judul Temuan">Temuan</th>
+        <th title="Jenis PNBP">Jenis PNBP</th>
         <th title="Klasifikasi Temuan">Klasifikasi Temuan</th>
         <th title="Kondisi">Kondisi</th>
         <th title="Nilai Temuan">Nilai</th>
@@ -642,6 +694,7 @@ function escapeHtml(text) {
         <th title="Klasifikasi Rekomendasi">Klasifikasi Rekomendasi</th>
         <th title="Progres Rekomendasi">Progres Rekomendasi</th>
         <th title="Klasifikasi Tindak Lanjut">Status TL</th>
+        <th title="Status Kirim">Status Kirim</th>
         <th style="width:50px">Aksi</th>
         <th>Inputer</th>
         <th>Status Kirim</th>
