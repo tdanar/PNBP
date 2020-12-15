@@ -126,6 +126,19 @@ $(document).ready(function() {
 
                                                     switch (true) {
                                                                 case ({!! json_encode(CRUDBooster::isUpdate()) !!}):
+                                                                var buttonComment = '<a class="btn btn-danger btn-xs btn-block" href="#" role="button" data-toggle="modal" title="Komentar" data-target="#comment'+full.id+'"><i class="fa fa-exclamation-triangle"></i></a>'+
+                                                                '<div id="comment'+full.id+'" class="modal fade" role="dialog">'+
+                                                                                        '<div class="modal-dialog modal-sm" role="document">'+
+                                                                                            '<div class="modal-content">'+
+                                                                                            '<div class="modal-header">'+
+                                                                                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                                                                                                    '<h5 class="modal-title" id="myModalLabel">Komentar Approver:</h5>'+
+                                                                                                    '</div><div class="modal-body">'+
+                                                                                                        '<div class="text-justify">'+full.comment+'</div>'+
+                                                                                                    '</div>'+
+                                                                                                '</div>'+
+                                                                                            '</div>'+
+                                                                                        '</div>';
                                                                     var button = '<a class="btn btn-success btn-xs btn-block" href="'+mainpath+'/edit/'+full.id+'" role="button" data-toggle="popover" title="Ubah Laporan" data-content="Silahkan mengubah identitas laporan No. '+full.no_lap+' di sini."><i class="fa fa-pen-nib"></i></a>';
                                                                     var button5 = '<a class="btn btn-warning btn-xs btn-block" href="'+verpath+'" role="button" data-toggle="modal" title="Kirim Laporan" data-target="#verifmodal'+full.id+'"><i class="fa fa-paper-plane"></i></a>'+
                                                                                     '<div id="verifmodal'+full.id+'" class="modal fade" role="dialog">'+
@@ -162,6 +175,7 @@ $(document).ready(function() {
                                                                 break;
 
                                                                 default:
+                                                                    var buttonComment = '';
                                                                     var button = '';
                                                                     var button2 = '';
                                                                     var button3 = '';
@@ -174,9 +188,11 @@ $(document).ready(function() {
 
                                                             };
                                                     if ((full.id_status_kirim === "1" || full.id_status_kirim === "4") && (myId == 2 || myId == 1)){
-
+                                                        if(full.comment){
+                                                            return buttonComment+button2+button+buttonDtl+button4+button5+penanda;
+                                                        }else{
                                                             return button2+button+buttonDtl+button4+button5+penanda;
-
+                                                        }
                                                     }else if(full.id_status_kirim === "3" && myId == 5){
                                                         return buttonDtl+buttonReviu+penanda;
                                                     }else if(full.id_status_kirim !== "1" && (myId == 3 || myId == 1)){

@@ -150,13 +150,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="lap_id" value="{{$first->id}}">
             <input type="hidden" name="user_id" value="{{CRUDBooster::myId()}}">
-                <div class="row">
-                    <label for="comment" class="text-bold">Komentar
-                            </label>
-                    <div style="width: 100%">
-                        <textarea class="col-sm-12" name="comment" id="comment" rows="5"></textarea>
-                    </div>
-                </div>
+
             <div class="row">
                 <label class="text-bold">Tolak/Terima ? <span class="text-danger">*</span>
                         </label>
@@ -168,6 +162,15 @@
                         <input type="radio" name="accept" id="terima" value="1" required> Terima
                     </label>
                 </div>
+            </div>
+            <div class="row komentar" id="komenan0" hidden>
+                <label for="comment" class="text-bold">Komentar
+                        </label>
+                <div style="width: 100%">
+                    <textarea class="col-sm-12" name="comment" id="comment" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="row komentar" id="komenan1" hidden>
             </div>
             <div class="row">
                 <div class="col-md-12">&nbsp;</div>
@@ -199,9 +202,10 @@
     $(document).ready(function(){
         $("input[name$='accept']").click(function() {
         var test = $(this).val();
-        //console.log(test);
         $("div.btnSubmit").hide();
+        $("div.row.komentar").hide();
         $("#divKirim" + test).show();
+        $("#komenan" + test).show();
     });
     });
 </script>

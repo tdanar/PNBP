@@ -119,7 +119,7 @@ $(document).ready(function() {
                                                 return '<div class="btn btn-danger btn-circle" title="Belum Ditindaklanjuti"></div>'
                                            }else{
                                                 return '<div class="btn btn-primary btn-circle" title="Tidak Ada Rekomendasi"></div>'
-                                           } 
+                                           }
                                         }},
                                         { 'render': function (data, type, full, meta) {
                                                     var myId = {!! json_encode(CRUDBooster::myPrivilegeId()) !!};
@@ -156,12 +156,12 @@ $(document).ready(function() {
 
 
                                                             };
-                                                    if(full.id_rekomendasi != null){
+                                                    if(full.id_rekomendasi !== null){
                                                         return button+penanda;
                                                     }else{
                                                         return penanda;
                                                     }
-                                                    
+
 
                                                     },
                                         'orderable': false,
@@ -268,7 +268,7 @@ $(document).ready(function() {
         });
 
 });
-   
+
 
 function klikDelete(link) {
          swal({
@@ -528,7 +528,7 @@ function klikDelete(link) {
                 </select>
         </div>
     </div>
-    
+
     </div>
     </div>
     <div class="row">
@@ -569,7 +569,7 @@ function klikDelete(link) {
           <th>Status Kirim</th>
       </tr>
     </thead>
-  
+
   </table>
 
 @endsection

@@ -945,6 +945,7 @@
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
                 `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas`.`comment`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -997,6 +998,7 @@
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
                 `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas`.`comment`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -1050,6 +1052,7 @@
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
                 `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas`.`comment`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -1099,6 +1102,7 @@
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
                 `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas`.`comment`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -1436,7 +1440,7 @@
 
                     DB::table('t_lap_awas')
                         ->where('id', (int)$request->lap_id)
-                        ->update(['id_status_kirim' => 4]);
+                        ->update(['id_status_kirim' => 4,'comment' => $request->comment]);
                         CRUDBooster::sendNotification($config);
                 return redirect('/ma/lap_awas')->with('status','Laporan telah berhasil ditolak!');
                 } catch (Exception $e) {
@@ -1459,7 +1463,7 @@
 
                     DB::table('t_lap_awas')
                         ->where('id', (int)$request->lap_id)
-                        ->update(['id_status_kirim' => 2]);
+                        ->update(['id_status_kirim' => 2,'comment' => $request->comment]);
                         CRUDBooster::sendNotification($config);
                 return redirect('/ma/lap_awas')->with('status','Laporan telah berhasil diterima dan dikirim ke Kemenkeu!');
                 } catch (Exception $e) {
