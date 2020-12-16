@@ -22,7 +22,6 @@ Route::get('/faq','faqController@index')->name('faq');
 Route::get('/peraturan','peraturanController@index')->name('peraturan');
 Route::get('/refereshcapcha', 'helperController@refereshCapcha');
 Route::get('/artikel/{id}','AdminArticleController@showArticle')->name('article');
-Route::get('/getPieId/{tahun?}','homepageController@index')->name('getPieId');
 Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBackend'])->group(function () {
     Route::get('/ma/importAwas', 'AdminLapAwasController@import');
     Route::get('/helpdesk','helpdeskController@index')->name('helpdesk');
@@ -52,6 +51,8 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
 
     //Route::post('/ma/rev','AdminLapAwasController@Rev');
 });
+Route::get('/api/getPiePNBP/{tahun?}','homepageController@getPiePNBP')->name('getPiePNBP');
+
 
 
 

@@ -2,10 +2,260 @@
 @section('content')
 @push('bottom')
 <script>
-    $('#sel_tahun').on('change',function(){
+    $(document).ready(function(){
+        var tahun = '';
+        $.ajax({
+                    type: 'GET',
+                    url: '/api/getPiePNBP/'+tahun,
+                    success: function (data) { 
+
+                            var data1 = data['pnbp_temuan'];
+                            AmCharts.addInitHandler(function(chart) {
+                                if (chart.legend === undefined || chart.legend.truncateLabels === undefined)
+                                    return;
+
+                                // init fields
+                                var titleField = chart.titleField;
+                                var legendTitleField = chart.titleField+"Legend";
+
+                                // iterate through the data and create truncated label properties
+                                for(var i = 0; i < chart.dataProvider.length; i++) {
+                                    var label = chart.dataProvider[i][chart.titleField];
+                                    if (label.length > chart.legend.truncateLabels)
+                                    label = label.substr(0, chart.legend.truncateLabels-1)+'...'
+                                    chart.dataProvider[i][legendTitleField] = label;
+                                }
+
+                                // replace chart.titleField to show our own truncated field
+                                chart.titleField = legendTitleField;
+
+                                // make the balloonText use full title instead
+                                chart.balloonText = chart.balloonText.replace(/\[\[title\]\]/, "[["+titleField+"]]");
+
+                                }, ["pie"]);
+                            var chart = AmCharts.makeChart("piegraphs4",
+                                {
+                                    "type": "pie",
+                                    "adjustPrecision": true,
+                                    "angle": 20,
+                                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
+                                    "depth3D": 30,
+                                    "labelRadius": -100,
+                                    "labelText": "[[percents]]%<br>[[title]]",
+                                    "colors": [
+                                        "#6ABBFC",
+                                        "#FFE457",
+                                        "#2DFF00",
+                                        "#8D95F8"
+                                        ],
+                                    "marginBottom": 0,
+					                "marginTop": 0,
+                                    "titles": [
+                                                                {
+                                                                    "id": "judul",
+                                                                    "size": 25,
+                                                                    "text": "Berdasarkan Jenis Temuan"
+                                                                }
+                                                            ],
+                                    "dataProvider": data1,
+                                    "valueField": "Jumlah",
+                                    "titleField": "Jenis Temuan",
+                                        "decimalSeparator": ",",
+                                        "fontFamily": "Calibri",
+                                        "fontSize": 12,
+                                        "percentPrecision": 0,
+                                        "thousandsSeparator": ".",
+                                        "allLabels": [],
+                                        "balloon": {},
+                                        "legend": {
+                                            "enabled": true,
+                                            "align": "center",
+                                            "labelText": "[[title]]:",
+                                            "markerType": "circle",
+                                            "maxColumns": 2,
+                                            "valueAlign": "left",
+                                            "valueText": "[[percents]]%"
+                                        }
+
+                                }
+                            );
+                        
+                                var data2= data['pnbp_tl'];
+                                AmCharts.makeChart("piegraphs3",
+                                    {
+                                        "type": "pie",
+                                        "adjustPrecision": true,
+                                        "angle": 20,
+                                        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
+                                        "depth3D": 30,
+                                        "labelRadius": -100,
+                                        "labelText": "[[percents]]%<br>[[title]]",
+                                        "colors": [
+                                            "#88E0B0",
+                                            "#FF5771",
+                                            "#FFCF00",
+                                            "#5FABBB"
+                                        ],
+                                        "marginBottom": 0,
+					                    "marginTop": 0,
+                                        "titleField": "Jenis Tindak Lanjut",
+                                        "valueField": "Jumlah",
+                                        "decimalSeparator": ",",
+                                        "fontFamily": "Calibri",
+                                        "fontSize": 12,
+                                        "percentPrecision": 0,
+                                        "thousandsSeparator": ".",
+                                        "allLabels": [],
+                                        "balloon": {},
+                                        "legend": {
+                                            "enabled": true,
+                                            "align": "center",
+                                            "labelText": "[[title]]:",
+                                            "markerType": "circle",
+                                            "maxColumns": 2,
+                                            "valueAlign": "left",
+                                            "valueText": "[[percents]]%"
+                                        },
+                                        "titles": [
+                                            {
+                                                "id": "judul",
+                                                "size": 25,
+                                                "text": "Status Tindak Lanjut Temuan Pengawasan"
+                                            }
+                                        ],
+                                        "dataProvider": data2
+                                    }
+                                );
+                            
+                     }
+                });
+    }).on('change','#sel_tahun',function(){
     var tahun = $(this).val();
-    console.log(tahun);
-});
+    $.ajax({
+                    type: 'GET',
+                    url: '/api/getPiePNBP/'+tahun,
+                    success: function (data) { 
+
+                            var data1 = data['pnbp_temuan'];
+                            AmCharts.addInitHandler(function(chart) {
+                                if (chart.legend === undefined || chart.legend.truncateLabels === undefined)
+                                    return;
+
+                                // init fields
+                                var titleField = chart.titleField;
+                                var legendTitleField = chart.titleField+"Legend";
+
+                                // iterate through the data and create truncated label properties
+                                for(var i = 0; i < chart.dataProvider.length; i++) {
+                                    var label = chart.dataProvider[i][chart.titleField];
+                                    if (label.length > chart.legend.truncateLabels)
+                                    label = label.substr(0, chart.legend.truncateLabels-1)+'...'
+                                    chart.dataProvider[i][legendTitleField] = label;
+                                }
+
+                                // replace chart.titleField to show our own truncated field
+                                chart.titleField = legendTitleField;
+
+                                // make the balloonText use full title instead
+                                chart.balloonText = chart.balloonText.replace(/\[\[title\]\]/, "[["+titleField+"]]");
+
+                                }, ["pie"]);
+                            var chart = AmCharts.makeChart("piegraphs4",
+                                {
+                                    "type": "pie",
+                                    "adjustPrecision": true,
+                                    "angle": 20,
+                                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
+                                    "depth3D": 30,
+                                    "labelRadius": -100,
+                                    "labelText": "[[percents]]%<br>[[title]]",
+                                    "colors": [
+                                        "#6ABBFC",
+                                        "#FFE457",
+                                        "#2DFF00",
+                                        "#8D95F8"
+                                        ],
+                                    "marginBottom": 0,
+					                "marginTop": 0,
+                                    "titles": [
+                                                                {
+                                                                    "id": "judul",
+                                                                    "size": 25,
+                                                                    "text": "Berdasarkan Jenis Temuan"
+                                                                }
+                                                            ],
+                                    "dataProvider": data1,
+                                    "valueField": "Jumlah",
+                                    "titleField": "Jenis Temuan",
+                                        "decimalSeparator": ",",
+                                        "fontFamily": "Calibri",
+                                        "fontSize": 12,
+                                        "percentPrecision": 0,
+                                        "thousandsSeparator": ".",
+                                        "allLabels": [],
+                                        "balloon": {},
+                                        "legend": {
+                                            "enabled": true,
+                                            "align": "center",
+                                            "labelText": "[[title]]:",
+                                            "markerType": "circle",
+                                            "maxColumns": 2,
+                                            "valueAlign": "left",
+                                            "valueText": "[[percents]]%"
+                                        }
+
+                                }
+                            );
+
+                                var data2= data['pnbp_tl'];
+                                AmCharts.makeChart("piegraphs3",
+                                    {
+                                        "type": "pie",
+                                        "adjustPrecision": true,
+                                        "angle": 20,
+                                        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
+                                        "depth3D": 30,
+                                        "labelRadius": -100,
+                                        "labelText": "[[percents]]%<br>[[title]]",
+                                        "colors": [
+                                            "#88E0B0",
+                                            "#FF5771",
+                                            "#FFCF00",
+                                            "#5FABBB"
+                                        ],
+                                        "marginBottom": 0,
+					                    "marginTop": 0,
+                                        "titleField": "Jenis Tindak Lanjut",
+                                        "valueField": "Jumlah",
+                                        "decimalSeparator": ",",
+                                        "fontFamily": "Calibri",
+                                        "fontSize": 12,
+                                        "percentPrecision": 0,
+                                        "thousandsSeparator": ".",
+                                        "allLabels": [],
+                                        "balloon": {},
+                                        "legend": {
+                                            "enabled": true,
+                                            "align": "center",
+                                            "labelText": "[[title]]:",
+                                            "markerType": "circle",
+                                            "maxColumns": 2,
+                                            "valueAlign": "left",
+                                            "valueText": "[[percents]]%"
+                                        },
+                                        "titles": [
+                                            {
+                                                "id": "judul",
+                                                "size": 25,
+                                                "text": "Status Tindak Lanjut Temuan Pengawasan"
+                                            }
+                                        ],
+                                        "dataProvider": data2
+                                    }
+                                );
+                     }
+                });
+    });
 </script>
 @endpush
 <div class="clear"></div>
@@ -478,128 +728,10 @@
                         <script src="/vendor/amcharts/amcharts/pie.js" type="text/javascript"></script>
                         <script src="/scripts/lodash.min.js" type="text/javascript"></script>
                         <!-- amCharts javascript code -->
-                            <script type="text/javascript">
-                                var data2= JSON.parse("{{$pnbp_tl}}".replace(/&quot;/g,'"'));
-                                AmCharts.makeChart("piegraphs3",
-                                    {
-                                        "type": "pie",
-                                        "adjustPrecision": true,
-                                        "angle": 20,
-                                        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
-                                        "depth3D": 30,
-                                        "labelRadius": -100,
-                                        "labelText": "[[percents]]%<br>[[title]]",
-                                        "colors": [
-                                            "#88E0B0",
-                                            "#FF5771",
-                                            "#FFCF00",
-                                            "#5FABBB"
-                                        ],
-                                        "marginBottom": 0,
-					                    "marginTop": 0,
-                                        "titleField": "Jenis Tindak Lanjut",
-                                        "valueField": "Jumlah",
-                                        "decimalSeparator": ",",
-                                        "fontFamily": "Calibri",
-                                        "fontSize": 12,
-                                        "percentPrecision": 0,
-                                        "thousandsSeparator": ".",
-                                        "allLabels": [],
-                                        "balloon": {},
-                                        "legend": {
-                                            "enabled": true,
-                                            "align": "center",
-                                            "labelText": "[[title]]:",
-                                            "markerType": "circle",
-                                            "maxColumns": 2,
-                                            "valueAlign": "left",
-                                            "valueText": "[[percents]]%"
-                                        },
-                                        "titles": [
-                                            {
-                                                "id": "judul",
-                                                "size": 25,
-                                                "text": "Status Tindak Lanjut Temuan Pengawasan"
-                                            }
-                                        ],
-                                        "dataProvider": data2
-                                    }
-                                );
-                            </script>
+                            
 
                         <!-- amCharts javascript code -->
-                        <script type="text/javascript">
-                            var data1 = JSON.parse("{{$pnbp_temuan}}".replace(/&quot;/g,'"'));
-                            AmCharts.addInitHandler(function(chart) {
-                                if (chart.legend === undefined || chart.legend.truncateLabels === undefined)
-                                    return;
-
-                                // init fields
-                                var titleField = chart.titleField;
-                                var legendTitleField = chart.titleField+"Legend";
-
-                                // iterate through the data and create truncated label properties
-                                for(var i = 0; i < chart.dataProvider.length; i++) {
-                                    var label = chart.dataProvider[i][chart.titleField];
-                                    if (label.length > chart.legend.truncateLabels)
-                                    label = label.substr(0, chart.legend.truncateLabels-1)+'...'
-                                    chart.dataProvider[i][legendTitleField] = label;
-                                }
-
-                                // replace chart.titleField to show our own truncated field
-                                chart.titleField = legendTitleField;
-
-                                // make the balloonText use full title instead
-                                chart.balloonText = chart.balloonText.replace(/\[\[title\]\]/, "[["+titleField+"]]");
-
-                                }, ["pie"]);
-                            var chart = AmCharts.makeChart("piegraphs4",
-                                {
-                                    "type": "pie",
-                                    "adjustPrecision": true,
-                                    "angle": 20,
-                                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[percents]]%</b></span>",
-                                    "depth3D": 30,
-                                    "labelRadius": -100,
-                                    "labelText": "[[percents]]%<br>[[title]]",
-                                    "colors": [
-                                        "#6ABBFC",
-                                        "#FFE457",
-                                        "#2DFF00",
-                                        "#8D95F8"
-                                        ],
-                                    "marginBottom": 0,
-					                "marginTop": 0,
-                                    "titles": [
-                                                                {
-                                                                    "id": "judul",
-                                                                    "size": 25,
-                                                                    "text": "Berdasarkan Jenis Temuan"
-                                                                }
-                                                            ],
-                                    "dataProvider": data1,
-                                    "valueField": "Jumlah",
-                                    "titleField": "Jenis Temuan",
-                                        "decimalSeparator": ",",
-                                        "fontFamily": "Calibri",
-                                        "fontSize": 12,
-                                        "percentPrecision": 0,
-                                        "thousandsSeparator": ".",
-                                        "allLabels": [],
-                                        "balloon": {},
-                                        "legend": {
-                                            "enabled": true,
-                                            "align": "center",
-                                            "labelText": "[[title]]:",
-                                            "markerType": "circle",
-                                            "maxColumns": 2,
-                                            "valueAlign": "left",
-                                            "valueText": "[[percents]]%"
-                                        }
-
-                                }
-                            );
-                        </script>
+                        
                         <div class="cls-lintas" style="background:white;">
 
                                         <div id="piegraphs4" class="col-md-6"></div>

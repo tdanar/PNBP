@@ -36,56 +36,45 @@ class homepageController extends Controller {
 
         $get_trend = DB::table('t_diag_tren_pnbp')->selectRaw('tahun,realisasi_pnbp,realisasi_pn,persentase')->get();
        $data['pnbp_tren'] = json_encode($get_trend);
-
        $st_kirim = 2;
-       $l_tahun = 2019;
+       $l_tahun = 2018;
 
        $data['tahunSelector'] = DB::table('t_lap_awas')->where('id_status_kirim',$st_kirim)->where('tahun','>=',$l_tahun)->get();
-       $tahuns = array_values((collect($data['tahunSelector']->unique('tahun'))->map(function($item){
-           return ['tahun' => $item->tahun];
-       }))->toArray());
+        //dd($data);
+        return View::make('homepage')->with($data);
+    }
 
-       $data['pnbp_temuan_All'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan2.Deskripsi AS `Jenis Temuan`')
+    public function getPiePNBP($tahun = null)
+    {
+        $data = [];
+        $l_tahun = 2018;
+        if($tahun){
+            $tahuns = (int)$tahun;
+            $oprt = '=';
+        }else{
+            $tahuns = $l_tahun;
+            $oprt = '>=';
+        }
+       $data['pnbp_temuan'] = DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan2.Deskripsi AS `Jenis Temuan`')
        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
        ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
        ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
        ->join('t_ref_kod_temuan AS t_ref_kod_temuan2','t_ref_kod_temuan.id_up','=','t_ref_kod_temuan2.id')
        ->where('t_lap_awas.id_status_kirim',2)
-       ->where('t_lap_awas.tahun', '>=', $l_tahun)
+       ->where('t_lap_awas.tahun', $oprt, $tahuns)
        ->groupBy('t_ref_kod_temuan2.Deskripsi')
-       ->get());
+       ->get();
 
-        $data['pnbp_tl_All'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
+        $data['pnbp_tl'] = DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
         ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
         ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
         ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
         ->where('t_lap_awas.id_status_kirim',2)
-        ->where('t_lap_awas.tahun', '>=', $l_tahun)
+        ->where('t_lap_awas.tahun', $oprt, $tahuns)
         ->groupBy('t_ref_tl.deskripsi')
-        ->get());
-
-        for($x = 0; $x < count($tahuns); ++$x){
-            $data['pnbp_temuan_'.$tahuns[$x]['tahun']] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan2.Deskripsi AS `Jenis Temuan`')
-            ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
-            ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
-            ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
-            ->join('t_ref_kod_temuan AS t_ref_kod_temuan2','t_ref_kod_temuan.id_up','=','t_ref_kod_temuan2.id')
-            ->where('t_lap_awas.id_status_kirim',2)
-            ->where('t_lap_awas.tahun', '=', $tahuns[$x]['tahun'])
-            ->groupBy('t_ref_kod_temuan2.Deskripsi')
-            ->get());
-            $data['pnbp_tl_'.$tahuns[$x]['tahun']] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
-            ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
-            ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
-            ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
-            ->where('t_lap_awas.id_status_kirim',2)
-            ->where('t_lap_awas.tahun', '=', $tahuns[$x]['tahun'])
-            ->groupBy('t_ref_tl.deskripsi')
-            ->get());
-        }
-
-        //dd($data);
-        return View::make('homepage')->with($data);
+        ->get();
+        //dd($oprt,$tahuns);
+       return $data;
     }
 
 
