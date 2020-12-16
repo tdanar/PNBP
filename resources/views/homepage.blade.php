@@ -1,5 +1,13 @@
 @extends('layout')
 @section('content')
+@push('bottom')
+<script>
+    $('#sel_tahun').on('change',function(){
+    var tahun = $(this).val();
+    console.log(tahun);
+});
+</script>
+@endpush
 <div class="clear"></div>
     	<div id="my-content">
 			<div class="slider">
@@ -457,7 +465,7 @@
                                             <div class="col-md-8"><b><span class="pull-right">Hasil Pengawasan PNBP oleh APIP K/L TA : </span></b></div>
                                             <div class="col-md-1"> <select class="text-left" id="sel_tahun">
                                                 <option value="">All</option>
-                                                @foreach($tahunSelector->unique('tahun') as $row)
+                                                @foreach($tahunSelector->unique('tahun')->where('tahun','!=',null)->sortByDesc('tahun') as $row)
                                                 <option>{{$row->tahun}}</option>
                                                 @endforeach</select>
                                             </div>

@@ -139,7 +139,6 @@
                     })
                 })
     </script>
-
-
+@stack('bottom')
 </footer>
 
