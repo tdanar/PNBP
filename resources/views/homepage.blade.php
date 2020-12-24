@@ -128,7 +128,197 @@
                                 );
                             
                      }
-                });
+            });
+        $.ajax({
+            type: 'GET',
+                    url: '/api/getTrenPNBP',
+                    success: function (data) {
+                        var chart;
+						var chartData = data['pnbp_jenis'];
+						AmCharts.ready(function () {
+							chart = new AmCharts.AmSerialChart();
+							chart.dataProvider = chartData;
+							chart.categoryField = "Tahun";
+							chart.color = "#222222";
+							chart.fontSize = 14;
+							//chart.startDuration = 1;
+							chart.plotAreaFillAlphas = 0.2;
+							chart.angle = 30;
+
+                                chart.depth3D = 0;
+                                chart.decimalSeparator = ",";
+					            chart.thousandsSeparator = ".";
+
+
+
+							var categoryAxis = chart.categoryAxis;
+							categoryAxis.gridAlpha = 0.2;
+							categoryAxis.gridPosition = "start";
+							categoryAxis.gridColor = "#555555";
+							categoryAxis.axisColor = "#222222";
+							categoryAxis.axisAlpha = 0.5;
+							categoryAxis.dashLength = 5;
+
+							var valueAxis = new AmCharts.ValueAxis();
+							valueAxis.stackType = "regular";
+							valueAxis.gridAlpha = 0.2;
+							valueAxis.gridColor = "#222222";
+							valueAxis.axisColor = "#000000";
+							valueAxis.axisAlpha = 0.5;
+							valueAxis.dashLength = 5;
+							valueAxis.title = "Jumlah (triliun Rupiah)";
+							valueAxis.titleColor = "#222222";
+							valueAxis.unit = "";
+                            chart.addValueAxis(valueAxis);
+
+                            var graph1 = new AmCharts.AmGraph();
+							graph1.title = "Penerimaan SDA";
+							graph1.valueField = "Penerimaan SDA";
+							graph1.type = "column";
+							graph1.lineAlpha = 0;
+							graph1.lineColor = "#FFC300";
+							graph1.fillAlphas = 1;
+                            graph1.balloonText = "Penerimaan SDA [[category]] : [[value]]";
+
+                            chart.addGraph(graph1);
+
+                            var graph3 = new AmCharts.AmGraph();
+							graph3.title = "Pendapatan dari Kekayaan Negara Dipisahkan";
+							graph3.valueField = "Pendapatan dari Kekayaan Negara Dipisahkan";
+							graph3.type = "column";
+							graph3.lineAlpha = 0;
+							graph3.lineColor = "#266E01";
+							graph3.fillAlphas = 1;
+							graph3.balloonText = "Pendapatan dari Kekayaan Negara Dipisahkan [[category]] : [[value]]";
+                            chart.addGraph(graph3);
+
+                            var graph2 = new AmCharts.AmGraph();
+							graph2.title = "Belanja Pemerintah atas Laba BUMN";
+							graph2.valueField = "Belanja Pemerintah atas Laba BUMN";
+							graph2.type = "column";
+							graph2.lineAlpha = 0;
+							graph2.lineColor = "#BCBCBC";
+							graph2.fillAlphas = 1;
+							graph2.balloonText = "Belanja Pemerintah atas Laba BUMN [[category]] : [[value]]";
+                            chart.addGraph(graph2);
+
+                            var graph4 = new AmCharts.AmGraph();
+							graph4.title = "PNBP Lainnya";
+							graph4.valueField = "PNBP Lainnya";
+							graph4.type = "column";
+							graph4.lineAlpha = 0;
+							graph4.lineColor = "#5143FF";
+							graph4.fillAlphas = 1;
+							graph4.balloonText = "PNBP Lainnya [[category]] : [[value]]";
+                            chart.addGraph(graph4);
+
+                            var graph5 = new AmCharts.AmGraph();
+							graph5.title = "Pendapatan BLU";
+							graph5.valueField = "Pendapatan BLU";
+							graph5.type = "column";
+							graph5.lineAlpha = 0;
+							graph5.lineColor = "#FF5733";
+							graph5.fillAlphas = 1;
+							graph5.balloonText = "Pendapatan BLU [[category]] : [[value]]";
+                            chart.addGraph(graph5);
+
+                            var graph0 = new AmCharts.AmGraph();
+                            graph0.type = "line";
+                            graph0.title = "Total Keseluruhan";
+							graph0.balloonText = "Total Keseluruhan [[category]] : [[value]]";
+							graph0.lineColor = "#C70039";
+							graph0.valueField = "Total";
+							graph0.lineThickness = 5;
+							graph0.bullet = "round";
+                            graph0.bulletBorderThickness = 3;
+                            graph0.bulletBorderColor = "#fcd202";
+                            graph0.bulletBorderAlpha = 1;
+                            graph0.bulletColor = "#ffffff";
+                            //graph0.dashLengthField = "dashLengthLine";
+                            chart.addGraph(graph0);
+
+                            var legend = new AmCharts.AmLegend();
+							legend.useGraphSettings = true;
+							chart.addLegend(legend);
+							chart.write("graphs1");
+						});
+						var chartData2 = data['pnbp_tren'];
+						AmCharts.ready(function () {
+							chart = new AmCharts.AmSerialChart();
+
+							chart.dataProvider = chartData2;
+							chart.categoryField = "tahun";
+							chart.startDuration = 1;
+
+							//chart.handDrawn = true;
+							//chart.handDrawnScatter = 3;
+							chart.angle = 25;
+
+								chart.depth3D = 0;
+                                chart.decimalSeparator = ",";
+                                chart.thousandsSeparator = ".";
+                                chart.percentPrecision = 2;
+
+
+
+							var categoryAxis = chart.categoryAxis;
+							categoryAxis.gridPosition = "start";
+
+
+
+
+
+							var graph1 = new AmCharts.AmGraph();
+							graph1.type = "line";
+							graph1.title = "Realisasi PNBP";
+							graph1.lineColor = "#FF0017";
+							graph1.valueField = "realisasi_pnbp";
+							graph1.lineThickness = 10;
+                            graph1.labelText = "[[persentase]]%";
+                            graph1.fontSize = 30
+
+							graph1.customBullet = "/images/point_hijau.png";
+                            graph1.bulletSize = 50;
+							graph1.dashLengthField = "dashLengthLine";
+
+
+							var graph2 = new AmCharts.AmGraph();
+							graph2.type = "line";
+							graph2.title = "Realisasi Penerimaan Negara";
+							graph2.lineColor = "#194C85";
+							graph2.valueField = "realisasi_pn";
+							graph2.lineThickness = 10;
+
+                            graph2.customBullet = "/images/point_merah.png";
+                            graph2.bulletSize = 50;
+							graph2.dashLengthField = "dashLengthLine";
+
+							var valueAxis = new AmCharts.ValueAxis();
+							valueAxis.stackType = "regular";
+							valueAxis.gridAlpha = 0.2;
+							valueAxis.gridColor = "#222222";
+							valueAxis.axisColor = "#000000";
+							valueAxis.axisAlpha = 0.5;
+							valueAxis.dashLength = 5;
+							valueAxis.title = "Jumlah (triliun Rupiah)";
+							valueAxis.titleColor = "#222222";
+							valueAxis.unit = "";
+							chart.addValueAxis(valueAxis);
+
+                            graph1.balloonText = "<span style='font-size:13px;'>[[title]] [[category]]:<b>[[value]]</b> [[additional]]</span>";
+							graph2.balloonText = "<span style='font-size:13px;'>[[title]] [[category]]:<b>[[value]]</b> [[additional]]</span>";
+                            chart.addGraph(graph1);
+							chart.addGraph(graph2);
+
+
+							var legend = new AmCharts.AmLegend();
+							legend.useGraphSettings = true;
+							chart.addLegend(legend);
+
+							chart.write("graphs2");
+						});
+                    }
+        });
     }).on('change','#sel_tahun',function(){
     var tahun = $(this).val();
     $.ajax({
@@ -378,193 +568,9 @@
 								<script src="/vendor/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
                                 <script src="/vendor/amcharts/amcharts/serial.js" type="text/javascript"></script>
 
-								<script type="text/javascript">
-								var chart;
-						        var chartData = JSON.parse("{{$pnbp_jenis}}".replace(/&quot;/g,'"'));
-                                       // console.log(chartData);
-							AmCharts.ready(function () {
-							chart = new AmCharts.AmSerialChart();
-							chart.dataProvider = chartData;
-							chart.categoryField = "Tahun";
-							chart.color = "#222222";
-							chart.fontSize = 14;
-							//chart.startDuration = 1;
-							chart.plotAreaFillAlphas = 0.2;
-							chart.angle = 30;
-
-                                chart.depth3D = 0;
-                                chart.decimalSeparator = ",";
-					            chart.thousandsSeparator = ".";
-
-
-
-							var categoryAxis = chart.categoryAxis;
-							categoryAxis.gridAlpha = 0.2;
-							categoryAxis.gridPosition = "start";
-							categoryAxis.gridColor = "#555555";
-							categoryAxis.axisColor = "#222222";
-							categoryAxis.axisAlpha = 0.5;
-							categoryAxis.dashLength = 5;
-
-							var valueAxis = new AmCharts.ValueAxis();
-							valueAxis.stackType = "regular";
-							valueAxis.gridAlpha = 0.2;
-							valueAxis.gridColor = "#222222";
-							valueAxis.axisColor = "#000000";
-							valueAxis.axisAlpha = 0.5;
-							valueAxis.dashLength = 5;
-							valueAxis.title = "Jumlah (triliun Rupiah)";
-							valueAxis.titleColor = "#222222";
-							valueAxis.unit = "";
-                            chart.addValueAxis(valueAxis);
-
-                            var graph1 = new AmCharts.AmGraph();
-							graph1.title = "Penerimaan SDA";
-							graph1.valueField = "Penerimaan SDA";
-							graph1.type = "column";
-							graph1.lineAlpha = 0;
-							graph1.lineColor = "#FFC300";
-							graph1.fillAlphas = 1;
-                            graph1.balloonText = "Penerimaan SDA [[category]] : [[value]]";
-
-                            chart.addGraph(graph1);
-
-                            var graph3 = new AmCharts.AmGraph();
-							graph3.title = "Pendapatan dari Kekayaan Negara Dipisahkan";
-							graph3.valueField = "Pendapatan dari Kekayaan Negara Dipisahkan";
-							graph3.type = "column";
-							graph3.lineAlpha = 0;
-							graph3.lineColor = "#266E01";
-							graph3.fillAlphas = 1;
-							graph3.balloonText = "Pendapatan dari Kekayaan Negara Dipisahkan [[category]] : [[value]]";
-                            chart.addGraph(graph3);
-
-                            var graph2 = new AmCharts.AmGraph();
-							graph2.title = "Belanja Pemerintah atas Laba BUMN";
-							graph2.valueField = "Belanja Pemerintah atas Laba BUMN";
-							graph2.type = "column";
-							graph2.lineAlpha = 0;
-							graph2.lineColor = "#BCBCBC";
-							graph2.fillAlphas = 1;
-							graph2.balloonText = "Belanja Pemerintah atas Laba BUMN [[category]] : [[value]]";
-                            chart.addGraph(graph2);
-
-                            var graph4 = new AmCharts.AmGraph();
-							graph4.title = "PNBP Lainnya";
-							graph4.valueField = "PNBP Lainnya";
-							graph4.type = "column";
-							graph4.lineAlpha = 0;
-							graph4.lineColor = "#5143FF";
-							graph4.fillAlphas = 1;
-							graph4.balloonText = "PNBP Lainnya [[category]] : [[value]]";
-                            chart.addGraph(graph4);
-
-                            var graph5 = new AmCharts.AmGraph();
-							graph5.title = "Pendapatan BLU";
-							graph5.valueField = "Pendapatan BLU";
-							graph5.type = "column";
-							graph5.lineAlpha = 0;
-							graph5.lineColor = "#FF5733";
-							graph5.fillAlphas = 1;
-							graph5.balloonText = "Pendapatan BLU [[category]] : [[value]]";
-                            chart.addGraph(graph5);
-
-                            var graph0 = new AmCharts.AmGraph();
-                            graph0.type = "line";
-                            graph0.title = "Total Keseluruhan";
-							graph0.balloonText = "Total Keseluruhan [[category]] : [[value]]";
-							graph0.lineColor = "#C70039";
-							graph0.valueField = "Total";
-							graph0.lineThickness = 5;
-							graph0.bullet = "round";
-                            graph0.bulletBorderThickness = 3;
-                            graph0.bulletBorderColor = "#fcd202";
-                            graph0.bulletBorderAlpha = 1;
-                            graph0.bulletColor = "#ffffff";
-                            //graph0.dashLengthField = "dashLengthLine";
-                            chart.addGraph(graph0);
-
-                            var legend = new AmCharts.AmLegend();
-							legend.useGraphSettings = true;
-							chart.addLegend(legend);
-							chart.write("graphs1");
-						});
-						var chartData2 = JSON.parse("{{$pnbp_tren}}".replace(/&quot;/g,'"'));
-						AmCharts.ready(function () {
-							chart = new AmCharts.AmSerialChart();
-
-							chart.dataProvider = chartData2;
-							chart.categoryField = "tahun";
-							chart.startDuration = 1;
-
-							//chart.handDrawn = true;
-							//chart.handDrawnScatter = 3;
-							chart.angle = 25;
-
-								chart.depth3D = 0;
-                                chart.decimalSeparator = ",";
-                                chart.thousandsSeparator = ".";
-                                chart.percentPrecision = 2;
-
-
-
-							var categoryAxis = chart.categoryAxis;
-							categoryAxis.gridPosition = "start";
-
-
-
-
-
-							var graph1 = new AmCharts.AmGraph();
-							graph1.type = "line";
-							graph1.title = "Realisasi PNBP";
-							graph1.lineColor = "#FF0017";
-							graph1.valueField = "realisasi_pnbp";
-							graph1.lineThickness = 10;
-                            graph1.labelText = "[[persentase]]%";
-                            graph1.fontSize = 30
-
-							graph1.customBullet = "/images/point_hijau.png";
-                            graph1.bulletSize = 50;
-							graph1.dashLengthField = "dashLengthLine";
-
-
-							var graph2 = new AmCharts.AmGraph();
-							graph2.type = "line";
-							graph2.title = "Realisasi Penerimaan Negara";
-							graph2.lineColor = "#194C85";
-							graph2.valueField = "realisasi_pn";
-							graph2.lineThickness = 10;
-
-                            graph2.customBullet = "/images/point_merah.png";
-                            graph2.bulletSize = 50;
-							graph2.dashLengthField = "dashLengthLine";
-
-							var valueAxis = new AmCharts.ValueAxis();
-							valueAxis.stackType = "regular";
-							valueAxis.gridAlpha = 0.2;
-							valueAxis.gridColor = "#222222";
-							valueAxis.axisColor = "#000000";
-							valueAxis.axisAlpha = 0.5;
-							valueAxis.dashLength = 5;
-							valueAxis.title = "Jumlah (triliun Rupiah)";
-							valueAxis.titleColor = "#222222";
-							valueAxis.unit = "";
-							chart.addValueAxis(valueAxis);
-
-                            graph1.balloonText = "<span style='font-size:13px;'>[[title]] [[category]]:<b>[[value]]</b> [[additional]]</span>";
-							graph2.balloonText = "<span style='font-size:13px;'>[[title]] [[category]]:<b>[[value]]</b> [[additional]]</span>";
-                            chart.addGraph(graph1);
-							chart.addGraph(graph2);
-
-
-							var legend = new AmCharts.AmLegend();
-							legend.useGraphSettings = true;
-							chart.addLegend(legend);
-
-							chart.write("graphs2");
-						});
-								</script>
+					<script type="text/javascript">
+						
+					</script>
 
                         <!-- amCharts javascript code -->
                         <script type="text/javascript">

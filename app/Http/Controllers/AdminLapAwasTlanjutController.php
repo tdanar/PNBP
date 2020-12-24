@@ -3,7 +3,8 @@
 	use Session;
 	use Request;
 	use DB;
-	use CRUDBooster;
+    use CRUDBooster;
+    use DataTables;
 
 	class AdminLapAwasTlanjutController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -45,9 +46,23 @@
 			# START FORM DO NOT REMOVE THIS LINE
             $this->form = [];
             $this->form[] = ['label'=>'Rekomendasi','name'=>'id_rekomendasi','type'=>'hidden','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Tgl','name'=>'tgl','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Progress','name'=>'progress','type'=>'textarea','validation'=>'max:5000','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Status','name'=>'status','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
+            if(CRUDBooster::myPrivilegeId() == 5){
+                $this->form[] = ['label'=>'Tanggal','name'=>'tgl','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'disabled'];
+                $this->form[] = ['label'=>'Progress','name'=>'progress','type'=>'textarea','validation'=>'max:5000','width'=>'col-sm-10', 'disabled' => 'disabled'];
+                $this->form[] = ['label'=>'Status','name'=>'status','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi', 'disabled' => 'disabled'];
+                $this->form[] = ['label'=>'Terima?','name'=>'id_status_kirim','type'=>'radio','validation'=>'required','width'=>'col-sm-10','dataenum'=>'2|Ya;4|Tidak'];
+                $this->form[] = ['label'=>'Komentar','name'=>'comment','type'=>'textarea','width'=>'col-sm-10','style'=>'display: none;'];
+                $this->form[] = ['label'=>'Approver','name'=>'id_user_comment','type'=>'hidden','value'=>CRUDBooster::myId(),'width'=>'col-sm-10'];
+                $this->form[] = ['label'=>'Inputer','name'=>'inputer','type'=>'hidden','width'=>'col-sm-10'];
+            }else{
+                $this->form[] = ['label'=>'Komentar Approver','name'=>'comment','type'=>'textarea','width'=>'col-sm-10','disabled' => 'disabled'];
+                $this->form[] = ['label'=>'Tanggal','name'=>'tgl','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
+                $this->form[] = ['label'=>'Progress','name'=>'progress','type'=>'textarea','validation'=>'max:5000','width'=>'col-sm-10'];
+                $this->form[] = ['label'=>'Status','name'=>'status','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
+                $this->form[] = ['label'=>'Kirim ke approver?','name'=>'id_status_kirim','type'=>'radio','validation'=>'required','width'=>'col-sm-10','dataenum'=>'3|Ya;1|Tidak'];
+            }
+			
+            
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -154,8 +169,23 @@
 	        | javascript code in the variable
 	        | $this->script_js = "function() { ... }";
 	        |
-	        */
-	        $this->script_js = NULL;
+            */
+            if(CRUDBooster::myPrivilegeId() == 5){
+                $this->script_js = 
+                '$(document).ready(function(){
+                    
+                    $("input[name$=id_status_kirim]").click(function() {
+                    var test = $(this).val();
+                    
+                    if(test == 4){
+                        $("#form-group-comment").show();
+                    }else{
+                        $("#form-group-comment").hide();
+                    }
+                });
+                });';
+            }
+            
 
 
             /*
@@ -264,13 +294,21 @@
 	    */
 	    public function hook_before_add(&$postdata) {
             //Your code here
-            $id = $postdata['id_rekomendasi'];
-            $tgl_tl = $postdata['tgl'];
-            $tl = $postdata['progress'];
-            $id_kod_tl = $postdata['status'];
+            // $id = $postdata['id_rekomendasi'];
+            // $tgl_tl = $postdata['tgl'];
+            // $tl = $postdata['progress'];
+            // $id_kod_tl = $postdata['status'];
+            // DB::table('t_lap_awas_rekomend')
+            // ->where('id',$id)
+            // ->update(['tgl_tl'=>$tgl_tl,'tl'=>$tl,'id_kod_tl'=>$id_kod_tl]);
+            $postdata['inputer'] = CRUDBooster::myId();
+            $id_rekomend = $postdata['id_rekomendasi'];
+            $id_status_kirim = $postdata['id_status_kirim'];
             DB::table('t_lap_awas_rekomend')
-            ->where('id',$id)
-            ->update(['tgl_tl'=>$tgl_tl,'tl'=>$tl,'id_kod_tl'=>$id_kod_tl]);
+                ->where('id',$id_rekomend)
+                ->update(['id_status_kirim' => $id_status_kirim,'updated_at'=>now()]);
+            
+            
 
 	    }
 
@@ -282,7 +320,42 @@
 	    |
 	    */
 	    public function hook_after_add($id) {
-	        //Your code here
+            //Your code here
+            $id_rekomend = DB::table('t_lap_awas_rekomend')->select('t_lap_awas_rekomend.id')->leftjoin('t_lap_awas_tlanjut','t_lap_awas_tlanjut.id_rekomendasi','=','t_lap_awas_rekomend.id')->where('t_lap_awas_tlanjut.id',$id)->first()->id;
+            $tlanjut = DB::table('t_lap_awas_tlanjut')->selectRaw('t_lap_awas_tlanjut.*,cms_users.name,cms_users.id_cms_privileges,cms_users.id_kode_unit')->leftjoin('cms_users','cms_users.id','=','t_lap_awas_tlanjut.inputer')->where('t_lap_awas_tlanjut.id',$id)->first();
+            $project = DB::table('t_lap_awas')->selectRaw('t_lap_awas.*')->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+                        join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('t_lap_awas_rekomend.id',$id_rekomend)->first();
+                        
+            $tosend = DB::table('cms_users')->select('id')->where('id_cms_privileges',5)->where('id_kode_unit',$tlanjut->id_kode_unit)->first()->id;
+
+            
+
+            if($tlanjut->id_status_kirim == 3){
+                try {
+                    $config = [];
+                    $config['content'] = "[TL Dikirim] ".$tlanjut->name." telah mengirimkan progress tindak lanjut, harap untuk melakukan reviu.";
+                    $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
+                    $config['id_cms_users'] = [$tosend];
+    
+                    //dd($config);
+                    DB::table('t_lap_awas_tlanjut')
+                        ->where('id', $id)
+                        ->update(['id_status_kirim' => 3,'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+                    DB::table('t_lap_awas_rekomend')
+                        ->where('id', $id_rekomend)
+                        ->update(['last_id_tl' => $id, 'id_status_kirim' => 3,'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+                        CRUDBooster::sendNotification($config);
+                return redirect('/ma/lap_awas_tlanjut')->with('status','Progress tindak lanjut telah berhasil dikirim!');
+                } catch (Exception $e) {
+                    report ($e);
+                    return false;
+                }
+            }else{
+                DB::table('t_lap_awas_rekomend')
+                ->where('id',$id_rekomend)
+                ->update(['last_id_tl' => $id]);
+            }
+           
 
 	    }
 
@@ -295,7 +368,76 @@
 	    |
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
-	        //Your code here
+            //Your code here
+            $id_rekomend = $postdata['id_rekomendasi'];
+            $choice = $postdata['id_status_kirim'];
+            $tgl_tl = $postdata['tgl'];
+            $tl = $postdata['progress'];
+            $id_kod_tl = $postdata['status'];
+            $id_status_kirim = $postdata['id_status_kirim'];
+            $comment = $postdata['comment'];
+            $id_user_comment = $postdata['id_user_comment'];
+            $inputer = $postdata['inputer'];
+            $tlanjut = DB::table('t_lap_awas_tlanjut')->selectRaw('t_lap_awas_tlanjut.*,cms_users.name,cms_users.id_cms_privileges,cms_users.id_kode_unit')->leftjoin('cms_users','cms_users.id','=','t_lap_awas_tlanjut.id_user_comment')->where('t_lap_awas_tlanjut.id',$id)->first();
+            $tlanjut2 = DB::table('t_lap_awas_tlanjut')->selectRaw('t_lap_awas_tlanjut.*,cms_users.name,cms_users.id_cms_privileges,cms_users.id_kode_unit')->leftjoin('cms_users','cms_users.id','=','t_lap_awas_tlanjut.inputer')->where('t_lap_awas_tlanjut.id',$id)->first();
+            $project = DB::table('t_lap_awas')->selectRaw('t_lap_awas.*')->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+            join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('t_lap_awas_rekomend.id',$id_rekomend)->first();
+            $tosend = DB::table('cms_users')->select('id')->where('id_cms_privileges',5)->where('id_kode_unit',$tlanjut->id_kode_unit)->first()->id;
+
+            if($choice == 2){
+                try {
+                    $config = [];
+                    $config['content'] = "[TL Diterima] Approver ".$tlanjut->name." telah menerima dan mengirimkan progress tindak lanjut ke Kemenkeu.";
+                    $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
+                    $config['id_cms_users'] = [$inputer];
+                    
+                    DB::table('t_lap_awas_rekomend')
+                    ->where('id',$id_rekomend)
+                    ->update(['tgl_tl' => $tgl_tl,'tl' => $tl, 'id_kod_tl' => $id_kod_tl, 'comment' => null, 'id_user_comment' => null, 'id_status_kirim' => $id_status_kirim, 'updated_at' => now()]);
+                    CRUDBooster::sendNotification($config);
+                        } catch (Exception $e) {
+                            report ($e);
+                            return false;
+                        }
+            }elseif($choice == 3){
+                try {
+                    $config = [];
+                    $config['content'] = "[TL Dikirim] ".$tlanjut2->name." telah mengirimkan progress tindak lanjut, harap untuk melakukan reviu.";
+                    $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
+                    $config['id_cms_users'] = [$tosend];
+
+                    $postdata['comment'] =  null;
+                    $postdata['id_user_comment'] = null;
+                    DB::table('t_lap_awas_rekomend')
+                    ->where('id',$id_rekomend)
+                    ->update(['id_status_kirim'=>$id_status_kirim, 'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+                    CRUDBooster::sendNotification($config);
+                    } catch (Exception $e) {
+                        report ($e);
+                        return false;
+                    }
+            }elseif($choice == 1){
+                $postdata['comment'] =  null;
+                $postdata['id_user_comment'] = null;
+                DB::table('t_lap_awas_rekomend')
+                ->where('id',$id_rekomend)
+                ->update(['id_status_kirim'=>$id_status_kirim, 'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+            }else{
+                try {
+                    $config = [];
+                    $config['content'] = "[TL Ditolak] Approver ".$tlanjut->name." telah menolak progress tindak lanjut, silahkan diperbaiki.";
+                    $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
+                    $config['id_cms_users'] = [$inputer];
+                    
+                    DB::table('t_lap_awas_rekomend')
+                    ->where('id',$id_rekomend)
+                    ->update(['comment'=>$comment, 'id_user_comment'=>$id_user_comment, 'id_status_kirim'=>$id_status_kirim, 'updated_at' => now()]);
+                    CRUDBooster::sendNotification($config);
+                        } catch (Exception $e) {
+                            report ($e);
+                            return false;
+                        }
+            }
 
 	    }
 
@@ -335,7 +477,34 @@
 
 	    }
 
+        public function KirimTL($id)
+        {
+            $id_tlanjut = DB::table('t_lap_awas_rekomend')->selectRaw('t_lap_awas_tlanjut.id')->leftjoin('t_lap_awas_tlanjut','t_lap_awas_tlanjut.id_rekomendasi','=','t_lap_awas_rekomend.id')->orderBy('t_lap_awas_tlanjut.id','desc')->first()->id;
+            $tlanjut = DB::table('t_lap_awas_tlanjut')->selectRaw('t_lap_awas_tlanjut.*,cms_users.name,cms_users.id_cms_privileges,cms_users.id_kode_unit')->leftjoin('cms_users','cms_users.id','=','t_lap_awas_tlanjut.inputer')->where('t_lap_awas_tlanjut.id',$id_tlanjut)->first();
+            $project = DB::table('t_lap_awas')->selectRaw('t_lap_awas.*')->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
+                        join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('t_lap_awas_rekomend.id',$id)->first();
+            $tosend = DB::table('cms_users')->select('id')->where('id_cms_privileges',5)->where('id_kode_unit',$tlanjut->id_kode_unit)->first()->id;
+            //dd($id_tlanjut, $tlanjut, $project, $tosend);
+            try {
+                $config = [];
+                $config['content'] = "[TL Dikirim] ".$tlanjut->name." telah mengirimkan progress tindak lanjut, harap untuk melakukan reviu.";
+                $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
+                $config['id_cms_users'] = [$tosend];
 
+                //dd($config);
+                DB::table('t_lap_awas_tlanjut')
+                    ->where('id', $id_tlanjut)
+                    ->update(['id_status_kirim' => 3,'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+                DB::table('t_lap_awas_rekomend')
+                    ->where('id', $id)
+                    ->update(['id_status_kirim' => 3,'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+                    CRUDBooster::sendNotification($config);
+            return redirect('/ma/lap_awas_tlanjut')->with('status','Progress tindak lanjut telah berhasil dikirim!');
+            } catch (Exception $e) {
+                report ($e);
+                return false;
+            }
+        }
 
         public function getIndex() {
             //First, Add an auth
@@ -343,7 +512,12 @@
 
              //Create your own query
              $data = [];
-             $data['page_title'] = 'Monitoring TL Pengawasan PNBP';
+             if(CRUDBooster::myPrivilegeId() == 2 || CRUDBooster::myPrivilegeId() == 5){
+                $data['page_title'] = 'Monitoring TL Pengawasan PNBP : '.CRUDBooster::myUnit();
+            }else{
+                $data['page_title'] = 'Monitoring TL Pengawasan PNBP';
+            }
+             
              if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
@@ -352,7 +526,7 @@
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
-                `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas_rekomend`.`id_status_kirim`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -385,7 +559,7 @@
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
                 leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
                 leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 orderby('id','desc')->
@@ -398,7 +572,7 @@
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
-                `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas_rekomend`.`id_status_kirim`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -431,7 +605,7 @@
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
                 leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
                 leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 where('id_status_kirim',2)->
@@ -445,7 +619,7 @@
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
-                `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas_rekomend`.`id_status_kirim`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -478,7 +652,7 @@
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
                 leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
                 leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 where('unit',CRUDBooster::myUnit())->
@@ -492,7 +666,7 @@
                 `t_lap_awas`.`tanggal`,
                 `t_lap_awas`.`nama_giat_was`,
                 `t_lap_awas`.`id`,
-                `t_lap_awas`.`id_status_kirim`,
+                `t_lap_awas_rekomend`.`id_status_kirim`,
                 `t_lap_awas`.`thn_mulai`,
                 `t_lap_awas`.`thn_usai`,
                 `t_ref_jenis_awas`.`jenis_awas`,
@@ -525,7 +699,7 @@
                 leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
                 leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
                 leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-                leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+                leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
                 leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
                 leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
                 where('id_user',CRUDBooster::myId())->orderby('id','desc')->
@@ -539,14 +713,29 @@
              $this->cbView('lapTLanjut',$data);
     }
 
+    
+
+
     public function getEdit($id)
     {
-        abort(404);
-    }
+        $this->button_addmore = FALSE;
+		$this->button_cancel  = TRUE;
+		$this->button_show    = FALSE;
+		$this->button_add     = FALSE;
+		$this->button_delete  = FALSE;
+        $this->hide_form 	  = [];
 
-    public function getDelete($id)
-    {
-        abort(404);
+
+
+
+
+        $data['page_title'] = 'Reviu Tindak Lanjut dari Inputer';
+        $data['row']        = CRUDBooster::first('t_lap_awas_tlanjut',$id);
+
+        $data['command']    = 'edit';
+
+
+		$this->cbView('crudbooster::default.form',$data);
     }
 
     public function getDataWas() {
@@ -560,7 +749,7 @@
             `t_lap_awas`.`tanggal`,
             `t_lap_awas`.`nama_giat_was`,
             `t_lap_awas`.`id`,
-            `t_lap_awas`.`id_status_kirim`,
+            `t_lap_awas_rekomend`.`id_status_kirim`,
             `t_lap_awas`.`thn_mulai`,
             `t_lap_awas`.`thn_usai`,
             `t_ref_jenis_awas`.`jenis_awas`,
@@ -594,7 +783,7 @@
             leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
             leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
             leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
             leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
             leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
             orderby('id','desc')->
@@ -612,7 +801,7 @@
             `t_lap_awas`.`tanggal`,
             `t_lap_awas`.`nama_giat_was`,
             `t_lap_awas`.`id`,
-            `t_lap_awas`.`id_status_kirim`,
+            `t_lap_awas_rekomend`.`id_status_kirim`,
             `t_lap_awas`.`thn_mulai`,
             `t_lap_awas`.`thn_usai`,
             `t_ref_jenis_awas`.`jenis_awas`,
@@ -646,7 +835,7 @@
             leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
             leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
             leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
             leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
             leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
             orderby('id','desc')->
@@ -665,7 +854,7 @@
             `t_lap_awas`.`tanggal`,
             `t_lap_awas`.`nama_giat_was`,
             `t_lap_awas`.`id`,
-            `t_lap_awas`.`id_status_kirim`,
+            `t_lap_awas_rekomend`.`id_status_kirim`,
             `t_lap_awas`.`thn_mulai`,
             `t_lap_awas`.`thn_usai`,
             `t_ref_jenis_awas`.`jenis_awas`,
@@ -699,7 +888,7 @@
             leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
             leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
             leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
             leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
             leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
             where('unit',CRUDBooster::myUnit())->orderby('id','desc')->
@@ -714,7 +903,7 @@
             `t_lap_awas`.`tanggal`,
             `t_lap_awas`.`nama_giat_was`,
             `t_lap_awas`.`id`,
-            `t_lap_awas`.`id_status_kirim`,
+            `t_lap_awas_rekomend`.`id_status_kirim`,
             `t_lap_awas`.`thn_mulai`,
             `t_lap_awas`.`thn_usai`,
             `t_ref_jenis_awas`.`jenis_awas`,
@@ -748,7 +937,7 @@
             leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
             leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
             leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-            leftjoin('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
             leftjoin('cms_users','cms_users.id','=','t_lap_awas.id_user')->
             leftjoin('t_ref_unit','t_ref_unit.id','=','cms_users.id_kode_unit')->
             where('id_user',CRUDBooster::myId())->orderby('id','desc')->
@@ -768,7 +957,7 @@
                 }
 
             }
-
+            
             return Datatables::of($datas)->make(true);
 
         }else{
@@ -848,16 +1037,19 @@
             `t_lap_awas_rekomend`.`status_tl`,
             `t_lap_awas_rekomend`.`tgl_tl`,
             `t_lap_awas_rekomend`.`tl`,
+            `t_lap_awas_rekomend`.`last_id_tl`,
+            `t_lap_awas_rekomend`.`id_status_kirim` AS `id_kirim_TL`,
+            `t_lap_awas_rekomend`.`comment` AS `comment_TL`,
             `t_lap_awas_rekomend`.`rekomendasi`')->
             leftjoin('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
             leftjoin('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->
             leftjoin('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')->
-            join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
-            join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
+            leftjoin('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')->
+            leftjoin('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')->
             leftjoin('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')->
             leftjoin('t_ref_matauang','t_lap_awas_temuan.id_mata_uang','=','t_ref_matauang.id')->
-            leftjoin('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
-            join('t_ref_statkirim','t_lap_awas.id_status_kirim','=','t_ref_statkirim.id')->
+            join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')->
+            leftjoin('t_ref_statkirim','t_lap_awas_rekomend.id_status_kirim','=','t_ref_statkirim.id')->
             where('t_lap_awas.id',$id)->get();
 
             $detail['countTemuan'] = DB::table('t_lap_awas_temuan')->where('id_lap',$id)->count();

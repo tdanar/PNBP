@@ -27,6 +27,8 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     Route::get('/helpdesk','helpdeskController@index')->name('helpdesk');
     Route::post('/api/getAwas', 'AdminLapAwasController@getDataWas');
     Route::get('/api/getAwas', 'AdminLapAwasController@getDataWas');
+    Route::post('/api/tlanjut', 'AdminLapAwasTlanjutController@getDataWas');
+    Route::get('/api/tlanjut', 'AdminLapAwasTlanjutController@getDataWas');
     Route::get('/api/getNestedWas', 'AdminLapAwasController@getNestedWas');
     Route::post('/api/getMonitorWas', 'AdminMonitoringController@getMonitorWas');
     Route::get('/api/getMonitorWas', 'AdminMonitoringController@getMonitorWas');
@@ -47,11 +49,13 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     Route::get('/ma/rev','AdminLapAwasController@Rev');
     Route::get('/ma/manajemenGrafik','manajemenGrafikController@Index');
     Route::get('/ma/lap_awas_tlanjut/addTL/{id}', 'AdminLapAwasTlanjutController@getTlanjut');
-
+    Route::get('/ma/kirimTL/{id}', 'AdminLapAwasTlanjutController@KirimTL');
 
     //Route::post('/ma/rev','AdminLapAwasController@Rev');
 });
 Route::get('/api/getPiePNBP/{tahun?}','homepageController@getPiePNBP')->name('getPiePNBP');
+Route::get('/api/getTrenPNBP','homepageController@getTrenPNBP')->name('getTrenPNBP');
+
 
 
 

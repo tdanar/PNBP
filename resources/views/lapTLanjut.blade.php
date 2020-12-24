@@ -18,6 +18,8 @@
 <script>
 $(document).ready(function() {
     var unit = {!! json_encode(CRUDBooster::myUnit()) !!};
+    var myId = {!! json_encode(CRUDBooster::myPrivilegeId()) !!};
+    var no_lap = escapeHtml(getParameterByName('no_lap'));
     var table = $('#lapawas').DataTable({
 
             language:
@@ -44,7 +46,7 @@ $(document).ready(function() {
                     order:[[0,'desc'],[1,'desc']],
                     serverSide: true,
                     ajax: {
-                                url: '/api/getAwas',
+                                url: '/api/tlanjut',
                                 type: 'POST'
                             },
                     columns: [
@@ -133,7 +135,7 @@ $(document).ready(function() {
                                                     var batalpath = {!! json_encode(CRUDBooster::adminPath()) !!}+'/batal/'+full.id;
                                                     var begin = "<div class='btn-toolbar' role='toolbar'><div class='btn-group btn-group-xs' role='group'>";
                                                     var end = "</div></div>";
-                                                    var penanda = '<span style="color: #ffffff; opacity: 0.0;">'+full.id+'</span>';
+                                                    var penanda = '<span style="color: #ffffff; opacity: 0.0;">'+full.id_rekomendasi+'</span>';
 
                                                     switch (true) {
                                                                 case ({!! json_encode(CRUDBooster::isUpdate()) !!}):
@@ -156,7 +158,7 @@ $(document).ready(function() {
 
 
                                                             };
-                                                    if(full.id_rekomendasi !== null){
+                                                    if(full.id_rekomendasi && (full.KodTL === 'Belum Sesuai' || full.KodTL === 'Belum Ditindaklanjuti' || !full.KodTL) && (myId == 2 || myId == 5)){
                                                         return button+penanda;
                                                     }else{
                                                         return penanda;
@@ -180,7 +182,7 @@ $(document).ready(function() {
                                     header: true,
                                     messageTop: unit,
                                     exportOptions: {
-                                        columns: [' :not(:last-child)'],
+                                        columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
                                         orthogonal: {
                                             'type': null
                                         }
@@ -190,7 +192,7 @@ $(document).ready(function() {
                                 targets: [3,13],
                                 render: $.fn.dataTable.render.ellipsis(40)
                                 },{
-                                targets: [1,5,7,8,10,11,12,14,15,18,19],
+                                targets: [5,7,8,10,11,12,14,15,18,19],
                                 searchable: true,
                                 visible: false,
                                 } ],
@@ -259,7 +261,12 @@ $(document).ready(function() {
                                                 });
                             }
             });
-
+            if(no_lap){
+                table.column(3).search(no_lap).draw();
+            }
+            if(myId == 2 || myId == 5){
+                table.column(1).visible(false);
+            }
             $(document.body).on('hide.bs.modal', function (e) {
                                             //divid = '#'+e.target.id;
                                             //$(e.target).removeData('bs.modal');
@@ -268,6 +275,30 @@ $(document).ready(function() {
         });
 
 });
+
+function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+function escapeHtml(text) {
+  var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  if(text){
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }else{
+      return text
+  }
+
+}
 
 
 function klikDelete(link) {
@@ -286,8 +317,8 @@ function klikDelete(link) {
 
     function klikKirim(link){
         swal({
-            title: "Anda yakin ingin lanjut mengirimkan laporan ini ke approver Anda? ",
-            text: "Setelah Kirim, Anda tidak dapat mengubah data laporan lagi",
+            title: "Anda yakin ingin lanjut mengirimkan progress TL ini ke approver Anda? ",
+            text: "Setelah Kirim, Anda tidak dapat mengubah data progress TL lagi",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#f39c12",
@@ -446,8 +477,8 @@ function klikDelete(link) {
                 </select>
         </div>
     </div>
-    @if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4 || CRUDBooster::myPrivilegeId() == 5)
-    @if(CRUDBooster::myPrivilegeId() != 5)
+    
+    @if(CRUDBooster::myPrivilegeId() != 5 || CRUDBooster::myPrivilegeId() != 2)
     <div class="row">
         <div class="col-xs-3 text-right">
             <label for="table-filter-unit">Kementerian / Lembaga : </label>
@@ -501,7 +532,7 @@ function klikDelete(link) {
                 </select>
         </div>
     </div>
-    @endif
+    
     <div class="row">
         <div class="col-xs-3 text-right">
             <label for="table-filter3">Status Tindak Lanjut :</label>
@@ -517,7 +548,7 @@ function klikDelete(link) {
     </div>
     <div class="row">
         <div class="col-xs-3 text-right">
-            <label for="table-filter4">Status Kirim :</label>
+            <label for="table-filter4">Status Kirim TL:</label>
         </div>
         <div class="col-xs-2">
             <select id="table-filter4">

@@ -17,25 +17,7 @@ class homepageController extends Controller {
         $data['artikel'] = DB::table('t_article')->orderBy('id','desc')->get();
         $data['infografis'] = DB::table('t_infografis')->orderBy('id','desc')->get();
         $data['pengumuman'] = DB::table('t_pengumuman')->where('show',1)->orderByDesc('id')->get();
-
-                $get_pnbp = DB::table('t_diag_pnbp_jenis')->selectRaw('tahun,komp_pnbp,nominal')->groupBy(['tahun','komp_pnbp','nominal'])->get();
-
-                $pnbps = $get_pnbp
-                ->map(function($item){
-                    return [
-                        'Tahun' => $item->tahun,
-                        $item->komp_pnbp => $item->nominal,
-                        'nominal' => $item->nominal
-                    ];
-                });
-                $array_pnbps = $pnbps->groupBy('Tahun')->map(function ($item) {
-                    $item[4] = ['Total' => $item->sum('nominal')];
-                    return array_merge(...$item->toArray());
-            })->values()->toArray();
-       $data['pnbp_jenis'] = json_encode($array_pnbps);
-
-        $get_trend = DB::table('t_diag_tren_pnbp')->selectRaw('tahun,realisasi_pnbp,realisasi_pn,persentase')->get();
-       $data['pnbp_tren'] = json_encode($get_trend);
+         
        $st_kirim = 2;
        $l_tahun = 2018;
 
@@ -74,6 +56,30 @@ class homepageController extends Controller {
         ->groupBy('t_ref_tl.deskripsi')
         ->get();
         //dd($oprt,$tahuns);
+       return $data;
+    }
+
+    public function getTrenPNBP()
+    {
+        $get_pnbp = DB::table('t_diag_pnbp_jenis')->selectRaw('tahun,komp_pnbp,nominal')->groupBy(['tahun','komp_pnbp','nominal'])->get();
+
+                $pnbps = $get_pnbp
+                ->map(function($item){
+                    return [
+                        'Tahun' => $item->tahun,
+                        $item->komp_pnbp => $item->nominal,
+                        'nominal' => $item->nominal
+                    ];
+                });
+                $array_pnbps = $pnbps->groupBy('Tahun')->map(function ($item) {
+                    $item[4] = ['Total' => $item->sum('nominal')];
+                    return array_merge(...$item->toArray());
+            })->values()->toArray();
+       $data['pnbp_jenis'] = $array_pnbps;
+
+        $get_trend = DB::table('t_diag_tren_pnbp')->selectRaw('tahun,realisasi_pnbp,realisasi_pn,persentase')->get();
+       $data['pnbp_tren'] = $get_trend;
+
        return $data;
     }
 
