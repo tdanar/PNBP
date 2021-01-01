@@ -61,8 +61,8 @@
                 $this->form[] = ['label'=>'Status','name'=>'status','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
                 $this->form[] = ['label'=>'Kirim ke approver?','name'=>'id_status_kirim','type'=>'radio','validation'=>'required','width'=>'col-sm-10','dataenum'=>'3|Ya;1|Tidak'];
             }
-			
-            
+
+
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -171,12 +171,12 @@
 	        |
             */
             if(CRUDBooster::myPrivilegeId() == 5){
-                $this->script_js = 
+                $this->script_js =
                 '$(document).ready(function(){
-                    
+
                     $("input[name$=id_status_kirim]").click(function() {
                     var test = $(this).val();
-                    
+
                     if(test == 4){
                         $("#form-group-comment").show();
                     }else{
@@ -185,7 +185,7 @@
                 });
                 });';
             }
-            
+
 
 
             /*
@@ -307,8 +307,8 @@
             DB::table('t_lap_awas_rekomend')
                 ->where('id',$id_rekomend)
                 ->update(['id_status_kirim' => $id_status_kirim,'updated_at'=>now()]);
-            
-            
+
+
 
 	    }
 
@@ -325,10 +325,10 @@
             $tlanjut = DB::table('t_lap_awas_tlanjut')->selectRaw('t_lap_awas_tlanjut.*,cms_users.name,cms_users.id_cms_privileges,cms_users.id_kode_unit')->leftjoin('cms_users','cms_users.id','=','t_lap_awas_tlanjut.inputer')->where('t_lap_awas_tlanjut.id',$id)->first();
             $project = DB::table('t_lap_awas')->selectRaw('t_lap_awas.*')->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')->
                         join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')->where('t_lap_awas_rekomend.id',$id_rekomend)->first();
-                        
+
             $tosend = DB::table('cms_users')->select('id')->where('id_cms_privileges',5)->where('id_kode_unit',$tlanjut->id_kode_unit)->first()->id;
 
-            
+
 
             if($tlanjut->id_status_kirim == 3){
                 try {
@@ -336,7 +336,7 @@
                     $config['content'] = "[TL Dikirim] ".$tlanjut->name." telah mengirimkan progress tindak lanjut, harap untuk melakukan reviu.";
                     $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
                     $config['id_cms_users'] = [$tosend];
-    
+
                     //dd($config);
                     DB::table('t_lap_awas_tlanjut')
                         ->where('id', $id)
@@ -355,7 +355,7 @@
                 ->where('id',$id_rekomend)
                 ->update(['last_id_tl' => $id]);
             }
-           
+
 
 	    }
 
@@ -369,11 +369,9 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
             //Your code here
+            $reference = DB::table('t_lap_awas_tlanjut')->where('id',$id)->first();
             $id_rekomend = $postdata['id_rekomendasi'];
             $choice = $postdata['id_status_kirim'];
-            $tgl_tl = $postdata['tgl'];
-            $tl = $postdata['progress'];
-            $id_kod_tl = $postdata['status'];
             $id_status_kirim = $postdata['id_status_kirim'];
             $comment = $postdata['comment'];
             $id_user_comment = $postdata['id_user_comment'];
@@ -385,58 +383,50 @@
             $tosend = DB::table('cms_users')->select('id')->where('id_cms_privileges',5)->where('id_kode_unit',$tlanjut->id_kode_unit)->first()->id;
 
             if($choice == 2){
-                try {
+
                     $config = [];
                     $config['content'] = "[TL Diterima] Approver ".$tlanjut->name." telah menerima dan mengirimkan progress tindak lanjut ke Kemenkeu.";
                     $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
                     $config['id_cms_users'] = [$inputer];
-                    
+
                     DB::table('t_lap_awas_rekomend')
                     ->where('id',$id_rekomend)
-                    ->update(['tgl_tl' => $tgl_tl,'tl' => $tl, 'id_kod_tl' => $id_kod_tl, 'comment' => null, 'id_user_comment' => null, 'id_status_kirim' => $id_status_kirim, 'updated_at' => now()]);
+                    ->update(['tgl_tl' => $reference->tgl,'tl' => $reference->progress, 'id_kod_tl' => $reference->status, 'comment' => null, 'id_user_comment' => null, 'id_status_kirim' => $choice, 'updated_at' => now()]);
+                    $postdata['progress'] = $reference->progress;
+                    $postdata['status'] = $reference->status;
+
                     CRUDBooster::sendNotification($config);
-                        } catch (Exception $e) {
-                            report ($e);
-                            return false;
-                        }
+
             }elseif($choice == 3){
-                try {
+
                     $config = [];
                     $config['content'] = "[TL Dikirim] ".$tlanjut2->name." telah mengirimkan progress tindak lanjut, harap untuk melakukan reviu.";
                     $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
                     $config['id_cms_users'] = [$tosend];
 
-                    $postdata['comment'] =  null;
-                    $postdata['id_user_comment'] = null;
                     DB::table('t_lap_awas_rekomend')
                     ->where('id',$id_rekomend)
-                    ->update(['id_status_kirim'=>$id_status_kirim, 'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+                    ->update(['id_status_kirim'=>$choice, 'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
                     CRUDBooster::sendNotification($config);
-                    } catch (Exception $e) {
-                        report ($e);
-                        return false;
-                    }
+
             }elseif($choice == 1){
-                $postdata['comment'] =  null;
-                $postdata['id_user_comment'] = null;
                 DB::table('t_lap_awas_rekomend')
                 ->where('id',$id_rekomend)
-                ->update(['id_status_kirim'=>$id_status_kirim, 'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
+                ->update(['id_status_kirim'=>$choice, 'comment'=>null, 'id_user_comment' => null, 'updated_at' => now()]);
             }else{
-                try {
+
                     $config = [];
                     $config['content'] = "[TL Ditolak] Approver ".$tlanjut->name." telah menolak progress tindak lanjut, silahkan diperbaiki.";
                     $config['to'] = CRUDBooster::adminPath('lap_awas_tlanjut')."?no_lap=".$project->no_lap;
                     $config['id_cms_users'] = [$inputer];
-                    
+                    $postdata['progress'] = $reference->progress;
+                    $postdata['status'] = $reference->status;
+
                     DB::table('t_lap_awas_rekomend')
                     ->where('id',$id_rekomend)
                     ->update(['comment'=>$comment, 'id_user_comment'=>$id_user_comment, 'id_status_kirim'=>$id_status_kirim, 'updated_at' => now()]);
                     CRUDBooster::sendNotification($config);
-                        } catch (Exception $e) {
-                            report ($e);
-                            return false;
-                        }
+
             }
 
 	    }
@@ -517,7 +507,7 @@
             }else{
                 $data['page_title'] = 'Monitoring TL Pengawasan PNBP';
             }
-             
+
              if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3){
                 $data['result'] = DB::table('t_lap_awas')->selectRaw('`t_lap_awas`.`id_user`,
                 `t_lap_awas`.`tahun`,
@@ -713,7 +703,7 @@
              $this->cbView('lapTLanjut',$data);
     }
 
-    
+
 
 
     public function getEdit($id)
@@ -728,8 +718,12 @@
 
 
 
+        if(CRUDBooster::myPrivilegeId() == 5){
+           $data['page_title'] = 'Reviu Tindak Lanjut dari Inputer';
+        }else{
+            $data['page_title'] = 'Edit Tindak Lanjut';
+        }
 
-        $data['page_title'] = 'Reviu Tindak Lanjut dari Inputer';
         $data['row']        = CRUDBooster::first('t_lap_awas_tlanjut',$id);
 
         $data['command']    = 'edit';
@@ -957,7 +951,7 @@
                 }
 
             }
-            
+
             return Datatables::of($datas)->make(true);
 
         }else{
@@ -1062,7 +1056,7 @@
             $this->cbView('modal.tlanjut',$detail);
         }
 
-   
+
     }
-    
-    
+
+

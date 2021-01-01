@@ -142,14 +142,20 @@
                                                                         <div class="col-sm-4">
                                                                             &ensp;&ensp;&ensp;<strong>Uraian Tindak Lanjut</strong>
                                                                         </div>
-                                                                        
-                                                                            <div class="col-sm-4 text-justify">{{$value->tl}}</div>
+
+                                                                            <div class="col-sm-4 text-justify">{{$value->tl}}<br/>
+                                                                                @if($value->last_id_tl && $value->id_kirim_TL != 2)
+
+                                                                                <em class="text-muted">{{DB::table('t_lap_awas_tlanjut')->where('id',$value->last_id_tl)->first()->progress}}</em>
+                                                                                @endif
+                                                                            </div>
                                                                             @if(($value->KodTL == 'Belum Ditindaklanjuti' || !$value->KodTL || $value->KodTL == 'Belum Sesuai')&&($value->id_kirim_TL == null || $value->id_kirim_TL == 2)&& CRUDBooster::myPrivilegeId() == 2)
                                                                             <div class="col-sm-4 text-justify"><a href="/ma/lap_awas_tlanjut/add?parent_id={{$value->id_rekomendasi}}&parent_field=id_rekomendasi" class="btn btn-block btn-primary">Progress Tindak Lanjut</a></div>
                                                                             @elseif($value->id_kirim_TL == 4 && CRUDBooster::myPrivilegeId() == 2)
                                                                             <div class="col-sm-4 text-justify"><a href="/ma/lap_awas_tlanjut/edit/{{$value->last_id_tl}}" class="btn btn-block btn-primary">Progress Tindak Lanjut</a></div>
                                                                             @elseif(($value->id_kirim_TL == 1)  && CRUDBooster::myPrivilegeId() == 2)
-                                                                            <div class="col-sm-4 text-justify"><button type="button" onclick="klikKirimTL('{{CRUDBooster::adminPath().'/kirimTL/'.$value->id_rekomendasi}}')" class="btn btn-block btn-warning">Kirim TL ke Approver</button></div>
+                                                                            <div class="col-sm-4 text-justify"><a href="/ma/lap_awas_tlanjut/edit/{{$value->last_id_tl}}" class="btn btn-block btn-primary">Ubah Progress Tindak Lanjut</a><br/>
+                                                                            <button type="button" onclick="klikKirimTL('{{CRUDBooster::adminPath().'/kirimTL/'.$value->id_rekomendasi}}')" class="btn btn-block btn-warning">Kirim TL ke Approver</button></div>
                                                                             @elseif($value->id_kirim_TL == 3 && CRUDBooster::myPrivilegeId() == 5)
                                                                             <div class="col-sm-4 text-justify"><a href="/ma/lap_awas_tlanjut/edit/{{$value->last_id_tl}}" class="btn btn-block btn-warning">Reviu TL dari Inputer</a></div>
                                                                             @else
@@ -176,7 +182,7 @@
                 </div>
             </div>
             <div class="box-footer" style="background: #F5F5F5">
-                
+
             </div>
     </div>
 </div>
