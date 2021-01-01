@@ -143,11 +143,25 @@
                                                                             &ensp;&ensp;&ensp;<strong>Uraian Tindak Lanjut</strong>
                                                                         </div>
 
-                                                                            <div class="col-sm-4 text-justify">{{$value->tl}}<br/>
+                                                                            <div class="col-sm-4 text-left"><p>{{$value->tl}}</p>
                                                                                 @if($value->last_id_tl && $value->id_kirim_TL != 2)
-
+                                                                                <p>
                                                                                 <em class="text-muted">{{DB::table('t_lap_awas_tlanjut')->where('id',$value->last_id_tl)->first()->progress}}</em>
+                                                                                </p>
                                                                                 @endif
+
+                                                                                @if($value->nilai_tl)
+                                                                                <p>
+                                                                                Nilai Temuan yang Ditindaklanjuti: {{$value->KodeMatauang.' '.number_format($value->nilai_tl,0,",",".")}}
+                                                                                </p>
+                                                                                @endif
+
+                                                                                @if($value->last_id_tl && $value->id_kirim_TL != 2)
+                                                                                <p>
+                                                                                <em class="text-muted">Nilai Temuan yang Ditindaklanjuti: {{$value->KodeMatauang.' '.number_format(DB::table('t_lap_awas_tlanjut')->where('id',$value->last_id_tl)->first()->nilai_tl,0,",",".")}}</em>
+                                                                                </p>
+                                                                                @endif
+
                                                                             </div>
                                                                             @if(($value->KodTL == 'Belum Ditindaklanjuti' || !$value->KodTL || $value->KodTL == 'Belum Sesuai')&&($value->id_kirim_TL == null || $value->id_kirim_TL == 2)&& CRUDBooster::myPrivilegeId() == 2)
                                                                             <div class="col-sm-4 text-justify"><a href="/ma/lap_awas_tlanjut/add?parent_id={{$value->id_rekomendasi}}&parent_field=id_rekomendasi" class="btn btn-block btn-primary">Progress Tindak Lanjut</a></div>
