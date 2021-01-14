@@ -1,9 +1,12 @@
 <?php namespace App\Http\Controllers;
 
 	use Session;
+	use Illuminate\Support\Str;
 	use Request;
 	use DB;
 	use CRUDBooster;
+	use Illuminate\Support\Facades\Storage;
+
 
 	class AdminPanduanController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -33,9 +36,20 @@
 			$this->col[] = ["label"=>"Pembuat","name"=>"id_user","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"Kategori","name"=>"kategori"];
 			$this->col[] = ["label"=>"Judul","name"=>"judul"];
-			$this->col[] = ["label"=>"Keterangan","name"=>"keterangan"];
-			$this->col[] = ["label"=>"Pdf","name"=>"filename_pdf"];
-			$this->col[] = ["label"=>"Embed Vid","name"=>"embed_vid"];
+			$this->col[] = ["label"=>"Keterangan","name"=>"keterangan","callback"=>function($row){
+				$truncated = Str::limit($row->keterangan, 100, ' ...');
+				return $truncated;
+			}];
+			$this->col[] = ["label"=>"Thumbnail","name"=>"thumbnail","image"=>true];
+			$this->col[] = ["label"=>"Pdf","name"=>"filename_pdf","download"=>true];
+			$this->col[] = ["label"=>"Embed Vid","name"=>"embed_vid","callback"=>function($row){
+				
+				if(Str::contains($row->embed_vid,'.mp4')){
+					return '<div data-vjs-player><video id="vid1" class="video-js" controls preload="auto" responsive="true" width="180" height="180"><source src="'.$row->embed_vid.'"></video></div>';
+				}else{
+					return '<iframe src="'.$row->embed_vid.'" width="180" height="180" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+				}
+			}];
 			$this->col[] = ["label"=>"Tampil","name"=>"show", "callback"=>function($row){
                 if($row->show == 1){
                     return '<span class="text-success">Ya</span>';
@@ -51,6 +65,7 @@
 			$this->form[] = ['label'=>'Kategori','name'=>'kategori','type'=>'select','validation'=>'required','width'=>'col-sm-10','dataenum'=>'Panduan terkait Penggunaan e-Mawas PNBP;Panduan terkait Pengawasan PNBP'];
 			$this->form[] = ['label'=>'Judul','name'=>'judul','type'=>'text','validation'=>'required|string|min:3|max:70','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'textarea','validation'=>'string|min:5|max:5000','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Preview','name'=>'thumbnail','type'=>'upload','validation'=>'image|max:1000','width'=>'col-sm-10','user_id'=>'tmb_panduan'];
 			$this->form[] = ['label'=>'File Pdf','name'=>'filename_pdf','type'=>'upload','validation'=>'mimes:pdf|max:10000','width'=>'col-sm-10','user_id'=>'panduan'];
 			$this->form[] = ['label'=>'Embed Video','name'=>'embed_vid','type'=>'text','validation'=>'url','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Show','name'=>'show','type'=>'radio','validation'=>'required','width'=>'col-sm-9','dataenum'=>'1|Ya;0|Tidak'];
@@ -226,37 +241,41 @@
 	    }
 
 
-		public function delImage($id,$column1){
+		public function delImage($id,$column1,$column2){
 
 
 			$this->cbLoader();
-			$id = $id;
-			$column1 = $column1;
-		
+                $id = $id;
+                $column1 = $column1;
+                $column2 = $column2;
 
-			$row = DB::table($this->table)->where($this->primary_key, $id)->first();
+                $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-			if (! CRUDBooster::isDelete() && $this->global_privilege == false) {
-				CRUDBooster::insertLog(trans("crudbooster.log_try_delete_image", [
-					'name' => $row->{$this->title_field},
-					'module' => CRUDBooster::getCurrentModule()->name,
-				]));
-				CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-			}
+                if (! CRUDBooster::isDelete() && $this->global_privilege == false) {
+                    CRUDBooster::insertLog(trans("crudbooster.log_try_delete_image", [
+                        'name' => $row->{$this->title_field},
+                        'module' => CRUDBooster::getCurrentModule()->name,
+                    ]));
+                    CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+                }
 
-			$row = DB::table($this->table)->where($this->primary_key, $id)->first();
+                $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-			$file1 = '/'.$row->{$column1};
+                $file1 = '/'.$row->{$column1};
+                $file2 = '/'.$row->{$column2};
 
-			if (Storage::exists($file1)) {
-				Storage::delete($file1);
-			}
+                if (Storage::exists($file1)) {
+                    Storage::delete($file1);
+                }
+                if (Storage::exists($file2)) {
+                    Storage::delete($file2);
+                }
 
 
-			CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
-				'name' => $row->{$this->title_field},
-				'module' => CRUDBooster::getCurrentModule()->name,
-			]));
+                CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
+                    'name' => $row->{$this->title_field},
+                    'module' => CRUDBooster::getCurrentModule()->name,
+                ]));
 
 
 	}
@@ -355,7 +374,7 @@
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
-			$this->delImage($id,'filename_pdf');
+			$this->delImage($id,'filename_pdf','thumbnail');
 	    }
 
 	    /*

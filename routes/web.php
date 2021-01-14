@@ -54,7 +54,7 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     //Route::post('/ma/rev','AdminLapAwasController@Rev');
 });
 Route::get('/api/getPiePNBP/{tahun?}','homepageController@getPiePNBP')->name('getPiePNBP');
-Route::get('/api/getTrenPNBP','homepageController@getTrenPNBP')->name('getTrenPNBP');
+Route::get('/api/getTrenPNBP/{tahun1?}/{tahun2?}','homepageController@getTrenPNBP')->name('getTrenPNBP');
 
 
 

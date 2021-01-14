@@ -48,7 +48,7 @@
 			$this->form[] = ['label'=>'Kodefikasi Rekomendasi','name'=>'id_kod_rekomendasi','type'=>'select2','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_kod_rekomendasi,Deskripsi'];
 			$this->form[] = ['label'=>'Tgl. Tindak Lanjut','name'=>'tgl_tl','type'=>'date','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Uraian Tindak Lanjut','name'=>'tl','type'=>'textarea','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Status Tindak Lanjut','name'=>'status_tl','type'=>'select','width'=>'col-sm-10','dataenum'=>'Dalam Proses;Tuntas'];
+			$this->form[] = ['label'=>'Nilai yang Ditindaklanjuti','name'=>'nilai_tl','type'=>'money','title'=>'Nilai Uang yang Telah Ditindaklanjuti (dalam Mata Uang sesuai Nilai Temuan - default IDR/Rupiah)','width'=>'col-sm-10','decimals'=>'0'];
 			$this->form[] = ['label'=>'Status Tindak Lanjut','name'=>'id_kod_tl','type'=>'select','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
 			# END FORM DO NOT REMOVE THIS LINE
 

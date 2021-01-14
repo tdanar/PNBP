@@ -136,14 +136,14 @@ class FileController extends Controller
                                 return Response::file(storage_path('app/'.$fullFilePath), $headers);
                             }
 
-                }elseif($owner[2] == 'infografis'){
+                }elseif($owner[2] == 'infografis' || $owner[2] == 'slideshow' || $owner[2] == 'tmb_videoshow' || $owner[2] == 'logopic'){
                 if (Request::get('download')) {
                     return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
 
                         } else {
                             return Response::file(storage_path('app/'.$fullFilePath), $headers);
                         }
-            }elseif($owner[2] == 'panduan'){
+            }elseif($owner[2] == 'panduan' || $owner[2] == 'tmb_panduan'){
                 if (Request::get('download')) {
                     return Response::download(storage_path('app/'.$fullFilePath), $filename, $headers);
 

@@ -3,7 +3,8 @@
 @push('bottom')
 <script>
     $(document).ready(function(){
-        var tahun = '';
+        var tahun = {!! json_encode($tahunSelector->unique('tahun')->where('tahun','!=',null)->sortByDesc('tahun')->first()->tahun) !!};
+        
         $.ajax({
                     type: 'GET',
                     url: '/api/getPiePNBP/'+tahun,
@@ -129,9 +130,13 @@
                             
                      }
             });
+
+        var tahun1 = {!! json_encode($tahun1) !!};
+        var tahun2 = {!! json_encode($tahun2) !!};
+
         $.ajax({
             type: 'GET',
-                    url: '/api/getTrenPNBP',
+                    url: '/api/getTrenPNBP/'+tahun1+'/'+tahun2,
                     success: function (data) {
                         var chart;
 						var chartData = data['pnbp_jenis'];
@@ -317,6 +322,77 @@
 
 							chart.write("graphs2");
 						});
+                        var chartData3 = data['pnbp_rank'];
+                        AmCharts.makeChart("graphs3",
+                                {
+                                    "type": "serial",
+                                    "categoryField": "category",
+                                    "columnSpacing3D": 5,
+                                    "angle": 30,
+                                    "depth3D": 30,
+                                    "colors": [
+                                        "#e3ed1c","#1ced5b"
+                                    ],
+                                    "startDuration": 1,
+                                    "startEffect": "bounce",
+                                    "decimalSeparator": ",",
+                                    "fontFamily": "Calibri",
+                                    "fontSize": 12,
+                                    "handDrawScatter": 4,
+                                    "handDrawThickness": 4,
+                                    "categoryAxis": {
+                                        "autoRotateAngle": 25.2,
+                                        "autoRotateCount": 1,
+                                        "gridPosition": "start"
+                                    },
+                                    "trendLines": [],
+                                    "graphs": [
+                                        {
+                                            "balloonText": "[[title]] [[category]] : Rp. [[value]] Triliun ",
+                                            "fillAlphas": 1,
+                                            "id": "AmGraph-1",
+                                            "title": "Target",
+                                            "type": "column",
+                                            "valueField": "target"
+                                        },
+                                        {
+                                            "balloonText": "[[title]] [[category]] : Rp. [[value]] Triliun ",
+                                            "bullet": "round",
+                                            "bulletColor": "#FFFFFF",
+                                            "bulletHitAreaSize": 0,
+                                            "bulletOffset": 20,
+                                            "bulletSize": 30,
+                                            "customBullet": "",
+                                            "customBulletField": "bullet",
+                                            "fillAlphas": 1,
+                                            "id": "AmGraph-2",
+                                            "title": "Realisasi",
+                                            "type": "column",
+                                            "valueField": "realization"
+                                        }
+                                    ],
+                                    "guides": [],
+                                    "valueAxes": [
+                                        {
+                                            "id": "ValueAxis-1",
+                                            "stackType": "3d",
+                                            "title": "(dalam Triliun Rupiah)"
+                                        }
+                                    ],
+                                    "allLabels": [],
+                                    "balloon": {},
+                                    "legend": {
+                                        "enabled": true,
+                                        "align": "right",
+                                        "combineLegend": true,
+                                        "position": "absolute",
+                                        "top": 10,
+                                        "useGraphSettings": true
+                                    },
+                                    "titles": [],
+                                    "dataProvider": chartData3
+                                }
+                            );
                     }
         });
     }).on('change','#sel_tahun',function(){
@@ -453,32 +529,17 @@
 			<div class="slider">
 					<div class="fadeOut owl-carousel owl-theme">
 
-
+                        @foreach ($slideshow as $item)
 						<div class="item">
 
-							<img src='/images/beranda_1.jpeg' />
+							<img src='{{$item->gambar}}' />
 							<div class="search" style="bottom:25%">
 							<div class="text-search">
-						</div>
-						</div>
-						</div>
-						<div class="item">
-
-							<img src='/images/beranda_2.jpeg' />
-							<div class="search" style="bottom:25%">
-							<div class="text-search">
-						</div>
-						</div>
-						</div>
-						<div class="item">
-
-							<img src='/images/beranda_3.jpeg' />
-							<div class="search" style="bottom:25%">
-							<div class="text-search">
-
 						</div>
 						</div>
                         </div>
+                        @endforeach
+						
 
 					</div>
 					<div class="bg_slider"></div>
@@ -532,27 +593,27 @@
 
                                             <div class="item active th_1">
                                                 <a onclick="javascript:load_graph('1','1');" href="javascript:void(0);">
-                                                    <img src="/media/5793/36cbd014-2a4b-46eb-ae2c-13ccefc0b651.jpg" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
+                                                    <img src="{{ CRUDBooster::getSetting("ikon_1")?asset(CRUDBooster::getSetting('ikon_1')):asset('/media/5793/36cbd014-2a4b-46eb-ae2c-13ccefc0b651.jpg') }}" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
                                                 </a>
                                             </div>
                                             <div class="item active th_2">
                                                 <a onclick="javascript:load_graph('2','2');" href="javascript:void(0);">
-                                                    <img src="/media/5794/8b1fb82d-606d-41d0-ac4e-3dfd46a44add.jpg" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
+                                                    <img src="{{ CRUDBooster::getSetting("ikon_2")?asset(CRUDBooster::getSetting('ikon_2')):asset('/media/5794/8b1fb82d-606d-41d0-ac4e-3dfd46a44add.jpg') }}" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
                                                 </a>
                                             </div>
 
                                             <div class="item active th_3">
                                                 <a onclick="javascript:load_graph('3','3');" href="javascript:void(0);">
-                                                    <img src="/media/5795/60b64532-dee9-424c-a391-1c864417c244.jpg" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
+                                                    <img src="{{ CRUDBooster::getSetting("ikon_3")?asset(CRUDBooster::getSetting('ikon_3')):asset('/media/5795/60b64532-dee9-424c-a391-1c864417c244.jpg') }}" style="margin-left:auto;margin-right:auto;max-width:95%;max-height:95%">
                                                 </a>
                                             </div>
 
                                         </div>
                                     </div>
 
-                                    <h2 class="heading gra active" id="graphshead1">Tren Realisasi PNBP per Jenis PNBP <p style="font-size:80%">Tahun 2014 s.d. 2018</p><p>Sumber: LKPP Audited </p></h2>
-                                    <h2 class="heading gra" id="graphshead2">Tren Perbandingan Realisasi PNBP dengan Penerimaan Negara <p style="font-size:80%">Tahun 2014 s.d. 2018</p><p>Sumber: LKPP Audited </p></h2>
-                                    <h2 class="heading gra" id="graphshead3">Realisasi PNBP Terbesar pada 10 Kementerian / Lembaga<p style="font-size:80%">Tahun 2018</p><p>Sumber: Aplikasi SIMPONI </p> </h2>
+                                    <h2 class="heading gra active" id="graphshead1">Tren Realisasi PNBP per Jenis PNBP <p style="font-size:80%">Tahun {{$tahun1}} s.d. {{$tahun2}}</p><p>Sumber: {{$sumber1}} </p></h2>
+                                    <h2 class="heading gra" id="graphshead2">Tren Perbandingan Realisasi PNBP dengan Penerimaan Negara <p style="font-size:80%">Tahun {{$tahun1}} s.d. {{$tahun2}}</p><p>Sumber: {{$sumber2}} </p></h2>
+                                    <h2 class="heading gra" id="graphshead3">Realisasi PNBP Terbesar pada 10 Kementerian / Lembaga<p style="font-size:80%">Tahun {{$tahun2}}</p><p>Sumber: {{$sumber3}} </p> </h2>
                                     <h2 class="heading gra" id="graphshead4"> </h2>
                                     <h2 class="heading gra" id="graphshead5"> </h2>
                                     <h2 class="heading gra" id="graphshead6"> </h2>
@@ -568,145 +629,6 @@
 								<script src="/vendor/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
                                 <script src="/vendor/amcharts/amcharts/serial.js" type="text/javascript"></script>
 
-					<script type="text/javascript">
-						
-					</script>
-
-                        <!-- amCharts javascript code -->
-                        <script type="text/javascript">
-                            AmCharts.makeChart("graphs3",
-                                {
-                                    "type": "serial",
-                                    "categoryField": "category",
-                                    "columnSpacing3D": 5,
-                                    "angle": 30,
-                                    "depth3D": 30,
-                                    "colors": [
-                                        "#e3ed1c","#1ced5b"
-                                    ],
-                                    "startDuration": 1,
-                                    "startEffect": "bounce",
-                                    "decimalSeparator": ",",
-                                    "fontFamily": "Calibri",
-                                    "fontSize": 12,
-                                    "handDrawScatter": 4,
-                                    "handDrawThickness": 4,
-                                    "categoryAxis": {
-                                        "autoRotateAngle": 25.2,
-                                        "autoRotateCount": 1,
-                                        "gridPosition": "start"
-                                    },
-                                    "trendLines": [],
-                                    "graphs": [
-                                        {
-                                            "balloonText": "[[title]] [[category]] : Rp. [[value]] Triliun ",
-                                            "fillAlphas": 1,
-                                            "id": "AmGraph-1",
-                                            "title": "Target",
-                                            "type": "column",
-                                            "valueField": "target"
-                                        },
-                                        {
-                                            "balloonText": "[[title]] [[category]] : Rp. [[value]] Triliun ",
-                                            "bullet": "round",
-                                            "bulletColor": "#FFFFFF",
-                                            "bulletHitAreaSize": 0,
-                                            "bulletOffset": 20,
-                                            "bulletSize": 30,
-                                            "customBullet": "",
-                                            "customBulletField": "bullet",
-                                            "fillAlphas": 1,
-                                            "id": "AmGraph-2",
-                                            "title": "Realisasi",
-                                            "type": "column",
-                                            "valueField": "realization"
-                                        }
-                                    ],
-                                    "guides": [],
-                                    "valueAxes": [
-                                        {
-                                            "id": "ValueAxis-1",
-                                            "stackType": "3d",
-                                            "title": "(dalam Triliun Rupiah)"
-                                        }
-                                    ],
-                                    "allLabels": [],
-                                    "balloon": {},
-                                    "legend": {
-                                        "enabled": true,
-                                        "align": "right",
-                                        "combineLegend": true,
-                                        "position": "absolute",
-                                        "top": 10,
-                                        "useGraphSettings": true
-                                    },
-                                    "titles": [],
-                                    "dataProvider": [
-                                        {
-                                            "category": "Kementerian ESDM",
-                                            "target": "33.35",
-                                            "realization": "65.22",
-                                            "bullet": "https://www.esdm.go.id/assets/imagecache/bodyView/xprofil-arti-logo-cszkz2w.png.pagespeed.ic.pDXwEJXIcZ.png"
-                                        },
-                                        {
-                                            "category": "Kementerian Kominfo",
-                                            "target": "18.67",
-                                            "realization": "21.39",
-                                            "bullet": "https://ppidkemkominfo.files.wordpress.com/2011/03/logo-kominfo-copy.jpg"
-                                        },
-                                        {
-                                            "category": "Kementerian Keuangan",
-                                            "target": "14.43",
-                                            "realization": "21.15",
-                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/7/73/Logo_kementerian_keuangan_republik_indonesia.png"
-                                        },
-                                        {
-                                            "category": "Kementerian Ristek & PT",
-                                            "target": "9.73",
-                                            "realization": "12.82",
-                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Logo_of_the_Ministry_of_Research%2C_Technology%2C_and_Higher_Education_of_the_Republic_of_Indonesia.png"
-                                        },
-                                        {
-                                            "category": "Kementerian Kesehatan",
-                                            "target": "11.72",
-                                            "realization": "12.04",
-                                            "bullet": "https://e-renggar.kemkes.go.id/images/img/logodepan.png"
-                                        },
-                                        {
-                                            "category": "Kepolisian",
-                                            "target": "10.9",
-                                            "realization": "11.51",
-                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Lambang_Polri.png"
-                                        },
-                                        {
-                                            "category": "Kementerian Perhubungan",
-                                            "target": "9",
-                                            "realization": "8.21",
-                                            "bullet": "http://1.bp.blogspot.com/-5A2Yam-5lbI/UOp_hR3aTsI/AAAAAAAAKlc/iFu32z6AH8Q/s1600/LOGO+KEMENTERIAN+PERHUBUNGAN.png"
-                                        },
-                                        {
-                                            "category": "Kementerian Pertahanan",
-                                            "target": "3.99",
-                                            "realization": "6.75",
-                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/6/60/Logo_of_the_Ministry_of_Defence_of_the_Republic_of_Indonesia.svg"
-                                        },
-                                        {
-                                            "category": "Kementerian LHK",
-                                            "target": "4.41",
-                                            "realization": "5.51",
-                                            "bullet": "https://upload.wikimedia.org/wikipedia/commons/6/63/Lambang_Kementerian_Lingkungan_Hidup_dan_Kehutanan.png"
-                                        },
-                                        {
-                                            "category": "Kementerian Hukum & HAM",
-                                            "target": "3.25",
-                                            "realization": "3.56",
-                                            "bullet": "https://www.kemenkumham.go.id/images/jux_portfolio_pro/logo_fix.png"
-                                        }
-                                    ]
-                                }
-                            );
-                        </script>
-
 
 				</div>
 
@@ -720,7 +642,7 @@
                                             <div class="col-md-1">&nbsp;</div>
                                             <div class="col-md-8"><b><span class="pull-right">Hasil Pengawasan PNBP oleh APIP K/L TA : </span></b></div>
                                             <div class="col-md-1"> <select class="text-left" id="sel_tahun">
-                                                <option value="">All</option>
+                                                
                                                 @foreach($tahunSelector->unique('tahun')->where('tahun','!=',null)->sortByDesc('tahun') as $row)
                                                 <option>{{$row->tahun}}</option>
                                                 @endforeach</select>
@@ -733,10 +655,6 @@
                         <!-- amCharts javascript sources -->
                         <script src="/vendor/amcharts/amcharts/pie.js" type="text/javascript"></script>
                         <script src="/scripts/lodash.min.js" type="text/javascript"></script>
-                        <!-- amCharts javascript code -->
-                            
-
-                        <!-- amCharts javascript code -->
                         
                         <div class="cls-lintas" style="background:white;">
 
@@ -794,76 +712,25 @@
                         </div>
                     </div>
                     <div class="infografis owl-carousel owl-theme">
+                        @foreach ($videoshow as $item)
                             <div class="item">
                                 <div class="newsv">
-                                    <video id='my-video' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                    width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/12/3-2.jpg' data-setup='{"fluid": true}'>
-                                        <source src='https://klcfiles.kemenkeu.go.id/2018/12/PNBP.mp4' type='video/mp4'>
-                                        <p class='vjs-no-js'>
-                                        To view this video please enable JavaScript, and consider upgrading to a web browser that
-                                        <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-                                        </p>
-                                    </video>
-
-                                    <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
+                                    @if(\Illuminate\Support\Str::contains($item->embed,'.mp4'))
+                                        <video id='my-video' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
+                                        @if($item->poster)
+                                            poster='{{asset($item->poster)}}'
+                                        @endif
+                                        width='480' height='480' data-setup='{"fluid": true}'>
+                                            <source src='{{$item->embed}}' type='video/mp4'>
+                                        </video>
+                                    @else
+                                    <div class="embed-responsive embed-responsive-4by3">
+                                        <iframe class="embed-responsive-item" src="{{$item->embed}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
-                            <div class="item">
-                                    <div class="newsv">
-                                            <video id='my-video-1' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/06/1-3.jpg' data-setup='{"fluid": true}'>
-                                                <source src='https://klcfiles.kemenkeu.go.id/2018/06/KC-1-Pak-Zun.mp4' type='video/mp4'>
-                                                <p class='vjs-no-js'>
-                                                To view this video please enable JavaScript, and consider upgrading to a web browser that
-                                                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-                                                </p>
-                                            </video>
-
-                                            <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
-                                        </div>
-                            </div>
-                            <div class="item">
-                                    <div class="newsv">
-                                            <video id='my-video-2' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/05/1-2.jpg' data-setup='{"fluid": true}'>
-                                                <source src='https://klcfiles.kemenkeu.go.id/2018/05/KC-1-Pak-Luhut-conv.mp4' type='video/mp4'>
-                                                <p class='vjs-no-js'>
-                                                To view this video please enable JavaScript, and consider upgrading to a web browser that
-                                                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-                                                </p>
-                                            </video>
-
-                                            <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
-                                        </div>
-                            </div>
-                            <div class="item">
-                                    <div class="newsv">
-                                            <video id='my-video-3' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/10/4-1.jpg' data-setup='{"fluid": true}'>
-                                                <source src='https://klcfiles.kemenkeu.go.id/2018/10/4.-Noor-Cholis-Madjid-Tugas-dan-Wewenang-Menteri-Keuangan-dalam-Pengelolaan-PNBP.mp4' type='video/mp4'>
-                                                <p class='vjs-no-js'>
-                                                To view this video please enable JavaScript, and consider upgrading to a web browser that
-                                                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-                                                </p>
-                                            </video>
-
-                                            <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
-                                        </div>
-                            </div>
-                            <div class="item">
-                                    <div class="newsv">
-                                            <video id='my-video-4' class='video-js vjs-default-skin vjs-4-3 vjs-big-play-centered' controls preload='auto' responsive='true'
-                                            width='480' height='480' poster='https://klcfiles.kemenkeu.go.id/2018/10/3-3.jpg' data-setup='{"fluid": true}'>
-                                                <source src='https://klcfiles.kemenkeu.go.id/2018/10/4.-Heryanto-Sijabat-MPN-G2.mp4' type='video/mp4'>
-                                                <p class='vjs-no-js'>
-                                                To view this video please enable JavaScript, and consider upgrading to a web browser that
-                                                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-                                                </p>
-                                            </video>
-
-                                            <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
-                                    </div>
-                            </div>
+                            @endforeach
                         </div>
                     </section>
         </div id="my-footer">
@@ -879,5 +746,8 @@
                         </div>
                     </div>
                 </section>
-
+                <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
+                <script>
+                    const player = videojs('my-video', {});
+                </script>
 @endsection

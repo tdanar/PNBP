@@ -49,7 +49,7 @@
             if(CRUDBooster::myPrivilegeId() == 5){
                 $this->form[] = ['label'=>'Tanggal','name'=>'tgl','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'disabled'];
                 $this->form[] = ['label'=>'Progress','name'=>'progress','type'=>'textarea','validation'=>'max:5000','width'=>'col-sm-10', 'disabled' => 'disabled'];
-                $this->form[] = ['label'=>'Nilai Temuan','name'=>'nilai_tl','type'=>'money','title'=>'Nilai Uang yang Telah Ditindaklanjuti (dalam Mata Uang sesuai Nilai Temuan)','width'=>'col-sm-10','decimals'=>'0','disabled' => 'disabled'];
+                $this->form[] = ['label'=>'Nilai yang Ditindaklanjuti','name'=>'nilai_tl','type'=>'money','title'=>'Nilai Uang yang Telah Ditindaklanjuti (dalam Mata Uang sesuai Nilai Temuan)','width'=>'col-sm-10','decimals'=>'0','disabled' => 'disabled'];
                 $this->form[] = ['label'=>'Status','name'=>'status','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi', 'disabled' => 'disabled'];
                 $this->form[] = ['label'=>'Terima?','name'=>'id_status_kirim','type'=>'radio','validation'=>'required','width'=>'col-sm-10','dataenum'=>'2|Ya;4|Tidak'];
                 $this->form[] = ['label'=>'Komentar','name'=>'comment','type'=>'textarea','width'=>'col-sm-10','style'=>'display: none;'];
@@ -59,7 +59,7 @@
                 $this->form[] = ['label'=>'Komentar Approver','name'=>'comment','type'=>'textarea','width'=>'col-sm-10','disabled' => 'disabled'];
                 $this->form[] = ['label'=>'Tanggal','name'=>'tgl','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
                 $this->form[] = ['label'=>'Progress','name'=>'progress','type'=>'textarea','validation'=>'max:5000','width'=>'col-sm-10'];
-                $this->form[] = ['label'=>'Nilai Temuan','name'=>'nilai_tl','type'=>'money','title'=>'Nilai Uang yang Telah Ditindaklanjuti (dalam Mata Uang sesuai Nilai Temuan - default IDR/Rupiah)','width'=>'col-sm-10','decimals'=>'0'];
+                $this->form[] = ['label'=>'Nilai yang Ditindaklanjuti','name'=>'nilai_tl','type'=>'money','title'=>'Nilai Uang yang Telah Ditindaklanjuti (dalam Mata Uang sesuai Nilai Temuan - default IDR/Rupiah)','width'=>'col-sm-10','decimals'=>'0'];
                 $this->form[] = ['label'=>'Status','name'=>'status','type'=>'select','validation'=>'required','width'=>'col-sm-10','datatable'=>'t_ref_tl,deskripsi'];
                 $this->form[] = ['label'=>'Kirim ke approver?','name'=>'id_status_kirim','type'=>'radio','validation'=>'required','width'=>'col-sm-10','dataenum'=>'3|Ya;1|Tidak'];
             }

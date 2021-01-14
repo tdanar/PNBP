@@ -4,13 +4,15 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
+	use Illuminate\Support\Facades\Storage;
 
-	class AdminRefUnitController extends \crocodicstudio\crudbooster\controllers\CBController {
+
+	class AdminSlideshowController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "Manajemen Instansi";
+			$this->title_field = "id";
 			$this->limit = "20";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
@@ -20,38 +22,42 @@
 			$this->button_add = true;
 			$this->button_edit = true;
 			$this->button_delete = true;
-			$this->button_detail = false;
-			$this->button_show = false;
+			$this->button_detail = true;
+			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "t_ref_unit";
+			$this->table = "t_slideshow";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Id","name"=>"id"];
-			$this->col[] = ["label"=>"Logo","name"=>"logo", "image"=>true];
-			$this->col[] = ["label"=>"Nama Instansi","name"=>"unit"];
-			$this->col[] = ["label"=>"Nama Singkat Instansi","name"=>"singkat"];
-
+			$this->col[] = ["label"=>"Pembuat","name"=>"id_user","join"=>"cms_users,name"];
+			$this->col[] = ["label"=>"Gambar","name"=>"gambar","image"=>true];
+			$this->col[] = ["label"=>"Link","name"=>"link"];
+			$this->col[] = ["label"=>"Show","name"=>"show","callback"=>function($row){
+                if($row->show == 1){
+                    return '<span class="text-success">Ya</span>';
+                }else{
+                    return '<span class="text-danger">Tidak</span>';
+                }
+            }];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Logo','name'=>'logo','type'=>'upload',"help"=>"Rekomendasi resolusi gambar adalah 200x200px (pixel) dan tidak lebih dari 1 Mb.",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90,'user_id'=>'logopic'];
-			$this->form[] = ['label'=>'Nama Instansi','name'=>'unit','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Nama Instansi Singkat (untuk grafis)','name'=>'singkat','type'=>'text','validation'=>'required|min:1|max:100','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'User Id dari DJA','name'=>'u_base','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Pass dari DJA','name'=>'p_base','type'=>'password','validation'=>'confirmed|min:8|max:255','help'=>'Biarkan kosong bila tidak ada perubahan','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Konf Pass dari DJA','name'=>'p_base_confirmation','type'=>'password','help'=>'Biarkan kosong bila tidak ada perubahan','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'User','name'=>'id_user','type'=>'hidden','validation'=>'required|integer|min:0','width'=>'col-sm-10','value'=> CRUDBooster::myId()];
+			$this->form[] = ['label'=>'Gambar','name'=>'gambar','type'=>'upload','validation'=>'required|image|max:3000','width'=>'col-sm-10','help'=>'Hanya mendukung file gambar, max.3Mb, dan resolusi yang disarankan: 1280x600 px'];
+			$this->form[] = ['label'=>'Link','name'=>'link','type'=>'text','validation'=>'url','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Show','name'=>'show','type'=>'radio','validation'=>'required|min:1|max:255','width'=>'col-sm-10','dataenum'=>'1|Ya;0|Tidak','user_id'=>'slideshow'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Unit","name"=>"unit","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"U Base","name"=>"u_base","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"P Base","name"=>"p_base","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ['label'=>'User','name'=>'id_user','type'=>'hidden','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Gambar','name'=>'gambar','type'=>'upload','validation'=>'required|image|max:3000','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Link','name'=>'link','type'=>'text','validation'=>'required|url','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Show','name'=>'show','type'=>'checkbox','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# OLD END FORM
 
 			/*
@@ -214,6 +220,7 @@
 
 
 	    }
+
 		public function delImage($id,$column1){
 
 
@@ -248,7 +255,6 @@
 
 
 	}
-
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected
@@ -294,7 +300,6 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-		    unset($postdata['p_base_confirmation']);
 
 	    }
 
@@ -320,7 +325,7 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-		    unset($postdata['p_base_confirmation']);
+
 	    }
 
 	    /*
@@ -344,7 +349,7 @@
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
-			$this->delImage($id,'logo');
+			$this->delImage($id,'gambar');
 	    }
 
 	    /*

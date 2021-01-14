@@ -5,12 +5,12 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminRefUnitController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminDiagRankPnbpController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "Manajemen Instansi";
+			$this->title_field = "id";
 			$this->limit = "20";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
@@ -20,38 +20,37 @@
 			$this->button_add = true;
 			$this->button_edit = true;
 			$this->button_delete = true;
-			$this->button_detail = false;
-			$this->button_show = false;
+			$this->button_detail = true;
+			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "t_ref_unit";
+			$this->table = "t_diag_rank_pnbp";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Id","name"=>"id"];
-			$this->col[] = ["label"=>"Logo","name"=>"logo", "image"=>true];
-			$this->col[] = ["label"=>"Nama Instansi","name"=>"unit"];
-			$this->col[] = ["label"=>"Nama Singkat Instansi","name"=>"singkat"];
-
+			$this->col[] = ["label"=>"Tahun","name"=>"tahun"];
+			$this->col[] = ["label"=>"K/L","name"=>"id_kl","join"=>"t_ref_unit,unit"];
+			$this->col[] = ["label"=>"Logo K/L","name"=>"id_kl","join"=>"t_ref_unit,logo","image"=>true];
+			$this->col[] = ["label"=>"Target Pnbp","name"=>"target_pnbp"];
+			$this->col[] = ["label"=>"Realisasi Pnbp","name"=>"realisasi_pnbp"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Logo','name'=>'logo','type'=>'upload',"help"=>"Rekomendasi resolusi gambar adalah 200x200px (pixel) dan tidak lebih dari 1 Mb.",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90,'user_id'=>'logopic'];
-			$this->form[] = ['label'=>'Nama Instansi','name'=>'unit','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Nama Instansi Singkat (untuk grafis)','name'=>'singkat','type'=>'text','validation'=>'required|min:1|max:100','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'User Id dari DJA','name'=>'u_base','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Pass dari DJA','name'=>'p_base','type'=>'password','validation'=>'confirmed|min:8|max:255','help'=>'Biarkan kosong bila tidak ada perubahan','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Konf Pass dari DJA','name'=>'p_base_confirmation','type'=>'password','help'=>'Biarkan kosong bila tidak ada perubahan','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Tahun','name'=>'tahun','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'t_ref_tahun_awas,tahun'];
+			$this->form[] = ['label'=>'Kl','name'=>'id_kl','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'t_ref_unit,unit'];
+			$this->form[] = ['label'=>'Target Pnbp','name'=>'target_pnbp','type'=>'number','validation'=>'required|required','width'=>'col-sm-10','step'=>'0.01'];
+			$this->form[] = ['label'=>'Realisasi Pnbp','name'=>'realisasi_pnbp','type'=>'number','validation'=>'required|required','width'=>'col-sm-10','step'=>'0.01'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Unit","name"=>"unit","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"U Base","name"=>"u_base","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"P Base","name"=>"p_base","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Tahun","name"=>"tahun","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Kl","name"=>"id_kl","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"kl,id"];
+			//$this->form[] = ["label"=>"Target Pnbp","name"=>"target_pnbp","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Realisasi Pnbp","name"=>"realisasi_pnbp","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			# OLD END FORM
 
 			/*
@@ -214,40 +213,7 @@
 
 
 	    }
-		public function delImage($id,$column1){
 
-
-			$this->cbLoader();
-			$id = $id;
-			$column1 = $column1;
-		
-
-			$row = DB::table($this->table)->where($this->primary_key, $id)->first();
-
-			if (! CRUDBooster::isDelete() && $this->global_privilege == false) {
-				CRUDBooster::insertLog(trans("crudbooster.log_try_delete_image", [
-					'name' => $row->{$this->title_field},
-					'module' => CRUDBooster::getCurrentModule()->name,
-				]));
-				CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-			}
-
-			$row = DB::table($this->table)->where($this->primary_key, $id)->first();
-
-			$file1 = '/'.$row->{$column1};
-
-			if (Storage::exists($file1)) {
-				Storage::delete($file1);
-			}
-
-
-			CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
-				'name' => $row->{$this->title_field},
-				'module' => CRUDBooster::getCurrentModule()->name,
-			]));
-
-
-	}
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -294,7 +260,6 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-		    unset($postdata['p_base_confirmation']);
 
 	    }
 
@@ -320,7 +285,7 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-		    unset($postdata['p_base_confirmation']);
+
 	    }
 
 	    /*
@@ -344,7 +309,7 @@
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
-			$this->delImage($id,'logo');
+
 	    }
 
 	    /*

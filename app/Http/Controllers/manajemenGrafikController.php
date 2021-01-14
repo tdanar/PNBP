@@ -14,7 +14,7 @@ class manajemenGrafikController extends \crocodicstudio\crudbooster\controllers\
     {
         
         if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
-        $data['page_title'] = 'Manajemen Grafik Beranda';
+        $data['page_title'] = 'Manajemen Beranda';
         $this->cbView('manajemenGrafik',$data);
     }
 }

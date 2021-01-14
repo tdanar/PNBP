@@ -15,13 +15,30 @@ class homepageController extends Controller {
         $data['nama'] = CRUDBooster::myName();
         $data['foto'] = CRUDbooster::myPhoto();
         $data['artikel'] = DB::table('t_article')->orderBy('id','desc')->get();
+        $data['slideshow'] = DB::table('t_slideshow')->where('show',1)->orderByDesc('id')->get();
         $data['infografis'] = DB::table('t_infografis')->orderBy('id','desc')->get();
         $data['pengumuman'] = DB::table('t_pengumuman')->where('show',1)->orderByDesc('id')->get();
+        $data['videoshow'] = DB::table('t_videoshow')->where('show',1)->orderByDesc('id')->get();
+
          
        $st_kirim = 2;
-       $l_tahun = 2018;
+       $f_tahun = CRUDBooster::getSetting('f_tahun') ? CRUDBooster::getSetting('f_tahun') : (now()->year)-4 ;
+       $l_tahun = CRUDBooster::getSetting('l_tahun') ? CRUDBooster::getSetting('l_tahun') : (now()->year) ;
+       $tahun1 = CRUDBooster::getSetting('tahun_1') ? CRUDBooster::getSetting('tahun_1') : (now()->year)-4 ;
+        $tahun2 = CRUDBooster::getSetting('tahun_2') ? CRUDBooster::getSetting('tahun_2') : (now()->year) ;
+        $sumber1 = CRUDBooster::getSetting('sumber_1') ? CRUDBooster::getSetting('sumber_1') : "LKPP Audited" ;
+        $sumber2 = CRUDBooster::getSetting('sumber_2') ? CRUDBooster::getSetting('sumber_2') : "LKPP Audited" ;
+        $sumber3 = CRUDBooster::getSetting('sumber_3') ? CRUDBooster::getSetting('sumber_3') : "Aplikasi SIMPONI" ;
 
-       $data['tahunSelector'] = DB::table('t_lap_awas')->where('id_status_kirim',$st_kirim)->where('tahun','>=',$l_tahun)->get();
+
+        $data['tahun1'] = $tahun1;
+        $data['tahun2'] = $tahun2;
+        $data['sumber1'] = $sumber1;
+        $data['sumber2'] = $sumber2;
+        $data['sumber3'] = $sumber3;
+
+
+       $data['tahunSelector'] = DB::table('t_lap_awas')->where('id_status_kirim',$st_kirim)->where('tahun','>=',$f_tahun)->where('tahun','<=',$l_tahun)->get();
         //dd($data);
         return View::make('homepage')->with($data);
     }
@@ -29,7 +46,7 @@ class homepageController extends Controller {
     public function getPiePNBP($tahun = null)
     {
         $data = [];
-        $l_tahun = 2018;
+        $l_tahun = (now()->year) - 2;
         if($tahun){
             $tahuns = (int)$tahun;
             $oprt = '=';
@@ -59,9 +76,11 @@ class homepageController extends Controller {
        return $data;
     }
 
-    public function getTrenPNBP()
+    public function getTrenPNBP($tahun1 = null, $tahun2 = null)
     {
-        $get_pnbp = DB::table('t_diag_pnbp_jenis')->selectRaw('tahun,komp_pnbp,nominal')->groupBy(['tahun','komp_pnbp','nominal'])->get();
+        
+        
+        $get_pnbp = DB::table('t_diag_pnbp_jenis')->selectRaw('tahun,komp_pnbp,nominal')->where('tahun','>=',$tahun1)->where('tahun','<=',$tahun2)->groupBy(['tahun','komp_pnbp','nominal'])->get();
 
                 $pnbps = $get_pnbp
                 ->map(function($item){
@@ -77,9 +96,13 @@ class homepageController extends Controller {
             })->values()->toArray();
        $data['pnbp_jenis'] = $array_pnbps;
 
-        $get_trend = DB::table('t_diag_tren_pnbp')->selectRaw('tahun,realisasi_pnbp,realisasi_pn,persentase')->get();
+        $get_trend = DB::table('t_diag_tren_pnbp')->selectRaw('tahun,realisasi_pnbp,realisasi_pn,persentase')->where('tahun','>=',$tahun1)->where('tahun','<=',$tahun2)->get();
+        $get_rank = DB::table('t_diag_rank_pnbp')->selectRaw('tahun,t_ref_unit.singkat AS category,realisasi_pnbp AS realization,target_pnbp AS target,t_ref_unit.logo AS bullet')->join('t_ref_unit','t_ref_unit.id','=','t_diag_rank_pnbp.id_kl')->where('tahun',$tahun2)->get();
+            
        $data['pnbp_tren'] = $get_trend;
+       $data['pnbp_rank'] = $get_rank;
 
+       
        return $data;
     }
 

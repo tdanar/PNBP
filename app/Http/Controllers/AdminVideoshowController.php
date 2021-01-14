@@ -1,16 +1,18 @@
 <?php namespace App\Http\Controllers;
 
 	use Session;
+	use Illuminate\Support\Str;
+	use Illuminate\Support\Facades\Storage;
 	use Request;
 	use DB;
 	use CRUDBooster;
 
-	class AdminRefUnitController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminVideoshowController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "Manajemen Instansi";
+			$this->title_field = "id";
 			$this->limit = "20";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
@@ -20,38 +22,53 @@
 			$this->button_add = true;
 			$this->button_edit = true;
 			$this->button_delete = true;
-			$this->button_detail = false;
-			$this->button_show = false;
+			$this->button_detail = true;
+			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "t_ref_unit";
+			$this->table = "t_videoshow";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Id","name"=>"id"];
-			$this->col[] = ["label"=>"Logo","name"=>"logo", "image"=>true];
-			$this->col[] = ["label"=>"Nama Instansi","name"=>"unit"];
-			$this->col[] = ["label"=>"Nama Singkat Instansi","name"=>"singkat"];
-
+			$this->col[] = ["label"=>"Post oleh","name"=>"id_user","join"=>"cms_users,name"];
+			$this->col[] = ["label"=>"Embed Video","name"=>"embed","callback"=>function($row){
+				
+				if(Str::contains($row->embed,'.mp4')){
+					return '<div data-vjs-player><video id="vid1" class="video-js" controls preload="auto" responsive="true" width="180" height="180" poster="'.($row->poster ? asset($row->poster):'').'"><source src="'.$row->embed.'"></video></div>';
+				}else{
+					return '<iframe src="'.$row->embed.'" width="180" height="180" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+				}
+			}];
+			$this->col[] = ["label"=>"Thumbnail","name"=>"poster","visible"=>false];
+			$this->col[] = ["label"=>"Keterangan","name"=>"keterangan","callback"=>function($row){
+				$truncated = Str::limit($row->keterangan, 100, ' ...');
+				return $truncated;
+			}];
+			$this->col[] = ["label"=>"Show","name"=>"show","callback"=>function($row){
+                if($row->show == 1){
+                    return '<span class="text-success">Ya</span>';
+                }else{
+                    return '<span class="text-danger">Tidak</span>';
+                }
+            }];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Logo','name'=>'logo','type'=>'upload',"help"=>"Rekomendasi resolusi gambar adalah 200x200px (pixel) dan tidak lebih dari 1 Mb.",'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90,'user_id'=>'logopic'];
-			$this->form[] = ['label'=>'Nama Instansi','name'=>'unit','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Nama Instansi Singkat (untuk grafis)','name'=>'singkat','type'=>'text','validation'=>'required|min:1|max:100','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'User Id dari DJA','name'=>'u_base','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Pass dari DJA','name'=>'p_base','type'=>'password','validation'=>'confirmed|min:8|max:255','help'=>'Biarkan kosong bila tidak ada perubahan','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Konf Pass dari DJA','name'=>'p_base_confirmation','type'=>'password','help'=>'Biarkan kosong bila tidak ada perubahan','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'User','name'=>'id_user','type'=>'hidden','validation'=>'required|integer|min:0','width'=>'col-sm-10','value' => CRUDBooster::myId()];
+			$this->form[] = ['label'=>'Embed','name'=>'embed','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Thumbnail','name'=>'poster','type'=>'upload','validation'=>'image|max:1000','width'=>'col-sm-10','user_id'=>'tmb_videoshow'];
+			$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'textarea','validation'=>'min:1|max:500','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Show','name'=>'show','type'=>'radio','validation'=>'required|min:1|max:255','width'=>'col-sm-10','dataenum'=>'1|Ya;0|Tidak'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Unit","name"=>"unit","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"U Base","name"=>"u_base","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"P Base","name"=>"p_base","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"User","name"=>"id_user","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"user,id"];
+			//$this->form[] = ["label"=>"Embed","name"=>"embed","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Show","name"=>"show","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			# OLD END FORM
 
 			/*
@@ -214,41 +231,43 @@
 
 
 	    }
+
 		public function delImage($id,$column1){
 
 
 			$this->cbLoader();
-			$id = $id;
-			$column1 = $column1;
-		
+                $id = $id;
+                $column1 = $column1;
+                
 
-			$row = DB::table($this->table)->where($this->primary_key, $id)->first();
+                $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-			if (! CRUDBooster::isDelete() && $this->global_privilege == false) {
-				CRUDBooster::insertLog(trans("crudbooster.log_try_delete_image", [
-					'name' => $row->{$this->title_field},
-					'module' => CRUDBooster::getCurrentModule()->name,
-				]));
-				CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-			}
+                if (! CRUDBooster::isDelete() && $this->global_privilege == false) {
+                    CRUDBooster::insertLog(trans("crudbooster.log_try_delete_image", [
+                        'name' => $row->{$this->title_field},
+                        'module' => CRUDBooster::getCurrentModule()->name,
+                    ]));
+                    CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+                }
 
-			$row = DB::table($this->table)->where($this->primary_key, $id)->first();
+                $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-			$file1 = '/'.$row->{$column1};
+                $file1 = '/'.$row->{$column1};
+                
 
-			if (Storage::exists($file1)) {
-				Storage::delete($file1);
-			}
+                if (Storage::exists($file1)) {
+                    Storage::delete($file1);
+                }
+                
 
 
-			CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
-				'name' => $row->{$this->title_field},
-				'module' => CRUDBooster::getCurrentModule()->name,
-			]));
+                CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
+                    'name' => $row->{$this->title_field},
+                    'module' => CRUDBooster::getCurrentModule()->name,
+                ]));
 
 
 	}
-
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected
@@ -294,7 +313,6 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-		    unset($postdata['p_base_confirmation']);
 
 	    }
 
@@ -320,7 +338,7 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-		    unset($postdata['p_base_confirmation']);
+
 	    }
 
 	    /*
@@ -344,7 +362,7 @@
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
-			$this->delImage($id,'logo');
+
 	    }
 
 	    /*
@@ -356,7 +374,7 @@
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
-
+			$this->delImage($id,'poster');
 	    }
 
 

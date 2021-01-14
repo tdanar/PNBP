@@ -86,7 +86,7 @@
 							<ul class="menu-logo">
 								<li>
 									<a href="">
-										<img src="/media/6277/logo-atas.png" onerror="this.onerror=null; this.src='/media/6277/logo-atas.png?widht=278'">
+										<img src="{{ CRUDBooster::getSetting("gambar_logo")?asset(CRUDBooster::getSetting('gambar_logo')):asset('media/6277/logo-atas.png') }}?widht=278">
 									</a>
                                     <div id="ikeh" class="container-button icon" >
                                             <div class="icon">

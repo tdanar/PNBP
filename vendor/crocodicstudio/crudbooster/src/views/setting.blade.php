@@ -52,10 +52,10 @@
     @endpush
 
     <div style="width:750px;margin:0 auto ">
-
+        @if(CRUDBooster::isSuperadmin())
         <p align="right"><a title='Add Field Setting' class='btn btn-sm btn-primary' href='{{route("SettingsControllerGetAdd")."?group_setting=".$page_title}}'><i
                         class='fa fa-plus'></i> Add Field Setting</a></p>
-
+            @endif
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class='fa fa-cog'></i> {{$page_title}}
@@ -84,11 +84,13 @@
                         ?>
                         <div class='form-group'>
                             <label class='label-setting' title="{{$s->name}}">{{$s->label}}
+                                @if(CRUDBooster::isSuperadmin())
                                 <a style="visibility:hidden" href='{{CRUDBooster::mainpath("edit/$s->id")}}' title='Edit This Meta Setting'
-                                   class='btn btn-box-tool'><i class='fa fa-pencil'></i></a>
+                                   class='btn btn-box-tool'><i class='fa fa-pen-nib'></i></a>
                                 <a style="visibility:hidden" href='javascript:;' title='Delete this Setting' class='btn btn-box-tool'
                                    onClick='swal({   title: "Are you sure?",   text: "You will not be able to recover {{$s->label}} and may be can cause some errors on your system !",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   closeOnConfirm: false }, function(){  location.href="{{CRUDBooster::mainpath("delete/$s->id")}}" });'
                                 ><i class='fa fa-trash'></i></a>
+                                @endif
                             </label>
                             <?php
                             switch ($s->content_input_type) {

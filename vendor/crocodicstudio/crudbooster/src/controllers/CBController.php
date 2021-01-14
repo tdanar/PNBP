@@ -225,7 +225,7 @@ class CBController extends Controller
     public function getIndex()
     {
         $this->cbLoader();
-
+        $data['return_url'] = $this->return_url;
         $module = CRUDBooster::getCurrentModule();
 
         if (! CRUDBooster::isView() && $this->global_privilege == false) {
@@ -640,6 +640,7 @@ class CBController extends Controller
         $html_contents = ['html' => $html_contents, 'data' => $data['result']];
 
         $data['html_contents'] = $html_contents;
+        
 
         return view("crudbooster::default.index", $data);
     }
