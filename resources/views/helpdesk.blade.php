@@ -3,6 +3,7 @@
 <div class="clear"></div>
 <div class="container">
 <div class="row">
+
     <div class="col-sm-7"><h5><img src="https://www.kemenkeu.go.id/media/6010/defaut1.jpg"/></h5><br/><h4>&nbsp;</h4></div>
     <div class="col-sm-5">
 
@@ -27,13 +28,6 @@
         </div>
     </div>
 </div>
-<script>var LHC_API = LHC_API||{};
-    LHC_API.args = {mode:'widget',lhc_base_url:'//localhost:8080/',wheight:450,wwidth:350,pheight:520,pwidth:500,leaveamessage:true,theme:1,check_messages:false,lang:'idn'};
-    (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.setAttribute('crossorigin','anonymous'); po.async = true;
-    var date = new Date();po.src = '//localhost:8080/design/defaulttheme/js/widgetv2/index.js?'+(""+date.getFullYear() + date.getMonth() + date.getDate());
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
-    </script>
+
 </div>
 @endsection

@@ -14,8 +14,11 @@ class helpdeskController extends Controller {
         $data['nama'] = CRUDBooster::myName();
         $data['foto'] = CRUDbooster::myPhoto();
         //dd($data);
+       
         return View::make('helpdesk')->with($data);
     }
+
+    
 }
 
 ?>

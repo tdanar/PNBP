@@ -14,8 +14,11 @@
 /* Route::get('/', function () {
     return view('partials.header');
 }); */
+
+use App\Http\Controllers\helpdeskController;
+
 Route::get('/','homepageController@index')->name('home');
-Route::get('/lhc_web','lhc_webController@getLHC');
+Route::get('/lhc_web','lhc_webController@getLHC')->name('lhc_web');
 Route::get('/header','homepageController@header');
 
 Route::get('/faq','faqController@index')->name('faq');
@@ -55,6 +58,7 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
 });
 Route::get('/api/getPiePNBP/{tahun?}','homepageController@getPiePNBP')->name('getPiePNBP');
 Route::get('/api/getTrenPNBP/{tahun1?}/{tahun2?}','homepageController@getTrenPNBP')->name('getTrenPNBP');
+
 
 
 
