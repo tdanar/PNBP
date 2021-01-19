@@ -26,7 +26,8 @@
 			$this->button_filter = true;
 			$this->button_import = false;
             $this->button_export = false;
-            $this->label_add_button = "Tambah Peraturan";
+			$this->label_add_button = "Tambah Peraturan";
+			$this->return_url = '/ma/manajemenGrafik';
 			$this->table = "t_peraturan";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 

@@ -15,9 +15,9 @@ class CaptchaServiceProvider extends ServiceProvider
     /**
      * Boot the service provider.
      *
-     * @return null
+     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         // Publish configuration files
         $this->publishes([
@@ -52,7 +52,7 @@ class CaptchaServiceProvider extends ServiceProvider
 
         // Validator extensions
         $validator->extend('captcha_api', function ($attribute, $value, $parameters) {
-            return captcha_api_check($value, $parameters[0]);
+            return captcha_api_check($value, $parameters[0], $parameters[1] ?? 'default');
         });
     }
 
@@ -61,7 +61,7 @@ class CaptchaServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         // Merge configs
         $this->mergeConfigFrom(
@@ -73,7 +73,7 @@ class CaptchaServiceProvider extends ServiceProvider
         $this->app->bind('captcha', function ($app) {
             return new Captcha(
                 $app['Illuminate\Filesystem\Filesystem'],
-                $app['Illuminate\Config\Repository'],
+                $app['Illuminate\Contracts\Config\Repository'],
                 $app['Intervention\Image\ImageManager'],
                 $app['Illuminate\Session\Store'],
                 $app['Illuminate\Hashing\BcryptHasher'],

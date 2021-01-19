@@ -1,6 +1,7 @@
 <?php namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
+use DOMDocument;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
@@ -72,6 +73,7 @@ class AdminController extends CBController
 
         $username = Request::input("username");
         $password = Request::input("password");
+
         $users = DB::table(config('crudbooster.USER_TABLE'))->where("username", $username)->first();
         $rand_num = 290288;
         $tohashid = $users->id.Request::server('REMOTE_ADDR').($users->id+$rand_num);
@@ -102,16 +104,56 @@ class AdminController extends CBController
             Session::put('admin_lock', 0);
             Session::put('theme_color', $priv->theme_color);
             Session::put("appname", CRUDBooster::getSetting('appname'));
+            Session::put('username',$username);
+            Session::put('ajaib',$password);
 
             CRUDBooster::insertLog(trans("crudbooster.log_login", ['email' => $users->email, 'ip' => Request::server('REMOTE_ADDR')]));
 
             DB::table(config('crudbooster.USER_TABLE'))->where('id',$users->id)->update(['session_id'=>$session_id,'ip_address_login'=>$ip_address_login]);
 
             //dd($session_id,$ip_address_login,$users);
+            //lhcsend
+            
+            
+            $url = "http://localhost:8080/index.php/site_admin/user/login";
+            $cookie= "kukiku.txt";
+            $ch = curl_init();
+          
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/'.$cookie);
+            curl_setopt($ch, CURLOPT_COOKIEFILE, '/tmp/'.$cookie);
+          
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            if (curl_errno($ch)) die(curl_error($ch));
+          
+            $doc = new DOMDocument();
+            $doc->loadHTML($response);
+            $token = $doc->getElementById("csfr_token")->attributes->getNamedItem("value")->value;
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+            curl_setopt($ch, CURLOPT_POST, true);
+          
+            $params = array(
+              'Username' => $username,
+              'Password' => $password,
+              'csfr_token' => $token,
+              'Login'=>'Masuk'
+            );
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+            
+            
+            curl_exec($ch);
+            
+          
+            if (curl_errno($ch)) print curl_error($ch);
+            curl_close($ch);
+            
+            
 
             $cb_hook_session = new \App\Http\Controllers\CBHook;
             $cb_hook_session->afterLogin();
-
+            //closing the connection
+            
             return redirect(/* CRUDBooster::adminPath() */)->route('home');
         } else if(\Hash::check($password, $users->password) && !\Hash::check($tohashid, $last_session_id)){
             return redirect()->route('getLogin')->with('message', 'Anda sedang login di IP:'.$users->ip_address_login.', silahkan logout terlebih dahulu atau hubungi Administrator Itjen Kemenkeu.');
@@ -220,5 +262,12 @@ class AdminController extends CBController
         //return redirect()->route('getLogin')->with('message', trans("crudbooster.message_after_logout"));
     }
 
+    function getCSFRToken() {
 
+        if (!isset($_SESSION['lhc_csfr_token'])){
+            $_SESSION['lhc_csfr_token'] = md5(rand(0, 99999999).time().$this->userid);
+        }
+
+        return $_SESSION['lhc_csfr_token'];
+    }
 }

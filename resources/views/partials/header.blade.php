@@ -184,7 +184,7 @@
 											<a href="\infopnbp">Informasi PNBP<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
-											<a href="\helpdesk">Hubungi Kami<div class="mobileTriggerButton"></div></a>
+											<a href="\helpdesk">Helpdesk<div class="mobileTriggerButton"></div></a>
                                         </li>
                                         <li class="hoverTrigger">
 											<a href="\faq">Panduan<div class="mobileTriggerButton"></div></a>
@@ -231,7 +231,7 @@
                                                     <a href="\infopnbp" target="_blank">Informasi PNBP</a>
                                                 </li>
                                                 <li>
-                                                    <a href="\helpdesk">Hubungi Kami</a>
+                                                    <a href="\helpdesk">Helpdesk</a>
                                                 </li>
                                                 <li>
                                                     <a href="\faq">Panduan</a>

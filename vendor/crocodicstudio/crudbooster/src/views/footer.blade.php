@@ -44,6 +44,17 @@
     </div>
 
 <!-- Star javascript Home -->
+<script type="text/javascript">
+    var LHCChatOptions = {};
+    LHCChatOptions.opt = {widget_height:340,widget_width:300,popup_height:520,popup_width:500,domain:'localhost:8080'};
+    (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://')+1)) : '';
+    var location  = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
+    po.src = '//localhost:8080/index.php/idn/chat/getstatus/(click)/internal/(position)/bottom_right/(ma)/br/(top)/350/(units)/pixels/(leaveamessage)/true?r='+referrer+'&l='+location;
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+    </script>
 <script type="text/javascript" src="https://unpkg.com/popper.js@latest/dist/umd/popper.js"></script>
 <script src="/vendor/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
 <script src="/vendor/amcharts/amcharts/serial.js" type="text/javascript"></script>

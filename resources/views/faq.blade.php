@@ -94,7 +94,7 @@
                                                 </a>
                                             </div>
                                             @else
-                                                <img src="{{$value->thumbnail ? $value->thumbnail : '/images/no-file-available.png'}}" style="min-height:175px;max-height:175px;" />
+                                                <img src="{{$value->thumbnail ? $value->thumbnail : '/images/no-file-available.png'}}" style="max-height:175px;" />
                                             @endif
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@
                                                 </a>
                                             </div>
                                             @else
-                                                <img src="{{$value->thumbnail ? $value->thumbnail : '/images/no-file-available.png'}}" style="min-height:175px;max-height:175px;" />
+                                                <img src="{{$value->thumbnail ? $value->thumbnail : '/images/no-file-available.png'}}" style="max-height:175px;" />
                                             @endif
                                         </div>
                                     </div>

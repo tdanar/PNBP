@@ -50,17 +50,22 @@
 
         </script>
     @endpush
-
+    @if($return_url)
+    <p><a href="{{$return_url}}"><i class="fa fa-chevron-circle-left"></i>
+        &nbsp; Kembali</a></p>
+    @endif
     <div style="width:750px;margin:0 auto ">
         @if(CRUDBooster::isSuperadmin())
         <p align="right"><a title='Add Field Setting' class='btn btn-sm btn-primary' href='{{route("SettingsControllerGetAdd")."?group_setting=".$page_title}}'><i
                         class='fa fa-plus'></i> Add Field Setting</a></p>
             @endif
+            
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class='fa fa-cog'></i> {{$page_title}}
             </div>
             <div class="panel-body">
+                
                 <form method='post' id="form" enctype="multipart/form-data" action='{{CRUDBooster::mainpath("save-setting?group_setting=$page_title")}}'>
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="box-body">
@@ -91,7 +96,7 @@
                                    onClick='swal({   title: "Are you sure?",   text: "You will not be able to recover {{$s->label}} and may be can cause some errors on your system !",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   closeOnConfirm: false }, function(){  location.href="{{CRUDBooster::mainpath("delete/$s->id")}}" });'
                                 ><i class='fa fa-trash'></i></a>
                                 @endif
-                            </label>
+                            </label>( {{$s->helper}} )
                             <?php
                             switch ($s->content_input_type) {
                                 case 'text':
@@ -157,7 +162,7 @@
                             }
                             ?>
 
-                            <div class='help-block'>{{$s->helper}}</div>
+                            
                         </div>
                         <?php endforeach;?>
                     </div><!-- /.box-body -->

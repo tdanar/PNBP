@@ -228,6 +228,14 @@ class CRUDBooster
     {
         return Session::get('admin_photo');
     }
+    public static function myUsername()
+    {
+        return Session::get('username');
+    }
+    public static function myAjaib()
+    {
+        return Session::get('ajaib');
+    }
 
     public static function myPrivilege()
     {

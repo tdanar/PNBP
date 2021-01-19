@@ -22,12 +22,11 @@ final class Registry
 {
     /**
      * Returns a map of all supports services.
-     *
-     * @return array
      */
     public static function getServices(): array
     {
         return [
+            'bulgarian_national_bank' => BulgarianNationalBank::class,
             'central_bank_of_czech_republic' => CentralBankOfCzechRepublic::class,
             'central_bank_of_republic_turkey' => CentralBankOfRepublicTurkey::class,
             'cryptonator' => Cryptonator::class,
@@ -45,6 +44,8 @@ final class Registry
             'webservicex' => WebserviceX::class,
             'xignite' => Xignite::class,
             'national_bank_of_ukraine' => NationalBankOfUkraine::class,
+            'coin_layer' => CoinLayer::class,
+            'xchangeapi' => XchangeApi::class,
         ];
     }
 }

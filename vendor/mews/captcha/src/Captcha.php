@@ -15,7 +15,7 @@ namespace Mews\Captcha;
  */
 
 use Exception;
-use Illuminate\Config\Repository;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\File;
@@ -25,6 +25,8 @@ use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Illuminate\Session\Store as Session;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * Class Captcha
@@ -178,6 +180,16 @@ class Captcha
     protected $fontsDirectory;
 
     /**
+     * @var int
+     */
+    protected $expire = 60;
+
+    /**
+     * @var bool
+     */
+    protected $encrypt = true;
+    
+    /**
      * Constructor
      *
      * @param Filesystem $files
@@ -204,7 +216,7 @@ class Captcha
         $this->hasher = $hasher;
         $this->str = $str;
         $this->characters = config('captcha.characters', ['1', '2', '3', '4', '6', '7', '8', '9']);
-        $this->fontsDirectory = config('captcha.fontsDirectory', __DIR__ . '/../assets/fonts');
+        $this->fontsDirectory = config('captcha.fontsDirectory',  dirname(__DIR__) . '/assets/fonts');
     }
 
     /**
@@ -281,6 +293,10 @@ class Captcha
             $this->image->blur($this->blur);
         }
 
+        if ($api) {
+            Cache::put('captcha_record_' . $generator['key'], $generator['value'], $this->expire);
+        }
+
         return $api ? [
             'sensitive' => $generator['sensitive'],
             'key' => $generator['key'],
@@ -325,9 +341,12 @@ class Captcha
         }
 
         $hash = $this->hasher->make($key);
+        if($this->encrypt) $hash = Crypt::encrypt($hash);
+        
         $this->session->put('captcha', [
             'sensitive' => $this->sensitive,
-            'key' => $hash
+            'key' => $hash,
+            'encrypt' => $this->encrypt
         ]);
 
         return [
@@ -449,11 +468,13 @@ class Captcha
 
         $key = $this->session->get('captcha.key');
         $sensitive = $this->session->get('captcha.sensitive');
+        $encrypt = $this->session->get('captcha.encrypt');
 
         if (!$sensitive) {
             $value = $this->str->lower($value);
         }
 
+        if($encrypt) $key = Crypt::decrypt($key);
         $check = $this->hasher->check($value, $key);
         // if verify pass,remove session
         if ($check) {
@@ -468,10 +489,19 @@ class Captcha
      *
      * @param string $value
      * @param string $key
+     * @param string $config
      * @return bool
      */
-    public function check_api($value, $key): bool
+    public function check_api($value, $key, $config = 'default'): bool
     {
+        if (!Cache::pull('captcha_record_' . $key)) {
+            return false;
+        }
+
+        $this->configure($config);
+
+        if(!$this->sensitive) $value = $this->str->lower($value);
+        if($this->encrypt) $key = Crypt::decrypt($key);
         return $this->hasher->check($value, $key);
     }
 

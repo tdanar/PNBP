@@ -22,6 +22,7 @@ class SettingsController extends CBController
         $this->button_cancel = false;
         $this->button_import = false;
         $this->button_export = false;
+        
 
         $this->col = [];
         $this->col[] = ["label" => "Nama", "name" => "name", "callback_php" => "ucwords(str_replace('_',' ',%field%))"];
@@ -74,6 +75,7 @@ class SettingsController extends CBController
         }
 
         $data['page_title'] = urldecode(Request::get('group'));
+        $data['return_url'] = '/ma/manajemenGrafik';
 
         return view('crudbooster::setting', $data);
     }

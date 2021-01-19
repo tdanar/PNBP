@@ -14,8 +14,12 @@
 /* Route::get('/', function () {
     return view('partials.header');
 }); */
-
+use crocodicstudio\crudbooster\helpers\CRUDBooster;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\helpdeskController;
+use GuzzleHttp\Client;
+
+
 
 Route::get('/','homepageController@index')->name('home');
 Route::get('/lhc_web','lhc_webController@getLHC')->name('lhc_web');

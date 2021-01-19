@@ -25,6 +25,7 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
+			$this->return_url = '/ma/manajemenGrafik';
 			$this->table = "t_diag_rank_pnbp";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 

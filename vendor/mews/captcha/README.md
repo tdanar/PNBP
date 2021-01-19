@@ -1,4 +1,4 @@
-# Captcha for Laravel 5 & 6
+# Captcha for Laravel 5/6/7
 
 [![Build Status](https://travis-ci.org/mewebstudio/captcha.svg?branch=master)](https://travis-ci.org/mewebstudio/captcha) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mewebstudio/captcha/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mewebstudio/captcha/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/mews/captcha/v/stable.svg)](https://packagist.org/packages/mews/captcha)
@@ -13,6 +13,20 @@ for Laravel 4 [Captcha for Laravel Laravel 4](https://github.com/mewebstudio/cap
 ## Preview
 ![Preview](https://image.ibb.co/kZxMLm/image.png)
 
+- [Captcha for Laravel 5/6/7](#captcha-for-laravel-5-6-7)
+  * [Preview](#preview)
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [Configuration](#configuration)
+  * [Example Usage](#example-usage)
+    + [Session Mode:](#session-mode-)
+    + [Stateless Mode:](#stateless-mode-)
+- [Return Image](#return-image)
+- [Return URL](#return-url)
+- [Return HTML](#return-html)
+- [To use different configurations](#to-use-different-configurations)
+  * [Links](#links)
+  
 ## Installation
 
 The Captcha Service Provider can be installed via [Composer](http://getcomposer.org) by requiring the
@@ -95,13 +109,15 @@ return [
         'width'     => 120,
         'height'    => 36,
         'quality'   => 90,
-        'math'      => true, //Enable Math Captcha
+        'math'      => true,  //Enable Math Captcha
+        'expire'    => 60,    //Stateless/API captcha expiration
     ],
     // ...
 ];
 ```
 
 ## Example Usage
+### Session Mode:
 ```php
 
     // [your site path]/Http/routes.php
@@ -124,6 +140,25 @@ return [
         $form .= '</form>';
         return $form;
     });
+```
+### Stateless Mode:
+You get key and img from this url
+`http://localhost/captcha/api/math`
+and verify the captcha using this method:
+```php
+    //key is the one that you got from json response
+    // fix validator
+    // $rules = ['captcha' => 'required|captcha_api:'. request('key')];
+    $rules = ['captcha' => 'required|captcha_api:'. request('key') . ',default'];
+    $validator = validator()->make(request()->all(), $rules);
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'invalid captcha',
+        ]);
+
+    } else {
+        //do the job
+    }
 ```
 
 # Return Image
