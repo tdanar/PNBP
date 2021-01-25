@@ -28,7 +28,7 @@
 			$this->button_export       = FALSE;
 			$this->button_import       = FALSE;
 			$this->button_bulk_action  = TRUE;
-			$this->return_url = '/ma/manajemenGrafik';
+			$this->return_url2 = '/ma/manajemenGrafik';
 			$this->sidebar_mode		   = "normal"; //normal,mini,collapse,collapse-mini
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 

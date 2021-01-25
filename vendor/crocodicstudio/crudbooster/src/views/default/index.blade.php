@@ -30,8 +30,8 @@
                 &nbsp; Kembali</a></p>
 {{--                 {{trans('crudbooster.form_back_to_list',['module'=>urldecode(g('label'))])}} --}}
     @endif
-    @if($return_url)
-    <p><a href='{{$return_url}}'><i class='fa fa-chevron-circle-left'></i>
+    @if($return_url2)
+    <p><a href='{{$return_url2}}'><i class='fa fa-chevron-circle-left'></i>
         &nbsp; Kembali</a></p>
     @endif
 

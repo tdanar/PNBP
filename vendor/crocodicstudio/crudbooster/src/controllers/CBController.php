@@ -120,6 +120,7 @@ class CBController extends Controller
     public $button_selected = [];
 
     public $return_url = null;
+    public $return_url2 = null;
 
     public $parent_field = null;
 
@@ -183,6 +184,7 @@ class CBController extends Controller
         $this->data['style_css'] = $this->style_css;
         $this->data['sub_module'] = $this->sub_module;
         $this->data['subtitle_module'] = $this->subtitle_module;
+        $this->data['return_url2'] = $this->return_url2;
         $this->data['page_title'] = $this->page_title;
         $this->data['parent_field'] = (g('parent_field')) ?: $this->parent_field;
         $this->data['parent_id'] = (g('parent_id')) ?: $this->parent_id;

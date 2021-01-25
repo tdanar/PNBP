@@ -64,9 +64,11 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
         if(CRUDBooster::isSuperadmin()) {
         $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_active<>0",'required'=>true);
         $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"select2","datatable"=>"t_ref_unit,unit",'required'=>true);
+        $this->form[] = array("label"=>"Operator LHC ?","name"=>"lhc_mode","type"=>"radio","validation"=>"required","width"=>"col-sm-10","dataenum"=>"1|Ya;0|Tidak");
         }else if(CRUDBooster::myPrivilegeId() == 3){
         $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name","datatable_where"=>"is_superadmin<>1 AND is_active<>0",'required'=>true);
         $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"select2","datatable"=>"t_ref_unit,unit",'required'=>true);
+        $this->form[] = array("label"=>"Operator LHC ?","name"=>"lhc_mode","type"=>"radio","validation"=>"required","width"=>"col-sm-10","dataenum"=>"1|Ya;0|Tidak");
         }else{
             $this->form[] = array("label"=>"Role / Privilege","name"=>"id_cms_privileges","type"=>"hidden","value"=>2);
             $this->form[] = array("label"=>"Kementerian / Lembaga","name"=>"id_kode_unit","type"=>"hidden","value"=>$unit_id);
@@ -183,5 +185,100 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 
 
    }
+
+   public function hook_after_add($id) {
+        //Your code here
+        $table = DB::table(config('crudbooster.USER_TABLE'))->where('id',$id)->first();
+        if($table->lhc_mode == 1){
+            $data['id'] = $table->id;
+            $data['username'] = $table->username;
+            $data['password'] = $table->password;
+            $data['email'] = $table->email;
+            $data['name'] = $table->name;
+            $data['job_title'] = $table->jabatan;
+            $data['chat_nickname'] = $table->name;
+            if($table->id_cms_privileges == 3 || $table->id_cms_privileges == 1){
+                $data['all_departments'] = 1;
+            }else{
+                $data['all_departments'] = 0;
+            }
+            $data2['user_id'] = $table->id;
+            if($table->id_cms_privileges == 1){
+                    $data2['group_id'] = 1;
+            }elseif($table->id_cms_privileges == 3){
+                    $data2['group_id'] = 2;
+            }else{
+                    $data2['group_id'] = 3;
+            }
+            DB::table('lh_users')->insert($data);
+            DB::table('lh_groupuser')->insert($data2);
+        
+            }else{
+
+            }
+    }
+
+    public function hook_after_edit($id) {
+        //Your code here
+        $table = DB::table(config('crudbooster.USER_TABLE'))->where('id',$id)->first();
+        $table2 = DB::table('lh_users')->where('id',$id)->first();
+
+        if($table->lhc_mode == 1 && $table2->id ){
+            
+            $data['username'] = $table->username;
+            $data['password'] = $table->password;
+            $data['email'] = $table->email;
+            $data['name'] = $table->name;
+            $data['job_title'] = $table->jabatan;
+            $data['chat_nickname'] = $table->name;
+            if($table->id_cms_privileges == 3 || $table->id_cms_privileges == 1){
+                $data['all_departments'] = 1;
+            }else{
+                $data['all_departments'] = 0;
+            }
+            DB::table('lh_users')->where('id', $id)->update($data);
+            }elseif($table->lhc_mode == 1 && !$table2->id ){
+                $data['id'] = $table->id;
+                $data['username'] = $table->username;
+                $data['password'] = $table->password;
+                $data['email'] = $table->email;
+                $data['name'] = $table->name;
+                $data['job_title'] = $table->jabatan;
+                $data['chat_nickname'] = $table->name;
+                if($table->id_cms_privileges == 3 || $table->id_cms_privileges == 1){
+                    $data['all_departments'] = 1;
+                }else{
+                    $data['all_departments'] = 0;
+                }
+                $data2['user_id'] = $table->id;
+                if($table->id_cms_privileges == 1){
+                        $data2['group_id'] = 1;
+                }elseif($table->id_cms_privileges == 3){
+                        $data2['group_id'] = 2;
+                }else{
+                        $data2['group_id'] = 3;
+                }
+                DB::table('lh_users')->insert($data);
+                DB::table('lh_groupuser')->insert($data2);
+            }elseif($table->lhc_mode == 0 && $table2->id ){
+                DB::table('lh_users')->where('id', $id)->delete();
+                DB::table('lh_groupuser')->where('user_id', $id)->delete();
+                
+            }else{
+
+            }
+
+    }
+
+    public function hook_before_delete($id) {
+        //Your code here
+        $table = DB::table(config('crudbooster.USER_TABLE'))->where('id',$id)->first();
+        if($table->lhc_mode == 1){
+            DB::table('lh_users')->where('id', $id)->delete();
+            DB::table('lh_groupuser')->where('user_id', $id)->delete();
+
+        }
+
+    }
 
 }

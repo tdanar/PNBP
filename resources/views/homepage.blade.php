@@ -133,10 +133,14 @@
 
         var tahun1 = {!! json_encode($tahun1) !!};
         var tahun2 = {!! json_encode($tahun2) !!};
+        var tahun3 = {!! json_encode($tahun3) !!};
+        var tahun4 = {!! json_encode($tahun4) !!};
+        var tahun5 = {!! json_encode($tahun5) !!};
+
 
         $.ajax({
             type: 'GET',
-                    url: '/api/getTrenPNBP/'+tahun1+'/'+tahun2,
+                    url: '/api/getTrenPNBP/'+tahun1+'/'+tahun2+'/'+tahun3+'/'+tahun4+'/'+tahun5,
                     success: function (data) {
                         var chart;
 						var chartData = data['pnbp_jenis'];
@@ -612,8 +616,8 @@
                                     </div>
 
                                     <h2 class="heading gra active" id="graphshead1">Tren Realisasi PNBP per Jenis PNBP <p style="font-size:80%">Tahun {{$tahun1}} s.d. {{$tahun2}}</p><p>Sumber: {{$sumber1}} </p></h2>
-                                    <h2 class="heading gra" id="graphshead2">Tren Perbandingan Realisasi PNBP dengan Penerimaan Negara <p style="font-size:80%">Tahun {{$tahun1}} s.d. {{$tahun2}}</p><p>Sumber: {{$sumber2}} </p></h2>
-                                    <h2 class="heading gra" id="graphshead3">Realisasi PNBP Terbesar pada 10 Kementerian / Lembaga<p style="font-size:80%">Tahun {{$tahun2}}</p><p>Sumber: {{$sumber3}} </p> </h2>
+                                    <h2 class="heading gra" id="graphshead2">Tren Perbandingan Realisasi PNBP dengan Penerimaan Negara <p style="font-size:80%">Tahun {{$tahun3}} s.d. {{$tahun4}}</p><p>Sumber: {{$sumber2}} </p></h2>
+                                    <h2 class="heading gra" id="graphshead3">Realisasi PNBP Terbesar pada 10 Kementerian / Lembaga<p style="font-size:80%">Tahun {{$tahun5}}</p><p>Sumber: {{$sumber3}} </p> </h2>
                                     <h2 class="heading gra" id="graphshead4"> </h2>
                                     <h2 class="heading gra" id="graphshead5"> </h2>
                                     <h2 class="heading gra" id="graphshead6"> </h2>

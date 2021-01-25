@@ -5,6 +5,7 @@ use DOMDocument;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends CBController
@@ -115,39 +116,20 @@ class AdminController extends CBController
             //lhcsend
             
             
-            $url = "http://localhost:8080/index.php/site_admin/user/login";
-            $cookie= "kukiku.txt";
-            $ch = curl_init();
-          
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/'.$cookie);
-            curl_setopt($ch, CURLOPT_COOKIEFILE, '/tmp/'.$cookie);
-          
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            if (curl_errno($ch)) die(curl_error($ch));
-          
-            $doc = new DOMDocument();
-            $doc->loadHTML($response);
-            $token = $doc->getElementById("csfr_token")->attributes->getNamedItem("value")->value;
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
-            curl_setopt($ch, CURLOPT_POST, true);
-          
-            $params = array(
-              'Username' => $username,
-              'Password' => $password,
-              'csfr_token' => $token,
-              'Login'=>'Masuk'
-            );
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
             
+            $url = env('LHC_MAIN_URL')."/restapi/login";
+            $exec1 = $this->getLHCcredential($url,$username,$password);
+            $extract = json_decode($exec1);
             
-            curl_exec($ch);
-            
-          
-            if (curl_errno($ch)) print curl_error($ch);
-            curl_close($ch);
-            
+            Session::put('lhc_id', $extract->user_id);
+            Session::put('lhc_token', $extract->session_token);
+
+            $useridlhc = Session::get('lhc_id');
+            $url2 = env('LHC_MAIN_URL')."/restapi/generateautologin";
+            $redirectlhc = "site_admin";
+            $timelhc = 1800;
+            $generatelink = $this->getLHCAutoLogin($url2, $useridlhc, $username, $redirectlhc, $timelhc, $password);
+            Session::put('lhc_url', json_decode($generatelink)->result);
             
 
             $cb_hook_session = new \App\Http\Controllers\CBHook;
@@ -249,15 +231,25 @@ class AdminController extends CBController
     public function getLogout()
     {
 
+
+        $url = env('LHC_MAIN_URL')."/restapi/logout";
+
+        
+
         $me = CRUDBooster::me();
         DB::table(config('crudbooster.USER_TABLE'))->where('id',$me->id)->update(['session_id'=>null,'ip_address_login'=>null]);
 
-        //dd($me);
+        
         CRUDBooster::insertLog(trans("crudbooster.log_logout", ['email' => $me->email]));
 
+        
+        
         Session::flush();
+       
 
-        return redirect()->route('home')->with('message', trans("crudbooster.message_after_logout"));
+        //return redirect()->route('lhc_logout/'.$url);
+        
+        return redirect()->route('lhcredir')->with(['message' => trans("crudbooster.message_after_logout"), 'url' => $url ]);
 
         //return redirect()->route('getLogin')->with('message', trans("crudbooster.message_after_logout"));
     }
@@ -270,4 +262,50 @@ class AdminController extends CBController
 
         return $_SESSION['lhc_csfr_token'];
     }
+
+    function getLHCcredential($url,$user,$pass)
+    {
+            $ch = curl_init();
+            $params = array(
+                'username' => $user,
+                'password' => $pass,
+                'generate_token' => 'true',
+                'device' => 'unknown'
+              );
+          
+            curl_setopt($ch, CURLOPT_URL, $url);         
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+            $output = curl_exec($ch);
+            curl_close($ch);
+            return $output;
+    }
+
+    function getLHCAutoLogin($url, $userid, $username, $redirect, $time, $password){
+
+        $ch = curl_init();
+        $bodyjson = json_encode(array("u"=>$userid, "l"=>$username, "r"=>$redirect, "t"=>$time));
+        
+            $headr = array();
+            $headr[] = 'Content-type: application/json';
+            $headr[] = 'Authorization: Basic '.$token;
+            
+            curl_setopt($ch, CURLOPT_URL, $url);         
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . $password);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $bodyjson);
+            curl_setopt($ch, CURLOPT_POST, true);
+            $output = curl_exec($ch);
+            
+            curl_close($ch);
+
+            return $output;
+
+    }
+
+    
+
+
+
 }
