@@ -232,8 +232,10 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
             $data['job_title'] = $table->jabatan;
             $data['chat_nickname'] = $table->name;
             if($table->id_cms_privileges == 3 || $table->id_cms_privileges == 1){
+                $data['departments_ids'] = '1,2,0';
                 $data['all_departments'] = 1;
             }else{
+                $data['departments_ids'] = '2,-1';
                 $data['all_departments'] = 0;
             }
             DB::table('lh_users')->where('id', $id)->update($data);
@@ -246,8 +248,10 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
                 $data['job_title'] = $table->jabatan;
                 $data['chat_nickname'] = $table->name;
                 if($table->id_cms_privileges == 3 || $table->id_cms_privileges == 1){
+                    $data['departments_ids'] = '1,2,0';
                     $data['all_departments'] = 1;
                 }else{
+                    $data['departments_ids'] = '2,-1';
                     $data['all_departments'] = 0;
                 }
                 $data2['user_id'] = $table->id;
