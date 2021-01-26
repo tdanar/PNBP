@@ -2,6 +2,7 @@
 
 	use Session;
 	use Request;
+	use Illuminate\Http\Request as Rikues;
 	use DB;
 	use CRUDBooster;
 
@@ -328,7 +329,28 @@
 	    }
 
 
-
+		public function klasifikasiTemuan(Rikues $request){
+			
+			$data = DB::table("t_ref_kod_temuan")->selectRaw('`t_ref_kod_temuan`.`id`,
+					`t_ref_kod_temuan`.`Deskripsi` AS `DeskripsiCucu`,
+					`t_ref_kod_temuan1`.`Deskripsi` AS `DeskripsiAnak`,
+					`t_ref_kod_temuan2`.`Deskripsi` AS `DeskripsiInduk`')
+					->where(function ($query) use ($request) {
+						if ($request->DeskripsiCucu) {
+							$query->where('t_ref_kod_temuan.Deskripsi',$request->DeskripsiCucu);
+						}
+						if ($request->DeskripsiAnak) {
+							$query->orWhere('t_ref_kod_temuan1.Deskripsi',$request->DeskripsiAnak);
+						}
+						if ($request->DeskripsiInduk) {
+							$query->orWhere('t_ref_kod_temuan2.Deskripsi',$request->DeskripsiInduk);
+						}
+					})
+					->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan1.id','=','t_ref_kod_temuan.id_up2')
+					->join('t_ref_kod_temuan AS t_ref_kod_temuan2','t_ref_kod_temuan2.id','=','t_ref_kod_temuan.id_up')
+					->get();
+			return $data;
+		}
 	    //By the way, you can still create your own method in here... :)
 
 

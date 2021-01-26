@@ -57,6 +57,9 @@ Route::middleware(['web','XSS', '\crocodicstudio\crudbooster\middlewares\CBBacke
     Route::get('/ma/manajemenGrafik','manajemenGrafikController@Index');
     Route::get('/ma/lap_awas_tlanjut/addTL/{id}', 'AdminLapAwasTlanjutController@getTlanjut');
     Route::get('/ma/kirimTL/{id}', 'AdminLapAwasTlanjutController@KirimTL');
+    Route::get('/api/classTemuan','AdminRefKodTemuanController@klasifikasiTemuan')->name('klasifikasiTemuan');
+    Route::get('/api/classSebab','AdminTRefKodSebabController@klasifikasiSebab')->name('klasifikasiSebab');
+
 
     //Route::post('/ma/rev','AdminLapAwasController@Rev');
 });

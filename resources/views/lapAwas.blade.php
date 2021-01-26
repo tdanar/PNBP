@@ -20,11 +20,11 @@ $(document).ready(function() {
     var no_lap = escapeHtml(getParameterByName('no_lap'));
     var inputer = escapeHtml(getParameterByName('user'));
     var tahun = escapeHtml(getParameterByName('amp;tahun'));
-    var jAwas = escapeHtml(getParameterByName('amp;jAwas'));
-    var jTemuan = escapeHtml(getParameterByName('amp;jTemuan'));
-    var jSebab = escapeHtml(getParameterByName('amp;jSebab'));
-    var jRek = escapeHtml(getParameterByName('amp;jRek'));
-    var jTL = escapeHtml(getParameterByName('amp;jTL'));
+    var jAwas = escapeHtml(getParameterByName('jAwas'));
+    var jTemuan = escapeHtml(getParameterByName('jTemuan'));
+    var jSebab = escapeHtml(getParameterByName('jSebab'));
+    var jRek = escapeHtml(getParameterByName('jRek'));
+    var jTL = escapeHtml(getParameterByName('jTL'));
     var statusKirim = escapeHtml(getParameterByName('amp;statusKirim'));
     var table = $('#lapawas').DataTable({
 
@@ -322,23 +322,82 @@ $(document).ready(function() {
             }
 
             if(jAwas){
-                table.column(5).search(jAwas).draw();
+                jAwasx = jAwas.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
+                var pattern = (jAwasx === null ? '' :"^(" + jAwasx + ")$");
+                table.column(5).search(pattern,true,false,true).draw();
             }
 
             if(jTemuan){
-                table.column(8).search(jTemuan).draw();
+                $.ajax({
+                        url: "/api/classTemuan?DeskripsiAnak="+jTemuan,
+                        type: "get",
+                        success: function(response) {
+                            //Do Something
+                            var arr = [];
+                            var len = response.length;
+                            for (var i = 0; i < len; i++) {
+                                arr.push(
+                                    response[i].DeskripsiCucu
+                                );
+                                
+                            }
+                            
+                            var arr2 = arr.map(function (item) {
+                                return item.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
+                            });
+                            var pattern = (arr2 === null ? '' :"^(" + arr2.join("|") + ")$");
+                            table.column(8).search(pattern, true, false, true).draw();
+                            
+                            
+                        },
+                        error: function(xhr) {
+                            //Do Something to handle error
+                            
+                        }
+                        });
+                
             }
 
             if(jSebab){
-                table.column(12).search(jSebab).draw();
+                $.ajax({
+                        url: "/api/classSebab?DeskripsiAnak="+jSebab,
+                        type: "get",
+                        success: function(response) {
+                            //Do Something
+                            var arr = [];
+                            var len = response.length;
+                            for (var i = 0; i < len; i++) {
+                                arr.push(
+                                    response[i].DeskripsiCucu
+                                );
+                                
+                            }
+                            
+                            var arr2 = arr.map(function (item) {
+                                return item.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
+                            });
+                            var pattern = (arr2 === null ? '' :"^(" + arr2.join("|") + ")$");
+                            table.column(12).search(pattern, true, false, true).draw();
+                            
+                            
+                        },
+                        error: function(xhr) {
+                            //Do Something to handle error
+                            
+                        }
+                        });
             }
 
             if(jRek){
-                table.column(15).search(jRek).draw();
+                jRekx = jRek.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
+                var pattern = (jRekx === null ? '' :"^(" + jRekx + ")$");
+                table.column(15).search(pattern,true,false,true).draw();
             }
 
             if(jTL){
-                table.column(17).search(jTL).draw();
+                jTLx = jTL.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
+                var pattern = (jTLx === null ? '' :"^(" + jTLx + ")$");
+                table.column(17).search(pattern,true,false,true).draw();
             }
 
             if(myId == 2 || myId == 5){
@@ -563,7 +622,7 @@ function escapeHtml(text) {
 </div>
 {{-- @if(CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeId() == 3 || CRUDBooster::myPrivilegeId() == 4 || CRUDBooster::myPrivilegeId() == 5) --}}
 
-@if(CRUDBooster::myPrivilegeId() != 2 || CRUDBooster::myPrivilegeId() != 5)
+@if(CRUDBooster::myPrivilegeId() != 2 && CRUDBooster::myPrivilegeId() != 5)
 <div class="row">
     <div class="col-xs-3 text-right">
         <label for="table-filter-unit">Kementerian / Lembaga : </label>

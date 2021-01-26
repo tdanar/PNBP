@@ -264,7 +264,7 @@
                                             ->groupBy('cms_users.name')
                                             ->get());
                                                     //dd($data['resultInputer']);
-                $data['result1'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
+                $data['result1'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`,CONCAT("/ma/lap_awas?jAwas=",t_ref_jenis_awas.jenis_awas,"'.$queryku.'") AS `url`')
                                        ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
                                        ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
@@ -281,7 +281,7 @@
                                        ->groupBy('t_ref_jenis_awas.jenis_awas')
                                        ->get());
 
-                $data['result2'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`')
+                $data['result2'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`,CONCAT("/ma/lap_awas?jTemuan=",t_ref_kod_temuan1.Deskripsi,"'.$queryku.'") AS `url`')
                                         ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
                                         ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
                                         ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
@@ -298,9 +298,9 @@
                                                     }
                                                 }
                                             )
-                                       ->groupBy('t_ref_kod_temuan1.Deskripsi')
+                                       ->groupBy('t_ref_kod_temuan1.Deskripsi' )
                                        ->get());
-                $data['result3'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`')
+                $data['result3'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`,CONCAT("/ma/lap_awas?jSebab=",t_ref_kod_sebab1.Deskripsi,"'.$queryku.'") AS `url`')
                                         ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
                                        ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
@@ -318,7 +318,7 @@
                                             )
                                        ->groupBy('t_ref_kod_sebab1.Deskripsi')
                                        ->get());
-                $data['result4'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`')
+                $data['result4'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`,CONCAT("/ma/lap_awas?jRek=",t_ref_kod_rekomendasi.Deskripsi,"'.$queryku.'") AS `url`')
                                         ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
                                         ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
                                         ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
@@ -336,7 +336,7 @@
                                             )
                                        ->groupBy('t_ref_kod_rekomendasi.Deskripsi')
                                        ->get());
-                $data['result5'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
+                $data['result5'] = json_encode(DB::table('t_ref_unit')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`,CONCAT("/ma/lap_awas?jTL=",t_ref_tl.deskripsi,"'.$queryku.'") AS `url`')
                                         ->join('cms_users','t_ref_unit.id','=','cms_users.id_kode_unit')
                                         ->join('t_lap_awas','cms_users.id','=','t_lap_awas.id_user')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
@@ -440,7 +440,7 @@
                                                 )
                                             ->groupBy('cms_users.name')
                                             ->get());
-                $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
+                $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`,CONCAT("/ma/lap_awas?jAwas=",t_ref_jenis_awas.jenis_awas,"'.$queryku.'") AS `url`')
                                        ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
                                        ->where('t_lap_awas.id_status_kirim',$st_kirim)
                                        ->where(
@@ -454,7 +454,7 @@
                                             )
                                        ->groupBy('t_ref_jenis_awas.jenis_awas')
                                        ->get());
-               $data['result2'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`')
+               $data['result2'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`,CONCAT("/ma/lap_awas?jTemuan=",t_ref_kod_temuan1.Deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
                                        ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
@@ -470,7 +470,7 @@
                                             )
                                        ->groupBy('t_ref_kod_temuan1.Deskripsi')
                                        ->get());
-               $data['result3'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`')
+               $data['result3'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`,CONCAT("/ma/lap_awas?jSebab=",t_ref_kod_sebab1.Deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
                                        ->join('t_ref_kod_sebab AS t_ref_kod_sebab1','t_ref_kod_sebab.Id_up_sebab','=','t_ref_kod_sebab1.id')
@@ -486,7 +486,7 @@
                                             )
                                        ->groupBy('t_ref_kod_sebab1.Deskripsi')
                                        ->get());
-               $data['result4'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`')
+               $data['result4'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`,CONCAT("/ma/lap_awas?jRek=",t_ref_kod_rekomendasi.Deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
                                        ->join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
@@ -502,7 +502,7 @@
                                             )
                                        ->groupBy('t_ref_kod_rekomendasi.Deskripsi')
                                        ->get());
-               $data['result5'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
+               $data['result5'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`,CONCAT("/ma/lap_awas?jTL=",t_ref_tl.deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
                                        ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')
@@ -588,7 +588,7 @@
                                                 )
                                             ->groupBy('cms_users.name')
                                             ->get());
-                $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`')
+                $data['result1'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas.id) AS `Jumlah`,t_ref_jenis_awas.jenis_awas AS `Jenis Pengawasan`,CONCAT("/ma/lap_awas?jAwas=",t_ref_jenis_awas.jenis_awas,"'.$queryku.'") AS `url`')
                                        ->join('t_ref_jenis_awas','t_lap_awas.id_jenis_was','=','t_ref_jenis_awas.id')
                                        ->where(
                                                 function ($query) use ($input, $filters) {
@@ -601,7 +601,7 @@
                                             )
                                        ->groupBy('t_ref_jenis_awas.jenis_awas')
                                        ->get());
-               $data['result2'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`')
+               $data['result2'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_temuan1.Deskripsi AS `Jenis Temuan`,CONCAT("/ma/lap_awas?jTemuan=",t_ref_kod_temuan1.Deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_ref_kod_temuan','t_lap_awas_temuan.id_kod_temuan','=','t_ref_kod_temuan.id')
                                        ->join('t_ref_kod_temuan AS t_ref_kod_temuan1','t_ref_kod_temuan.id_up2','=','t_ref_kod_temuan1.id')
@@ -616,7 +616,7 @@
                                             )
                                        ->groupBy('t_ref_kod_temuan1.Deskripsi')
                                        ->get());
-               $data['result3'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`')
+               $data['result3'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_temuan.id) AS `Jumlah`,t_ref_kod_sebab1.Deskripsi AS `Jenis Sebab`,CONCAT("/ma/lap_awas?jSebab=",t_ref_kod_sebab1.Deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_ref_kod_sebab','t_lap_awas_temuan.id_kod_sebab','=','t_ref_kod_sebab.id')
                                        ->join('t_ref_kod_sebab AS t_ref_kod_sebab1','t_ref_kod_sebab.Id_up_sebab','=','t_ref_kod_sebab1.id')
@@ -631,7 +631,7 @@
                                             )
                                        ->groupBy('t_ref_kod_sebab1.Deskripsi')
                                        ->get());
-               $data['result4'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`')
+               $data['result4'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_kod_rekomendasi.Deskripsi AS `Jenis Rekomendasi`,CONCAT("/ma/lap_awas?jRek=",t_ref_kod_rekomendasi.Deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
                                        ->join('t_ref_kod_rekomendasi','t_lap_awas_rekomend.id_kod_rekomendasi','=','t_ref_kod_rekomendasi.id')
@@ -646,7 +646,7 @@
                                             )
                                        ->groupBy('t_ref_kod_rekomendasi.Deskripsi')
                                        ->get());
-               $data['result5'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`')
+               $data['result5'] = json_encode(DB::table('t_lap_awas')->selectRaw('COUNT(t_lap_awas_rekomend.id) AS `Jumlah`,t_ref_tl.deskripsi AS `Jenis Tindak Lanjut`,CONCAT("/ma/lap_awas?jTL=",t_ref_tl.deskripsi,"'.$queryku.'") AS `url`')
                                        ->join('t_lap_awas_temuan','t_lap_awas_temuan.id_lap','=','t_lap_awas.id')
                                        ->join('t_lap_awas_rekomend','t_lap_awas_temuan.id','=','t_lap_awas_rekomend.id_temuan')
                                        ->join('t_ref_tl','t_lap_awas_rekomend.id_kod_tl','=','t_ref_tl.id')

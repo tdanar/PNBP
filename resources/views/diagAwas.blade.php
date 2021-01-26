@@ -88,6 +88,7 @@
                 "dataProvider": data1,
                 "valueField": "Jumlah",
                 "titleField": "Jenis Pengawasan",
+                "urlField": "url",
                 "outlineAlpha": 0.4,
                 "depth3D": 15,
                 "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
@@ -161,6 +162,7 @@
             "dataProvider": data2,
             "valueField": "Jumlah",
             "titleField": "Jenis Temuan",
+            "urlField": "url",
             "outlineAlpha": 0.4,
             "depth3D": 15,
             "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
@@ -214,6 +216,7 @@
             "dataProvider": data3,
             "valueField": "Jumlah",
             "titleField": "Jenis Sebab",
+            "urlField": "url",
             "outlineAlpha": 0.4,
             "depth3D": 15,
             "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
@@ -273,6 +276,7 @@
             "dataProvider": data4,
             "valueField": "Jumlah",
             "titleField": "Jenis Rekomendasi",
+            "urlField": "url",
             "outlineAlpha": 0.4,
             "depth3D": 15,
             "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
@@ -325,6 +329,7 @@
             "dataProvider": data5,
             "valueField": "Jumlah",
             "titleField": "Jenis Tindak Lanjut",
+            "urlField": "url",
             "outlineAlpha": 0.4,
             "depth3D": 15,
             "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
@@ -357,7 +362,7 @@
     //console.log(grouped);
     for(var k in grouped) {
 
-        console.log(grouped[k]);
+        //console.log(grouped[k]);
         }
 
 AmCharts.addInitHandler(function(chart) {
